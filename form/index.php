@@ -68,6 +68,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $payload['ref'] = $refCode;
                 $payload['submitted_at'] = date('Y-m-d H:i:s');
                 @file_put_contents($dir . '/' . $refCode . '.json', json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+
+                // ═══ Mirror ลงฐานข้อมูล (ตาราง form_submissions) ═══
+                try {
+                    require_once __DIR__ . '/../includes/db.php';
+                    $__ins = getDB()->prepare('INSERT INTO form_submissions (ref_code, payload) VALUES (?,?)');
+                    $__ins->execute([$refCode, json_encode($payload, JSON_UNESCAPED_UNICODE)]);
+                } catch (Throwable $e) {
+                    // DB ไม่พร้อม — ไฟล์ JSON ยังทำงานตามเดิม
+                }
             }
         }
     }

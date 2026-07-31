@@ -1,5 +1,27 @@
 <?php
 $pageTitle = 'ร่วมงานกับเรา';
+
+// ═══ เก็บผู้สมัครตัวแทนลงฐานข้อมูล ═══
+$applied = false;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $aName = trim($_POST['name'] ?? '');
+    $aPhone = trim($_POST['phone'] ?? '');
+    $aAge = trim($_POST['age'] ?? '');
+    $aEdu = trim($_POST['education'] ?? '');
+    $aExp = trim($_POST['experience'] ?? '');
+    $aLine = trim($_POST['line'] ?? '');
+    if ($aName !== '' && $aPhone !== '') {
+        try {
+            require_once __DIR__ . '/includes/db.php';
+            $__ins = getDB()->prepare('INSERT INTO agent_applications (name, phone, age, education, experience, line) VALUES (?,?,?,?,?,?)');
+            $__ins->execute([$aName, $aPhone, $aAge, $aEdu, $aExp, $aLine]);
+            $applied = true;
+        } catch (Throwable $e) {
+            // DB ไม่พร้อม — ไม่บล็อกการใช้งานฟอร์ม
+        }
+    }
+}
+
 include 'includes/header.php';
 ?>
 
@@ -65,6 +87,9 @@ include 'includes/header.php';
             <div class="bg-white rounded-3xl p-8 shadow-md border border-gray-100">
                 <h3 class="text-xl font-bold text-brand-navy mb-6">สมัครเลยวันนี้</h3>
                 <form method="POST" action="" class="space-y-4">
+                    <?php if ($applied): ?>
+                    <div class="bg-brand-green/10 border border-brand-green text-brand-green rounded-xl px-4 py-3 text-sm font-medium">✅ ส่งใบสมัครเรียบร้อย — ทีมงานจะติดต่อกลับโดยเร็วที่สุด</div>
+                    <?php endif; ?>
                     <div>
                         <label class="block text-sm font-medium text-brand-text mb-1">ชื่อ-นามสกุล <span class="text-red-500">*</span></label>
                         <input type="text" name="name" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-brand-navy focus:border-transparent outline-none transition">

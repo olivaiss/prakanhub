@@ -84,6 +84,9 @@ $adminMenu = isset($adminMenu) ? $adminMenu : 'dashboard';
                     <li><a href="pages.php" class="waves-effect <?= $adminMenu === 'pages' ? 'active' : '' ?>"><i class="ti ti-file"></i><span>หน้าเนื้อหา</span></a></li>
                     <li><a href="menus.php" class="waves-effect <?= $adminMenu === 'menus' ? 'active' : '' ?>"><i class="ti ti-menu"></i><span>เมนู</span></a></li>
 
+                    <li class="menu-title">ข้อมูลลูกค้า</li>
+                    <li><a href="inbox.php" class="waves-effect <?= $adminMenu === 'inbox' ? 'active' : '' ?>"><i class="ti ti-inbox"></i><span>กล่องข้อความ</span></a></li>
+
                     <li class="menu-title">ระบบสมาชิก</li>
                     <li><a href="courses.php" class="waves-effect <?= $adminMenu === 'courses' ? 'active' : '' ?>"><i class="ti ti-video-clapper"></i><span>คอร์สเรียน</span></a></li>
                     <li><a href="members.php" class="waves-effect <?= $adminMenu === 'members' ? 'active' : '' ?>"><i class="ti ti-user"></i><span>รหัสสมาชิก</span></a></li>

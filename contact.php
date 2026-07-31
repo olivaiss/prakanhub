@@ -1,5 +1,26 @@
 <?php
 $pageTitle = 'ติดต่อเรา';
+
+// ═══ เก็บข้อความจากฟอร์มลงฐานข้อมูล ═══
+$sent = false;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $cName = trim($_POST['name'] ?? '');
+    $cPhone = trim($_POST['phone'] ?? '');
+    $cLine = trim($_POST['line'] ?? '');
+    $cSubject = trim($_POST['subject'] ?? '');
+    $cMsg = trim($_POST['message'] ?? '');
+    if ($cName !== '' && $cPhone !== '') {
+        try {
+            require_once __DIR__ . '/includes/db.php';
+            $__ins = getDB()->prepare('INSERT INTO contacts (name, phone, subject, line, message) VALUES (?,?,?,?,?)');
+            $__ins->execute([$cName, $cPhone, $cSubject, $cLine, $cMsg]);
+            $sent = true;
+        } catch (Throwable $e) {
+            // DB ไม่พร้อม — ไม่บล็อกการใช้งานฟอร์ม
+        }
+    }
+}
+
 include 'includes/header.php';
 ?>
 
@@ -20,6 +41,9 @@ include 'includes/header.php';
             <div>
                 <h2 class="text-2xl font-bold text-brand-navy mb-6">ส่งข้อความถึงเรา</h2>
                 <form method="POST" action="" class="space-y-5">
+                    <?php if ($sent): ?>
+                    <div class="bg-brand-green/10 border border-brand-green text-brand-green rounded-xl px-4 py-3 text-sm font-medium">✅ ส่งข้อความเรียบร้อย — เราจะติดต่อกลับโดยเร็วที่สุด</div>
+                    <?php endif; ?>
                     <div>
                         <label class="block text-sm font-medium text-brand-text mb-1">ชื่อ <span class="text-red-500">*</span></label>
                         <input type="text" name="name" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-brand-navy focus:border-transparent outline-none transition">

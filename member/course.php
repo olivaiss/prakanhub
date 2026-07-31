@@ -23,6 +23,19 @@ $prevIdx = $curIdx > 0 ? $curIdx - 1 : null;
 $nextIdx = $curIdx < $total - 1 ? $curIdx + 1 : null;
 
 $pageTitle = $course['title'] . ' — ระบบเรียนรู้สมาชิก';
+
+// ═══ ความคืบหน้าการเรียนจากฐานข้อมูล (fallback: []) ═══
+$__dbDone = [];
+try {
+    if (function_exists('getDB')) {
+        $__stmt = getDB()->prepare('SELECT lesson_idx FROM member_progress WHERE member_code = ? AND course_id = ? AND done = 1');
+        $__stmt->execute([$_SESSION['member_code'] ?? '', $id]);
+        $__dbDone = array_map('intval', array_column($__stmt->fetchAll(), 'lesson_idx'));
+    }
+} catch (Throwable $e) {
+    $__dbDone = [];
+}
+
 include __DIR__ . '/../includes/header.php';
 ?>
 
@@ -151,17 +164,23 @@ include __DIR__ . '/../includes/header.php';
 </section>
 
 <script>
-    // ═══ ความคืบหน้าการเรียน — localStorage (ไม่มี DB) ═══
+    // ═══ ความคืบหน้าการเรียน — ฐานข้อมูล (member_progress) ═══
     var COURSE_ID = <?= $id ?>;
     var CUR_IDX = <?= $curIdx ?>;
     var TOTAL = <?= $total ?>;
-    var KEY = 'ph_progress_' + COURSE_ID;
+    var DB_DONE = <?= json_encode($__dbDone, JSON_UNESCAPED_UNICODE) ?>;
 
     function getDone() {
-        try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; }
+        return (typeof DB_DONE !== 'undefined' && DB_DONE) ? DB_DONE.slice() : [];
     }
     function saveDone(list) {
-        localStorage.setItem(KEY, JSON.stringify(list));
+        DB_DONE = list.slice();
+        // บันทึกไปยังฐานข้อมูล (ไม่บล็อกถ้า offline)
+        fetch('progress.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'course_id=' + COURSE_ID + '&lesson_idx=' + CUR_IDX + '&done=' + (list.indexOf(CUR_IDX) >= 0 ? 1 : 0)
+        }).catch(function () {});
     }
 
     function toggleDone() {
@@ -179,7 +198,6 @@ include __DIR__ . '/../includes/header.php';
             if (idx === CUR_IDX) return;
             el.classList.toggle('done', list.indexOf(idx) >= 0);
         });
-        // ปุ่มเรียนจบ
         var isDone = list.indexOf(CUR_IDX) >= 0;
         var btn = document.getElementById('done-btn');
         var lbl = document.getElementById('done-label');
@@ -190,8 +208,7 @@ include __DIR__ . '/../includes/header.php';
             btn.className = 'inline-flex items-center gap-2 text-sm font-bold px-5 py-2.5 rounded-xl border-2 border-brand-navy/30 text-brand-navy hover:border-brand-navy';
             lbl.textContent = 'ทำเครื่องหมายเรียนจบ';
         }
-        // progress
-        var pct = Math.round((list.length / TOTAL) * 100);
+        var pct = Math.round(list.length / TOTAL * 100);
         document.getElementById('pct-label').textContent = pct + '%';
         document.getElementById('pct-fill').style.width = pct + '%';
     }

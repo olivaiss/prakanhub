@@ -181,3 +181,25 @@ body {
 .cat-icon-inner {
     transition: transform 0.4s ease;
 }
+
+/* ─── เนื้อหาจาก DB (pages table) ─── */
+.prose-db h1, .prose-db h2, .prose-db h3 {
+    color: #003781;
+    font-weight: 700;
+    margin-bottom: .75rem;
+}
+.prose-db h2 { font-size: 1.5rem; margin-top: 1.5rem; }
+.prose-db h3 { font-size: 1.15rem; margin-top: 1.25rem; }
+.prose-db p { color: #1E293B; line-height: 1.8; margin-bottom: 1rem; font-size: .95rem; }
+.prose-db ul, .prose-db ol { margin: 0 0 1rem 1.25rem; color: #1E293B; line-height: 1.8; font-size: .95rem; }
+.prose-db ul { list-style: disc; }
+.prose-db ol { list-style: decimal; }
+.prose-db a { color: #003781; text-decoration: underline; }
+.prose-db blockquote {
+    border-left: 4px solid #00C300;
+    background: #EEF4F9;
+    padding: 1rem 1.25rem;
+    border-radius: .75rem;
+    margin-bottom: 1rem;
+    color: #1E293B;
+}

@@ -1,6 +1,29 @@
 <?php
 $data = json_decode(file_get_contents(__DIR__ . '/assets/data/insurance-data.json'), true);
 $sections = $data['health'] ?? [];
+
+// ═══ อ่านแผนประกันจากฐานข้อมูล (ตาราง products) — fallback: JSON ด้านบน ═══
+try {
+    if (function_exists('getDB')) {
+        $__stmt = getDB()->query("SELECT title, desc_text, badge FROM products WHERE category = 'health' AND is_active = 1 ORDER BY sort_order, id");
+        $__rows = $__stmt->fetchAll();
+        if (count($__rows) > 0) {
+            $sections = [];
+            foreach ($__rows as $__r) {
+                $__g = $__r['badge'] ?: 'อื่นๆ';
+                if (!isset($sections[$__g])) $sections[$__g] = [];
+                $__highlights = array_values(array_filter(array_map('trim', explode(',', (string)$__r['desc_text']))));
+                $sections[$__g][] = [
+                    'name' => $__r['title'],
+                    'type' => $__r['badge'],
+                    'highlights' => $__highlights ?: ['ติดต่อเราเพื่อดูรายละเอียด'],
+                ];
+            }
+        }
+    }
+} catch (Throwable $e) {
+    // DB ไม่พร้อม — ใช้ JSON
+}
 ?>
 <?php include 'includes/header.php'; ?>
 

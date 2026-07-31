@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $code = trim($_POST['member_code'] ?? '');
     if (member_check_code($code)) {
         $_SESSION['member_logged_in'] = true;
+        $_SESSION['member_code'] = $code;
         $_SESSION['member_login_at'] = date('Y-m-d H:i:s');
         $next = isset($_GET['next']) && preg_match('#^[a-z0-9_\-./?=&]+$#i', $_GET['next']) ? $_GET['next'] : '/member/home.php';
         header('Location: ' . $next);

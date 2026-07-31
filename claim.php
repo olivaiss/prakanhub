@@ -10,6 +10,27 @@ include 'includes/header.php';
     </div>
 </section>
 
+<?php
+// ═══ เนื้อหาจากฐานข้อมูล (pages table) — fallback: hardcode ด้านล่าง ═══
+$__pageContent = '';
+try {
+    if (function_exists('getDB')) {
+        $__s = getDB()->prepare('SELECT content FROM pages WHERE slug = ? AND content IS NOT NULL AND content != "" LIMIT 1');
+        $__s->execute(['claim']);
+        $__pageContent = trim((string)$__s->fetchColumn());
+    }
+} catch (Throwable $e) {
+    // DB ไม่พร้อม — ใช้ hardcode
+}
+?>
+
+<?php if ($__pageContent !== ''): ?>
+<section class="py-16">
+    <div class="max-w-[900px] mx-auto px-4 md:px-8 prose-db">
+        <?= $__pageContent ?>
+    </div>
+</section>
+<?php else: ?>
 <section class="py-16">
     <div class="max-w-[900px] mx-auto px-4 md:px-8">
         <div class="text-center mb-12">
@@ -100,5 +121,6 @@ include 'includes/header.php';
         </div>
     </div>
 </section>
+<?php endif; ?>
 
 <?php include 'includes/footer.php'; ?>

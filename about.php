@@ -495,6 +495,29 @@ include 'includes/header.php';
     <div class="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-gray-50 to-transparent z-[3]"></div>
 </section>
 
+<?php
+// ═══ เนื้อหา "เกี่ยวกับผม" จากฐานข้อมูล (pages table) — แสดงถ้ามี ═══
+$__pageContent = '';
+try {
+    if (function_exists('getDB')) {
+        $__s = getDB()->prepare('SELECT content FROM pages WHERE slug = ? AND content IS NOT NULL AND content != "" LIMIT 1');
+        $__s->execute(['about']);
+        $__pageContent = trim((string)$__s->fetchColumn());
+    }
+} catch (Throwable $e) {
+    // DB ไม่พร้อม — ไม่แสดง section
+}
+?>
+<?php if ($__pageContent !== ''): ?>
+<section id="about-db" class="py-16 lg:py-24 bg-white relative overflow-hidden">
+    <div class="relative max-w-7xl mx-auto px-4 lg:px-6">
+        <div class="prose-db">
+            <?= $__pageContent ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
 <!-- ============================================================ -->
 <!-- SECTION 2: TIMELINE — เส้นทางของผม                           -->
 <!-- ============================================================ -->
