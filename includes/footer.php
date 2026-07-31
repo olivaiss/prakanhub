@@ -1,3 +1,8 @@
+<?php
+// ลิงก์ฟอร์มทำประกัน — ใช้ได้ทั้ง main domain และ subdomain form.
+$isFormSubdomain = (strpos($_SERVER['HTTP_HOST'] ?? '', 'form.') === 0);
+$formUrl = $isFormSubdomain ? '/index.php' : '/form/';
+?>
     <!-- 8. PRE-FOOTER CONTACT BAR -->
     <section class="bg-brand-light border-y border-gray-200">
         <div class="max-w-[1400px] mx-auto px-4 md:px-8 py-6 flex flex-col lg:flex-row items-center justify-between gap-6">
@@ -62,14 +67,15 @@
 
             <!-- Links & Copyright -->
             <div class="flex-1 flex flex-col items-center md:items-start text-center md:text-left">
-                <div class="flex flex-wrap justify-center md:justify-start gap-4 text-xs font-medium text-blue-200 mb-2">
-                    <a href="/index.php" class="hover:text-white flex items-center gap-1"><i data-lucide="home" class="w-3 h-3"></i> หน้าแรก</a> <span class="text-white/20">|</span>
-                    <a href="/about.php" class="hover:text-white flex items-center gap-1"><i data-lucide="user" class="w-3 h-3"></i> เกี่ยวกับผม</a> <span class="text-white/20">|</span>
-                    <a href="/life.php" class="hover:text-white flex items-center gap-1"><i data-lucide="shield" class="w-3 h-3"></i> ประกันของเรา</a> <span class="text-white/20">|</span>
-                    <a href="/career.php" class="hover:text-white flex items-center gap-1"><i data-lucide="handshake" class="w-3 h-3"></i> ร่วมงานกับเรา</a> <span class="text-white/20">|</span>
-                    <a href="/seminar.php" class="hover:text-white flex items-center gap-1"><i data-lucide="presentation" class="w-3 h-3"></i> สัมมนา & คอร์ส</a> <span class="text-white/20">|</span>
-                    <a href="/articles.php" class="hover:text-white flex items-center gap-1"><i data-lucide="file-text" class="w-3 h-3"></i> บทความ</a> <span class="text-white/20">|</span>
-                    <a href="/contact.php" class="hover:text-white flex items-center gap-1"><i data-lucide="phone" class="w-3 h-3"></i> ติดต่อเรา</a>
+                <div class="flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-1.5 text-xs font-medium text-blue-200 mb-2">
+                    <a href="/index.php" class="hover:text-white">หน้าแรก</a> <span class="text-white/20">|</span>
+                    <a href="/about.php" class="hover:text-white">เกี่ยวกับผม</a> <span class="text-white/20">|</span>
+                    <a href="/life.php" class="hover:text-white">ประกันของเรา</a> <span class="text-white/20">|</span>
+                    <a href="<?= $formUrl ?>" class="hover:text-white">แบบฟอร์มทำประกัน</a> <span class="text-white/20">|</span>
+                    <a href="/career.php" class="hover:text-white">ร่วมงานกับเรา</a> <span class="text-white/20">|</span>
+                    <a href="/seminar.php" class="hover:text-white">สัมมนา & คอร์ส</a> <span class="text-white/20">|</span>
+                    <a href="/articles.php" class="hover:text-white">บทความ</a> <span class="text-white/20">|</span>
+                    <a href="/contact.php" class="hover:text-white">ติดต่อเรา</a>
                 </div>
                 <div class="text-[10px] text-blue-300 leading-relaxed">
                     &copy; 2026 NextGen Digital Solutions. All rights reserved.<br>
