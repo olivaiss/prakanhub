@@ -4,6 +4,7 @@ form/submissions/*.json
 
 # ฐานข้อมูลจริง (มีรหัสผ่าน production) — ใช้ db.sample.php แทน
 includes/db.php
+admin/includes/db.php
 
 # ─── OS / Editor junk ───
 .DS_Store
