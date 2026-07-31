@@ -148,6 +148,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     @media (min-width: 768px) {
         .review-row { grid-template-columns: 260px 1fr; gap: 1rem; }
     }
+
+    /* ─── หน้าแบบฟอร์ม: ซ่อน popup dev (บังการกรอกฟอร์ม) ─── */
+    #dev-popup { display: none !important; }
 </style>
 
 <!-- PAGE HERO -->
@@ -757,6 +760,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     });
     document.getElementById('prev-btn').addEventListener('click', function () {
         showStep(current - 1);
+    });
+
+    // ─── Plan cards: คลิกการ์ดแล้ว toggle เอง (กัน browser ที่ label activation ไม่ทำงาน) ───
+    document.querySelectorAll('label.relative input[type="checkbox"].peer').forEach(function (cb) {
+        var lbl = cb.closest('label');
+        if (!lbl) return;
+        lbl.addEventListener('click', function (e) {
+            if (e.target === cb) return; // คลิกที่ checkbox โดยตรง ปล่อย default
+            e.preventDefault();
+            cb.checked = !cb.checked;
+            cb.dispatchEvent(new Event('change', { bubbles: true }));
+        });
     });
 
     // Conditional reveal: radio ที่มี data-show
