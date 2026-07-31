@@ -47,6 +47,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     break;
                 }
             }
+            // ตรวจเลขบัตรประชาชน 13 หลัก (checksum) ฝั่ง server
+            if (!$errors && !empty($_POST['id_card'])) {
+                $digits = preg_replace('/\D/', '', (string)$_POST['id_card']);
+                if (strlen($digits) === 13) {
+                    $sum = 0;
+                    for ($i = 0; $i < 12; $i++) {
+                        $sum += (int)$digits[$i] * (13 - $i);
+                    }
+                    $check = (11 - ($sum % 11)) % 10;
+                    if ($check !== (int)$digits[12]) {
+                        $errors[] = 'เลขบัตรประชาชนไม่ถูกต้อง กรุณาตรวจสอบ';
+                    }
+                }
+            }
             if (!$errors) {
                 $submitted = true;
                 $refCode = 'L-' . date('Ymd') . '-' . strtoupper(substr(md5(uniqid('', true)), 0, 6));
@@ -781,7 +795,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         showStep(current - 1);
     });
 
-    // ─── ID card mask: X-XXXX-XXXXX-XX-X (auto dash) ───
+    // ─── ID card mask: X-XXXX-XXXXX-XX-X (auto dash) + checksum ───
+    function thaiIdValid(digits) {
+        if (digits.length !== 13) return false;
+        var sum = 0;
+        for (var i = 0; i < 12; i++) sum += parseInt(digits.charAt(i), 10) * (13 - i);
+        var check = (11 - (sum % 11)) % 10;
+        return check === parseInt(digits.charAt(12), 10);
+    }
     document.querySelectorAll('input.idcard-mask').forEach(function (inp) {
         inp.addEventListener('input', function () {
             var d = inp.value.replace(/\D/g, '').slice(0, 13);
@@ -792,6 +813,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (d.length > 10) out += '-' + d.slice(10, 12);
             if (d.length > 12) out += '-' + d.slice(12, 13);
             inp.value = out;
+            // เช็คความถูกต้องของเลขบัตร 13 หลัก (checksum) เมื่อครบ
+            if (d.length === 13) {
+                inp.setCustomValidity(thaiIdValid(d) ? '' : 'เลขบัตรประชาชนไม่ถูกต้อง กรุณาตรวจสอบ');
+            } else {
+                inp.setCustomValidity('');
+            }
         });
     });
 

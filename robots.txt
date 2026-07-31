@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /member/
+Disallow: /form/submissions/
 
-Sitemap: https://pokpong-insurance.com/sitemap.php
+Sitemap: https://prakanhub.com/sitemap.php

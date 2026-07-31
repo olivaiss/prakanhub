@@ -7,10 +7,11 @@ $adminPageTitle = 'ตั้งค่าเว็บ & SEO';
 $adminMenu = 'settings';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $section = $_POST['section'] ?? '';
     try {
         if ($section === 'seo') {
-            foreach (['site_title', 'site_description', 'site_keywords', 'og_image'] as $k) {
+            foreach (['site_title', 'site_description', 'site_keywords', 'og_image', 'ga_id', 'sc_verification'] as $k) {
                 admin_set_setting($k, trim($_POST[$k] ?? ''));
             }
             admin_flash('บันทึก SEO เรียบร้อย');
@@ -77,6 +78,8 @@ function fld(string $k, string $ph = ''): string {
                     <div class="mb-3"><label class="form-label">Meta Description</label><textarea class="form-control" name="site_description" rows="3"><?= admin_e(admin_setting('site_description')) ?></textarea></div>
                     <div class="mb-3"><label class="form-label">Keywords (คั่นด้วย ,)</label><input type="text" class="form-control" <?= fld('site_keywords') ?>></div>
                     <div class="mb-3"><label class="form-label">OG Image (URL)</label><input type="text" class="form-control" <?= fld('og_image') ?>></div>
+                    <div class="mb-3"><label class="form-label">Google Analytics ID (เช่น G-XXXXXXXXXX — เว้นว่างถ้าไม่ใช้)</label><input type="text" class="form-control" <?= fld('ga_id') ?> placeholder="G-XXXXXXXXXX"></div>
+                    <div class="mb-3"><label class="form-label">Search Console Verification (เนื้อหา meta google-site-verification — เว้นว่างถ้าไม่ใช้)</label><input type="text" class="form-control" <?= fld('sc_verification') ?>></div>
                     <button type="submit" class="btn btn-primary waves-effect">บันทึก SEO</button>
                 </form>
             </div>

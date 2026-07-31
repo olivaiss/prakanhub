@@ -7,6 +7,7 @@ $adminPageTitle = 'สัมมนา';
 $adminMenu = 'seminars';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $action = $_POST['action'] ?? '';
     try {
         if ($action === 'save') {

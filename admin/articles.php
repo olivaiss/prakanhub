@@ -45,6 +45,7 @@ if (isset($_GET['import'])) {
 
 // ─── CRUD ───
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $action = $_POST['action'] ?? '';
     try {
         if ($action === 'save') {

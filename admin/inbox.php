@@ -11,6 +11,7 @@ if (!in_array($tab, ['contacts', 'applications', 'form_submissions'], true)) $ta
 
 // ─── Actions ───
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $action = $_POST['action'] ?? '';
     $id = (int)($_POST['id'] ?? 0);
     if ($action === 'delete' && $id > 0) {
@@ -78,7 +79,7 @@ include __DIR__ . '/includes/header.php';
                 </thead>
                 <tbody>
                 <?php foreach ($rows as $r): ?>
-                    <tr class="<?= $r['is_read'] ? '' : 'table-primary' ?>">
+                    <tr class="<?= $r['is_read'] ? '' : 'table-primary' ?>" style="cursor:pointer" onclick="viewRow(<?= (int)$r['id'] ?>, '<?= $tab ?>')">
                     <?php if ($tab === 'contacts'): ?>
                         <td><?= (int)$r['id'] ?></td>
                         <td class="fw-semibold"><?= admin_e($r['name']) ?></td>
@@ -88,11 +89,11 @@ include __DIR__ . '/includes/header.php';
                         <td class="text-truncate" style="max-width:260px" title="<?= admin_e($r['message']) ?>"><?= admin_e(mb_substr((string)$r['message'], 0, 80)) ?></td>
                         <td><?= $r['is_read'] ? '<span class="badge bg-soft-secondary text-secondary">อ่านแล้ว</span>' : '<span class="badge bg-danger">ใหม่</span>' ?></td>
                         <td><?= date('d/m/Y H:i', strtotime($r['created_at'])) ?>
-                            <form method="post" class="d-inline">
+                            <form method="post" class="d-inline" onclick="event.stopPropagation()">
                                 <input type="hidden" name="action" value="read"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
                                 <button type="submit" class="btn btn-sm btn-soft-primary" title="ทำเครื่องหมายอ่านแล้ว"><i class="ti ti-check"></i></button>
                             </form>
-                            <form method="post" class="d-inline" onsubmit="return confirm('ลบรายการนี้?')">
+                            <form method="post" class="d-inline" onsubmit="return confirm('ลบรายการนี้?')" onclick="event.stopPropagation()">
                                 <input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
                                 <button type="submit" class="btn btn-sm btn-soft-danger"><i class="ti ti-trash"></i></button>
                             </form>
@@ -107,11 +108,11 @@ include __DIR__ . '/includes/header.php';
                         <td><?= admin_e($r['line']) ?></td>
                         <td><?= $r['is_read'] ? '<span class="badge bg-soft-secondary text-secondary">อ่านแล้ว</span>' : '<span class="badge bg-danger">ใหม่</span>' ?></td>
                         <td><?= date('d/m/Y H:i', strtotime($r['created_at'])) ?>
-                            <form method="post" class="d-inline">
+                            <form method="post" class="d-inline" onclick="event.stopPropagation()">
                                 <input type="hidden" name="action" value="read"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
                                 <button type="submit" class="btn btn-sm btn-soft-primary" title="อ่านแล้ว"><i class="ti ti-check"></i></button>
                             </form>
-                            <form method="post" class="d-inline" onsubmit="return confirm('ลบรายการนี้?')">
+                            <form method="post" class="d-inline" onsubmit="return confirm('ลบรายการนี้?')" onclick="event.stopPropagation()">
                                 <input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
                                 <button type="submit" class="btn btn-sm btn-soft-danger"><i class="ti ti-trash"></i></button>
                             </form>
@@ -128,11 +129,11 @@ include __DIR__ . '/includes/header.php';
                         </td>
                         <td><?= $r['is_read'] ? '<span class="badge bg-soft-secondary text-secondary">อ่านแล้ว</span>' : '<span class="badge bg-danger">ใหม่</span>' ?></td>
                         <td>
-                            <form method="post" class="d-inline">
+                            <form method="post" class="d-inline" onclick="event.stopPropagation()">
                                 <input type="hidden" name="action" value="read"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
                                 <button type="submit" class="btn btn-sm btn-soft-primary" title="อ่านแล้ว"><i class="ti ti-check"></i></button>
                             </form>
-                            <form method="post" class="d-inline" onsubmit="return confirm('ลบรายการนี้?')">
+                            <form method="post" class="d-inline" onsubmit="return confirm('ลบรายการนี้?')" onclick="event.stopPropagation()">
                                 <input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
                                 <button type="submit" class="btn btn-sm btn-soft-danger"><i class="ti ti-trash"></i></button>
                             </form>
@@ -146,5 +147,40 @@ include __DIR__ . '/includes/header.php';
         <?php endif; ?>
     </div>
 </div>
+
+<!-- View modal -->
+<div class="modal fade" id="viewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">รายละเอียด</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="viewModalBody"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+var __rows = <?= json_encode($rows, JSON_UNESCAPED_UNICODE) ?>;
+function viewRow(id, tab) {
+    var row = __rows.find(function (r) { return String(r.id) === String(id); });
+    if (!row) return;
+    var html = '<table class="table table-sm table-bordered mb-0">';
+    Object.keys(row).forEach(function (k) {
+        var v = row[k];
+        if (k === 'payload' && v) {
+            try { v = JSON.stringify(JSON.parse(v), null, 2); } catch (e) { /* raw */ }
+        }
+        html += '<tr><th style="width:160px" class="align-top">' + k + '</th><td class="text-break" style="white-space:pre-wrap">' + escHtml(v) + '</td></tr>';
+    });
+    html += '</table>';
+    document.getElementById('viewModalBody').innerHTML = html;
+    new bootstrap.Modal(document.getElementById('viewModal')).show();
+}
+function escHtml(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+</script>
 
 <?php include __DIR__ . '/includes/footer.php'; ?>

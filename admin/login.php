@@ -7,15 +7,21 @@ if (admin_logged_in()) {
 }
 
 $error = '';
+$lockSec = 0;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $u = trim($_POST['username'] ?? '');
     $p = $_POST['password'] ?? '';
-    if ($u !== '' && admin_login($u, $p)) {
+    if (admin_login_blocked()) {
+        $lockSec = admin_login_lock_seconds();
+        $error = 'ลองผิดพลาดเกิน 5 ครั้ง — กรุณารอ ' . ceil($lockSec / 60) . ' นาที แล้วลองใหม่';
+    } elseif ($u !== '' && admin_login($u, $p)) {
         header('Location: index.php');
         exit;
+    } else {
+        $error = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
     }
-    $error = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
 }
+$remainingAttempts = 5 - count(array_filter($_SESSION['admin_login_fails'] ?? [], fn($t) => $t > time() - 900));
 ?>
 <!DOCTYPE html>
 <html lang="th">
@@ -46,16 +52,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <div class="alert alert-danger py-2"><i class="fa fa-exclamation-circle me-1"></i> <?= admin_e($error) ?></div>
                             <?php endif; ?>
                             <form class="mt-2" method="post" autocomplete="off">
+                                <input type="hidden" name="csrf" value="<?= csrf_token() ?>">
                                 <div class="mb-3">
                                     <label class="form-label">ชื่อผู้ใช้</label>
-                                    <input type="text" name="username" class="form-control" required autofocus>
+                                    <input type="text" name="username" class="form-control" required autofocus <?= $lockSec ? 'disabled' : '' ?>>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">รหัสผ่าน</label>
-                                    <input type="password" name="password" class="form-control" required>
+                                    <input type="password" name="password" class="form-control" required <?= $lockSec ? 'disabled' : '' ?>>
                                 </div>
+                                <?php if (!$lockSec && $remainingAttempts > 0 && $remainingAttempts < 5): ?>
+                                <div class="text-muted small mb-2">เหลือการลอง <?= $remainingAttempts ?> ครั้ง (5 ครั้งผิด = ล็อก 15 นาที)</div>
+                                <?php endif; ?>
                                 <div class="mt-4">
-                                    <button class="btn btn-primary w-100 waves-effect waves-light" type="submit">เข้าสู่ระบบ</button>
+                                    <button class="btn btn-primary w-100 waves-effect waves-light" type="submit" <?= $lockSec ? 'disabled' : '' ?>>เข้าสู่ระบบ</button>
                                 </div>
                             </form>
                         </div>

@@ -29,6 +29,8 @@ $SITE = [
     'stat_years'  => '10+ ปี',
     'stat_clients' => '1,000+ คน',
     'stat_qualification' => 'MDRT',
+    'ga_id'       => '',
+    'sc_verification' => '',
 ];
 try {
     $__dbFile = __DIR__ . '/db.php';
@@ -52,6 +54,8 @@ $__pageDesc = $pageDesc ?? $SITE['description'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/assets/icon/favicon.svg">
+    <link rel="preload" as="image" href="/assets/image/hero-bg.webp" fetchpriority="high">
     <title><?= htmlspecialchars($pageTitle !== $SITE['title'] ? $pageTitle . ' | ' . $SITE['title'] : $pageTitle) ?></title>
     <meta name="description" content="<?= htmlspecialchars($__pageDesc) ?>">
     <meta name="keywords" content="<?= htmlspecialchars($SITE['keywords']) ?>">
@@ -172,6 +176,21 @@ $__pageDesc = $pageDesc ?? $SITE['description'];
     }
     </script>
 
+    <?php if (!empty($SITE['sc_verification'])): ?>
+    <meta name="google-site-verification" content="<?= htmlspecialchars($SITE['sc_verification']) ?>">
+    <?php endif; ?>
+
+    <?php if (!empty($SITE['ga_id']) && !str_contains($_SERVER['SCRIPT_NAME'] ?? '', '/admin/') && !str_contains($_SERVER['SCRIPT_NAME'] ?? '', '/member/')): ?>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=<?= htmlspecialchars($SITE['ga_id']) ?>"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', '<?= htmlspecialchars($SITE['ga_id']) ?>');
+    </script>
+    <?php endif; ?>
+
 </head>
 <body class="relative">
 
@@ -259,6 +278,10 @@ function closeMenu(){toggleMenu()}
 
             <!-- Actions -->
             <div class="flex items-center gap-4">
+                <form method="get" action="/search.php" class="hidden lg:flex items-center bg-gray-100 rounded-full px-3 py-1.5">
+                    <input type="text" name="q" placeholder="ค้นหา..." class="bg-transparent text-sm outline-none w-32 focus:w-44 transition-all" aria-label="ค้นหา">
+                    <button type="submit" aria-label="ค้นหา"><i data-lucide="search" class="w-4 h-4 text-brand-gray"></i></button>
+                </form>
                 <button class="hidden md:flex items-center gap-2 bg-brand-navy hover:bg-brand-navyHover text-white px-5 py-2.5 rounded-full text-sm font-semibold transition shadow-md">
                     <img src="/assets/icon/line.svg" class="w-4 h-4" alt="LINE"> ปรึกษาฟรี
                 </button>
@@ -274,6 +297,11 @@ function closeMenu(){toggleMenu()}
                 <button id="close-menu-btn" onclick="toggleMenu()"><i data-lucide="x" class="w-6 h-6"></i></button>
             </div>
             <div class="p-4 flex flex-col gap-3 text-sm font-medium overflow-y-auto pb-20">
+                <form method="get" action="/search.php" class="flex items-center gap-2 bg-gray-100 rounded-xl px-3 py-2.5 lg:hidden">
+                    <i data-lucide="search" class="w-4 h-4 text-brand-gray shrink-0"></i>
+                    <input type="text" name="q" placeholder="ค้นหาบทความ แผนประกัน..." class="bg-transparent text-sm outline-none flex-1 min-w-0" aria-label="ค้นหา">
+                    <button type="submit" class="text-brand-navy font-bold text-xs">ค้นหา</button>
+                </form>
                 <a href="/index.php" class="mob-link <?= mobActive('index.php', $currentPage) ?> flex items-center gap-2 py-2 rounded-lg"><i data-lucide="home" class="w-4 h-4"></i> หน้าแรก</a>
                 <a href="/about.php" class="mob-link <?= mobActive('about.php', $currentPage) ?> flex items-center gap-2 py-2 rounded-lg"><i data-lucide="user" class="w-4 h-4"></i> เกี่ยวกับผม</a>
                 <div class="mob-sub">

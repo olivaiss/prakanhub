@@ -25,6 +25,20 @@
 <script src="assets/libs/node-waves/waves.min.js"></script>
 <script src="assets/js/app.js"></script>
 
+<script>
+    // ═══ CSRF token — inject ลงทุกฟอร์ม POST อัตโนมัติ ═══
+    (function () {
+        var token = <?= json_encode(csrf_token()) ?>;
+        document.querySelectorAll('form[method="post"]').forEach(function (f) {
+            var inp = document.createElement('input');
+            inp.type = 'hidden';
+            inp.name = 'csrf';
+            inp.value = token;
+            f.appendChild(inp);
+        });
+    })();
+</script>
+
 <?php if (!empty($adminDataTable)): ?>
 <link rel="stylesheet" href="assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">

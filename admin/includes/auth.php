@@ -21,13 +21,18 @@ function admin_guard(): void {
     }
 }
 
-/** login ด้วย username/password */
+/** login ด้วย username/password — มี rate-limit กันเดารหัส */
 function admin_login(string $username, string $password): bool {
+    // Rate limit: 5 ครั้งผิด / 15 นาที ต่อ IP
+    if (admin_login_blocked()) {
+        return false;
+    }
     $db = admin_db();
     $stmt = $db->prepare('SELECT * FROM admin_users WHERE username = ? LIMIT 1');
     $stmt->execute([$username]);
     $user = $stmt->fetch();
     if ($user && password_verify($password, $user['password_hash'])) {
+        unset($_SESSION['admin_login_fails']);
         session_regenerate_id(true);
         $_SESSION['admin_id'] = (int)$user['id'];
         $_SESSION['admin_name'] = $user['display_name'] ?: $user['username'];
@@ -35,7 +40,44 @@ function admin_login(string $username, string $password): bool {
         $db->prepare('UPDATE admin_users SET last_login = NOW() WHERE id = ?')->execute([$user['id']]);
         return true;
     }
+    $_SESSION['admin_login_fails'][] = time();
+    $_SESSION['admin_login_fails'] = array_values(array_filter($_SESSION['admin_login_fails'], fn($t) => $t > time() - 900));
     return false;
+}
+
+/** ตรวจว่าโดน lock login หรือยัง (5 ครั้งผิดใน 15 นาที) */
+function admin_login_blocked(): bool {
+    $fails = $_SESSION['admin_login_fails'] ?? [];
+    $fails = array_values(array_filter($fails, fn($t) => $t > time() - 900));
+    $_SESSION['admin_login_fails'] = $fails;
+    return count($fails) >= 5;
+}
+
+/** เหลือเวลากี่วินาทีถึงจะลองใหม่ได้ */
+function admin_login_lock_seconds(): int {
+    $fails = $_SESSION['admin_login_fails'] ?? [];
+    if (count($fails) < 5) return 0;
+    $oldest = min($fails);
+    return max(0, ($oldest + 900) - time());
+}
+
+/** CSRF token (ต่อ session) */
+function csrf_token(): string {
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(16));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+/** ตรวจ CSRF token จาก POST — fail → 404 (กัน CSRF) */
+function csrf_verify(): void {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $sent = $_POST['csrf'] ?? '';
+        if (!hash_equals(csrf_token(), (string)$sent)) {
+            http_response_code(404);
+            exit('Invalid request.');
+        }
+    }
 }
 
 /** logout */

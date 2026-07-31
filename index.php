@@ -98,7 +98,7 @@
                     </button>
                 </div>
                 <div class="sm:w-2/5 h-64 sm:h-auto relative overflow-hidden">
-                    <img src="/assets/image/seminar/1784911056104.webp" alt="" class="w-full h-full object-cover">
+                    <img src="/assets/image/seminar/1784911056104.webp" alt="" loading="lazy" class="w-full h-full object-cover">
                 </div>
             </div>
 
@@ -117,7 +117,7 @@
                     </button>
                 </div>
                 <div class="sm:w-2/5 h-64 sm:h-auto relative overflow-hidden">
-                    <img src="/assets/image/seminar/1784911045672.webp" alt="" class="w-full h-full object-cover">
+                    <img src="/assets/image/seminar/1784911045672.webp" alt="" loading="lazy" class="w-full h-full object-cover">
                 </div>
             </div>
         </section>
@@ -125,7 +125,7 @@
         <!-- CAREER BANNER -->
         <section class="bg-gradient-to-br from-brand-navy to-brand-navyHover rounded-3xl overflow-hidden shadow-card relative group">
             <div class="absolute inset-0 opacity-[0.06]">
-                <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1400&q=80" alt="" class="w-full h-full object-cover">
+                <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1400&q=80" alt="" loading="lazy" class="w-full h-full object-cover">
             </div>
             <div class="absolute right-0 top-0 bottom-0 w-1/3 opacity-[0.03] pointer-events-none hidden lg:flex items-center justify-center">
                 <div class="flex gap-2">

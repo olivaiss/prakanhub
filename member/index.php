@@ -8,17 +8,29 @@ if (member_logged_in()) {
 }
 
 $error = '';
+$lockSec = 0;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $code = trim($_POST['member_code'] ?? '');
-    if (member_check_code($code)) {
-        $_SESSION['member_logged_in'] = true;
-        $_SESSION['member_code'] = $code;
-        $_SESSION['member_login_at'] = date('Y-m-d H:i:s');
-        $next = isset($_GET['next']) && preg_match('#^[a-z0-9_\-./?=&]+$#i', $_GET['next']) ? $_GET['next'] : '/member/home.php';
-        header('Location: ' . $next);
-        exit;
+    // Rate limit: 5 ครั้งผิด / 15 นาที
+    $fails = $_SESSION['member_login_fails'] ?? [];
+    $fails = array_values(array_filter($fails, fn($t) => $t > time() - 900));
+    $_SESSION['member_login_fails'] = $fails;
+    if (count($fails) >= 5) {
+        $lockSec = max(0, (min($fails) + 900) - time());
+        $error = 'ลองผิดพลาดเกิน 5 ครั้ง — กรุณารอ ' . ceil($lockSec / 60) . ' นาที แล้วลองใหม่';
+    } else {
+        $code = trim($_POST['member_code'] ?? '');
+        if (member_check_code($code)) {
+            unset($_SESSION['member_login_fails']);
+            $_SESSION['member_logged_in'] = true;
+            $_SESSION['member_code'] = $code;
+            $_SESSION['member_login_at'] = date('Y-m-d H:i:s');
+            $next = isset($_GET['next']) && preg_match('#^[a-z0-9_\-./?=&]+$#i', $_GET['next']) ? $_GET['next'] : '/member/home.php';
+            header('Location: ' . $next);
+            exit;
+        }
+        $_SESSION['member_login_fails'][] = time();
+        $error = 'รหัสสมาชิกไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง';
     }
-    $error = 'รหัสสมาชิกไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง';
 }
 
 $pageTitle = 'เข้าสู่ระบบสมาชิก';

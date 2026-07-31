@@ -2,6 +2,17 @@
 require_once __DIR__ . '/includes/auth.php';
 admin_guard();
 
+// ═══ ข้อมูลกราฟ: ฟอร์ม/ข้อความ 14 วันล่าสุด ═══
+$__chart = ['labels' => [], 'contacts' => [], 'submissions' => []];
+try {
+    for ($i = 13; $i >= 0; $i--) {
+        $d = date('Y-m-d', strtotime("-$i days"));
+        $__chart['labels'][] = date('d/m', strtotime($d));
+        $__chart['contacts'][] = (int)$db->query("SELECT COUNT(*) FROM contacts WHERE DATE(created_at) = '$d'")->fetchColumn();
+        $__chart['submissions'][] = (int)$db->query("SELECT COUNT(*) FROM form_submissions WHERE DATE(created_at) = '$d'")->fetchColumn();
+    }
+} catch (Throwable $e) { /* ignore */ }
+
 $adminPageTitle = 'แดชบอร์ด';
 $adminMenu = 'dashboard';
 include __DIR__ . '/includes/header.php';
@@ -39,8 +50,9 @@ $recentMembers = $db->query('SELECT id, member_code, display_name, is_active FRO
             </ol>
         </div>
         <div class="col-md-4">
-            <div class="float-end d-none d-md-block">
-                <a href="../index.php" target="_blank" class="btn btn-primary waves-effect waves-light"><i class="fa fa-external-link me-1"></i> ดูเว็บไซต์</a>
+            <div class="float-end">
+                <a href="../index.php" target="_blank" class="btn btn-primary waves-effect waves-light me-1"><i class="fa fa-external-link me-1"></i> ดูเว็บไซต์</a>
+                <a href="backup.php?do=dump" class="btn btn-outline-success waves-effect"><i class="ti ti-database-export me-1"></i> Backup DB</a>
             </div>
         </div>
     </div>
@@ -80,6 +92,19 @@ $recentMembers = $db->query('SELECT id, member_code, display_name, is_active FRO
         </div>
     </div>
     <?php endforeach; ?>
+</div>
+
+<!-- Chart: 14 วัน -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">📊 ข้อมูลลูกค้า 14 วันล่าสุด</h4>
+                <p class="card-title-desc">ข้อความติดต่อ + ใบสมัครทำประกัน ต่อวัน</p>
+                <div id="chart-inbox" class="ct-chart ct-perfect-fourth" style="height:260px"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Quick actions -->
@@ -161,5 +186,24 @@ $recentMembers = $db->query('SELECT id, member_code, display_name, is_active FRO
         </div>
     </div>
 </div>
+
+<script src="assets/libs/chartist/chartist.min.js"></script>
+<link rel="stylesheet" href="assets/libs/chartist/chartist.min.css">
+<script>
+new Chartist.Line('#chart-inbox', {
+    labels: <?= json_encode($__chart['labels']) ?>,
+    series: [
+        <?= json_encode($__chart['submissions']) ?>,
+        <?= json_encode($__chart['contacts']) ?>
+    ]
+}, {
+    height: '260px',
+    showArea: true,
+    fullWidth: true,
+    axisX: { showGrid: false },
+    lineSmooth: Chartist.Interpolation.simple({ divisor: 2 }),
+    chartPadding: { right: 12 }
+});
+</script>
 
 <?php include __DIR__ . '/includes/footer.php'; ?>

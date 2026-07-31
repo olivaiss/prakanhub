@@ -4,6 +4,21 @@ member_guard();
 
 $courses = member_courses();
 $pageTitle = 'คอร์สเรียนสมาชิก';
+
+// ═══ ความคืบหน้าการเรียนของสมาชิก (จาก DB) ═══
+$__progress = [];
+try {
+    if (function_exists('getDB')) {
+        $__stmt = getDB()->prepare('SELECT course_id, COUNT(*) AS done FROM member_progress WHERE member_code = ? AND done = 1 GROUP BY course_id');
+        $__stmt->execute([$_SESSION['member_code'] ?? '']);
+        foreach ($__stmt->fetchAll() as $__r) {
+            $__progress[(int)$__r['course_id']] = (int)$__r['done'];
+        }
+    }
+} catch (Throwable $e) {
+    // DB ไม่พร้อม — ไม่แสดง progress
+}
+
 include __DIR__ . '/../includes/header.php';
 
 // นับบทเรียนรวม + เวลารวม
@@ -55,6 +70,8 @@ function course_stats(array $c): array {
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <?php foreach ($courses as $c):
                     [$lessonCount, $hours] = course_stats($c);
+                    $doneCount = $__progress[(int)$c['id']] ?? 0;
+                    $donePct = $lessonCount > 0 ? (int)round($doneCount / $lessonCount * 100) : 0;
                     $catColors = [
                         'ความรู้พื้นฐาน' => 'bg-sky-50 text-sky-700 border-sky-200',
                         'การเงิน'       => 'bg-emerald-50 text-emerald-700 border-emerald-200',
@@ -71,6 +88,9 @@ function course_stats(array $c): array {
                             <div class="w-full h-full flex items-center justify-center"><i data-lucide="play-circle" class="w-14 h-14 text-brand-navy/30"></i></div>
                         <?php endif; ?>
                         <span class="absolute top-3 left-3 text-[10px] font-bold px-2.5 py-1 rounded-full border <?= $catCls ?>"><?= htmlspecialchars($c['category']) ?></span>
+                        <?php if ($donePct > 0): ?>
+                        <span class="absolute top-3 right-3 bg-brand-green text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow">เรียนแล้ว <?= $donePct ?>%</span>
+                        <?php endif; ?>
                         <span class="absolute bottom-3 right-3 bg-black/60 text-white text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1"><i data-lucide="play" class="w-3 h-3"></i> <?= $lessonCount ?> บทเรียน</span>
                     </div>
                     <div class="p-5">
