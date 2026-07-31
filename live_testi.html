@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รีวิวจากลูกค้า | ประกันจริงใจ by ปกป้อง | Insurance Advisor - Allianz Ayudhya</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            navy: '#003781',
+                            navyHover: '#00265A',
+                            light: '#EEF4F9',
+                            green: '#00C300',
+                            greenHover: '#00A000',
+                            text: '#1E293B',
+                            gray: '#64748B'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                        signature: ['Dancing Script', 'cursive'],
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 25px rgba(0, 0, 0, 0.05)',
+                        'card': '0 10px 30px -5px rgba(0, 55, 129, 0.08)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@0.379.0"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+
+    <style>
+        /* ─── Nav Hover Underline Animation ─── */
+        .nav-link {
+            position: relative;
+            transition: color 0.2s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #003781;
+            transition: width 0.25s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .nav-link.active-nav::after {
+            width: 100%;
+        }
+        /* ─── Mobile menu item hover ─── */
+        .mob-link {
+            transition: all 0.2s ease;
+            border-left: 2px solid transparent;
+        }
+        .mob-link:hover {
+            background: #EEF4F9;
+            border-left-color: #003781;
+            padding-left: 10px;
+        }
+    </style>
+
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "ประกันจริงใจ by ปกป้อง - Allianz Ayudhya",
+        "description": "ที่ปรึกษาประกันชีวิตและการเงิน Allianz Ayudhya",
+        "image": "https://pokpong-insurance.com/assets/icon/line.svg",
+        "telephone": "092-515-9991",
+        "email": "pokpong@pokpong-insurance.com",
+        "url": "https://pokpong-insurance.com",
+        "sameAs": [
+            "https://facebook.com/pp.insure168",
+            "https://lin.ee/QngrNQ3",
+            "https://youtube.com",
+            "https://instagram.com",
+            "https://www.tiktok.com/@945ampel"
+        ],
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "TH"
+        },
+        "knowsAbout": ["ประกันชีวิต", "ประกันสุขภาพ", "ประกันภัยทั่วไป", "การวางแผนการเงิน"],
+        "priceRange": "฿"
+    }
+    </script>
+
+</head>
+<body class="relative">
+
+<!-- Cookies Consent Banner -->
+<div id="cookies-banner" class="fixed bottom-0 left-0 right-0 bg-brand-navy text-white z-[9999] shadow-2xl" style="display:none;">
+    <div class="max-w-[1400px] mx-auto px-4 md:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p class="text-xs text-blue-200">เว็บไซต์นี้ใช้คุกกี้เพื่อเพิ่มประสิทธิภาพการใช้งานของคุณ <a href="/privacy.php" class="text-white underline hover:no-underline">อ่านนโยบายความเป็นส่วนตัว</a></p>
+        <div class="flex gap-2 shrink-0">
+            <button onclick="document.getElementById('cookies-banner').style.display='none';localStorage.setItem('cookies_accepted','1')" class="bg-white text-brand-navy text-xs font-bold px-5 py-2 rounded-full hover:bg-gray-100 transition">ยอมรับ</button>
+        </div>
+    </div>
+</div>
+<script>if(!localStorage.getItem('cookies_accepted'))document.getElementById('cookies-banner').style.display='';
+function toggleMenu(){var m=document.getElementById('mobile-menu'),o=document.getElementById('mobile-menu-overlay');if(!m||!o)return;var open=m.classList.contains('menu-open');if(open){m.classList.remove('menu-open');o.classList.remove('opacity-100');setTimeout(function(){o.classList.add('hidden')},300)}else{m.classList.add('menu-open');o.classList.remove('hidden');setTimeout(function(){o.classList.add('opacity-100')},10)}}
+function closeMenu(){toggleMenu()}
+</script>
+
+    <!-- HEADER -->
+    <header class="bg-white sticky top-0 z-50 shadow-sm border-b border-gray-100">
+        <div class="max-w-[1400px] mx-auto px-4 md:px-8 py-3 flex justify-between items-center">
+            
+            <!-- Logo -->
+            <a href="/index.php" class="flex items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="flex gap-0.5 mt-1">
+                        <div class="w-1.5 h-6 bg-brand-navy rounded-t-full"></div>
+                        <div class="w-1.5 h-8 bg-brand-navy rounded-t-full -mt-2"></div>
+                        <div class="w-1.5 h-6 bg-brand-navy rounded-t-full"></div>
+                    </div>
+                    <div class="flex flex-col leading-none text-brand-navy">
+                        <span class="font-bold text-xl tracking-tight">Allianz</span>
+                        <span class="font-medium text-[11px] tracking-[0.2em] uppercase">Ayudhya</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <nav class="hidden lg:flex items-center gap-8 font-medium text-sm">
+                <a href="/index.php" class="nav-link text-brand-text hover:text-brand-navy flex items-center gap-1.5 pb-1"><i data-lucide="home" class="w-4 h-4"></i> หน้าแรก</a>
+                <a href="/about.php" class="nav-link text-brand-text hover:text-brand-navy flex items-center gap-1.5 pb-1 hover:text-brand-navy transition"><i data-lucide="user" class="w-4 h-4"></i> เกี่ยวกับผม</a>
+                <div class="relative group">
+                    <a href="#" class="nav-link flex items-center gap-1 pb-1 hover:text-brand-navy transition cursor-pointer">ประกันของเรา <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-hover:rotate-180"></i></a>
+                    <!-- Dropdown -->
+                    <div class="absolute top-full left-0 mt-2 w-[650px] bg-white rounded-2xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 p-6">
+                        <div class="grid grid-cols-5 gap-6">
+                            <div class="col-span-3">
+                                <h4 class="font-bold text-brand-navy text-sm mb-3 flex items-center gap-2"><i data-lucide="user" class="w-4 h-4"></i> สำหรับบุคคลทั่วไป</h4>
+                                <div class="space-y-4">
+                                    <div>
+                                        <p class="text-[11px] font-bold text-brand-gray uppercase tracking-wider mb-2">ประกันหลัก</p>
+                                        <div class="space-y-2 pl-1">
+                                            <a href="/life.php" class="flex items-center gap-2 text-sm text-brand-text hover:text-brand-navy transition"><i data-lucide="heart" class="w-3.5 h-3.5 text-brand-navy shrink-0"></i> ประกันชีวิต</a>
+                                            <a href="/life.php" class="flex items-center gap-2 text-sm text-brand-text hover:text-brand-navy transition"><i data-lucide="landmark" class="w-3.5 h-3.5 text-brand-navy shrink-0"></i> ประกันเงินออม</a>
+                                            <a href="/life.php" class="flex items-center gap-2 text-sm text-brand-text hover:text-brand-navy transition"><i data-lucide="home" class="w-3.5 h-3.5 text-brand-navy shrink-0"></i> ประกันเกษียณ</a>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="text-[11px] font-bold text-brand-gray uppercase tracking-wider mb-2">ประกันเสริม</p>
+                                        <div class="space-y-2 pl-1">
+                                            <a href="/health.php" class="flex items-center gap-2 text-sm text-brand-text hover:text-brand-navy transition"><i data-lucide="activity" class="w-3.5 h-3.5 text-brand-navy shrink-0"></i> ประกันสุขภาพ</a>
+                                            <a href="/health.php" class="flex items-center gap-2 text-sm text-brand-text hover:text-brand-navy transition"><i data-lucide="shield-alert" class="w-3.5 h-3.5 text-brand-navy shrink-0"></i> ประกันโรคร้ายแรง</a>
+                                            <a href="/health.php" class="flex items-center gap-2 text-sm text-brand-text hover:text-brand-navy transition"><i data-lucide="dollar-sign" class="w-3.5 h-3.5 text-brand-navy shrink-0"></i> ประกันชดเชยรายได้</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-span-2 border-l border-gray-100 pl-6">
+                                <h4 class="font-bold text-brand-navy text-sm mb-3 flex items-center gap-2"><i data-lucide="building" class="w-4 h-4"></i> สำหรับองค์กร</h4>
+                                <div class="space-y-2 pl-1">
+                                    <a href="/general.php" class="flex items-center gap-2 text-sm text-brand-text hover:text-brand-navy transition"><i data-lucide="users" class="w-3.5 h-3.5 text-brand-navy shrink-0"></i> ประกันกลุ่ม</a>
+                                    <a href="/general.php" class="flex items-center gap-2 text-sm text-brand-text hover:text-brand-navy transition"><i data-lucide="briefcase" class="w-3.5 h-3.5 text-brand-navy shrink-0"></i> ประกันนิติบุคคล</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-gray-100 text-center">
+                            <a href="/life.php" class="text-xs font-medium text-brand-navy hover:underline flex items-center justify-center gap-1">ดูประกันทั้งหมด <i data-lucide="arrow-right" class="w-3 h-3"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <a href="/career.php" class="nav-link text-brand-text hover:text-brand-navy flex items-center gap-1.5 pb-1 hover:text-brand-navy transition"><i data-lucide="handshake" class="w-4 h-4"></i> ร่วมงานกับเรา</a>
+                <a href="/seminar.php" class="nav-link text-brand-text hover:text-brand-navy flex items-center gap-1.5 pb-1 hover:text-brand-navy transition"><i data-lucide="presentation" class="w-4 h-4"></i> สัมมนา & คอร์ส</a>
+                <a href="/articles.php" class="nav-link text-brand-text hover:text-brand-navy flex items-center gap-1.5 pb-1 hover:text-brand-navy transition"><i data-lucide="file-text" class="w-4 h-4"></i> บทความ</a>
+                <a href="/contact.php" class="nav-link text-brand-text hover:text-brand-navy flex items-center gap-1.5 pb-1 hover:text-brand-navy transition"><i data-lucide="phone" class="w-4 h-4"></i> ติดต่อเรา</a>
+            </nav>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-4">
+                <button class="hidden md:flex items-center gap-2 bg-brand-navy hover:bg-brand-navyHover text-white px-5 py-2.5 rounded-full text-sm font-semibold transition shadow-md">
+                    <img src="/assets/icon/line.svg" class="w-4 h-4" alt="LINE"> ปรึกษาฟรี
+                </button>
+                <button id="hamburger-btn" class="lg:hidden text-brand-navy p-2" onclick="toggleMenu()"><i data-lucide="menu" class="w-7 h-7"></i></button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/50 z-40 hidden opacity-0 transition-opacity"></div>
+        <div id="mobile-menu" class="fixed top-0 right-0 w-72 h-full bg-white z-50 transform translate-x-full shadow-2xl flex flex-col">
+            <div class="p-4 border-b flex justify-between items-center bg-brand-navy text-white">
+                <span class="font-signature text-2xl">ประกันจริงใจ by ปกป้อง</span>
+                <button id="close-menu-btn" onclick="toggleMenu()"><i data-lucide="x" class="w-6 h-6"></i></button>
+            </div>
+            <div class="p-4 flex flex-col gap-3 text-sm font-medium overflow-y-auto pb-20">
+                <a href="/index.php" class="mob-link text-brand-text pl-2 flex items-center gap-2 py-2 rounded-lg"><i data-lucide="home" class="w-4 h-4"></i> หน้าแรก</a>
+                <a href="/about.php" class="mob-link text-brand-text pl-2 flex items-center gap-2 py-2 rounded-lg"><i data-lucide="user" class="w-4 h-4"></i> เกี่ยวกับผม</a>
+                <div class="mob-sub">
+                    <button onclick="this.parentElement.classList.toggle('open')" class="mob-link flex items-center justify-between w-full gap-2 py-2 rounded-lg text-left cursor-pointer pl-2">
+                        <span class="flex items-center gap-2">ประกันของเรา</span>
+                        <i data-lucide="chevron-down" class="mob-chev w-4 h-4 transition-transform"></i>
+                    </button>
+                    <div class="mob-sub-content mt-3 space-y-3 pl-2 border-l-2 border-gray-100 ml-1">
+                        <div>
+                            <p class="text-xs font-bold text-brand-gray uppercase tracking-wider mb-2 flex items-center gap-1.5 ml-1"><i data-lucide="user" class="w-3 h-3"></i> สำหรับบุคคลทั่วไป</p>
+                            <div class="space-y-2 pl-3 mb-3">
+                                <p class="text-[10px] font-bold text-brand-gray/70 uppercase tracking-wider">ประกันหลัก</p>
+                                <div class="space-y-1.5 pl-2">
+                                    <a href="/life.php" class="flex items-center gap-2 text-sm hover:text-brand-navy transition"><i data-lucide="heart" class="w-3.5 h-3.5 text-brand-navy shrink-0"></i> ประกันชีวิต</a>
+                                    <a href="/life.php" class="flex items-center gap-2 text-sm hover:text-brand-navy transition"><i data-lucide="landmark" class="w-3.5 h-3.5 text-brand-navy shrink-0"></i> ประกันเงินออม</a>
+                                    <a href="/life.php" class="flex items-center gap-2 text-sm hover:text-brand-navy transition"><i data-lucide="home" class="w-3.5 h-3.5 text-brand-navy shrink-0"></i> ประกันเกษียณ</a>
+                                </div>
+                                <p class="text-[10px] font-bold text-brand-gray/70 uppercase tracking-wider mt-2">ประกันเสริม</p>
+                                <div class="space-y-1.5 pl-2">
+                                    <a href="/health.php" class="flex items-center gap-2 text-sm hover:text-brand-navy transition"><i data-lucide="activity" class="w-3.5 h-3.5 text-brand-navy shrink-0"></i> ประกันสุขภาพ</a>
+                                    <a href="/health.php" class="flex items-center gap-2 text-sm hover:text-brand-navy transition"><i data-lucide="shield-alert" class="w-3.5 h-3.5 text-brand-navy shrink-0"></i> ประกันโรคร้ายแรง</a>
+                                    <a href="/health.php" class="flex items-center gap-2 text-sm hover:text-brand-navy transition"><i data-lucide="dollar-sign" class="w-3.5 h-3.5 text-brand-navy shrink-0"></i> ประกันชดเชยรายได้</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-brand-gray uppercase tracking-wider mb-2 flex items-center gap-1.5 ml-1"><i data-lucide="building" class="w-3 h-3"></i> สำหรับองค์กร</p>
+                            <div class="space-y-1.5 pl-3">
+                                <a href="/general.php" class="flex items-center gap-2 text-sm hover:text-brand-navy transition"><i data-lucide="users" class="w-3.5 h-3.5 text-brand-navy shrink-0"></i> ประกันกลุ่ม</a>
+                                <a href="/general.php" class="flex items-center gap-2 text-sm hover:text-brand-navy transition"><i data-lucide="briefcase" class="w-3.5 h-3.5 text-brand-navy shrink-0"></i> ประกันนิติบุคคล</a>
+                                <a href="/general.php" class="flex items-center gap-2 text-sm hover:text-brand-navy transition"><i data-lucide="car" class="w-3.5 h-3.5 text-brand-navy shrink-0"></i> ประกันรถยนต์</a>
+                                <a href="/general.php" class="flex items-center gap-2 text-sm hover:text-brand-navy transition"><i data-lucide="plane" class="w-3.5 h-3.5 text-brand-navy shrink-0"></i> ประกันเดินทาง</a>
+                            </div>
+                        </div>
+                        <a href="/life.php" class="flex items-center gap-1 text-xs font-medium text-brand-navy hover:underline pt-1 pl-1">ดูประกันทั้งหมด <i data-lucide="arrow-right" class="w-3 h-3"></i></a>
+                    </div>
+                </div>
+                <a href="/career.php" class="mob-link text-brand-text pl-2 flex items-center gap-2 py-2 rounded-lg"><i data-lucide="handshake" class="w-4 h-4"></i> ร่วมงานกับเรา</a>
+                <a href="/seminar.php" class="mob-link text-brand-text pl-2 flex items-center gap-2 py-2 rounded-lg"><i data-lucide="presentation" class="w-4 h-4"></i> สัมมนา & คอร์ส</a>
+                <a href="/articles.php" class="mob-link text-brand-text pl-2 flex items-center gap-2 py-2 rounded-lg"><i data-lucide="file-text" class="w-4 h-4"></i> บทความ</a>
+                <a href="/contact.php" class="mob-link text-brand-text pl-2 flex items-center gap-2 py-2 rounded-lg"><i data-lucide="phone" class="w-4 h-4"></i> ติดต่อเรา</a>
+                <hr>
+                <button class="flex items-center justify-center gap-2 bg-brand-navy text-white px-5 py-3 rounded-xl text-sm font-semibold w-full mt-2">
+                    <img src="/assets/icon/line.svg" class="w-4 h-4" alt="LINE"> ปรึกษาฟรี
+                </button>
+            </div>
+        </div>
+    </header>
+
+<section class="bg-brand-navy text-white py-16">
+    <div class="max-w-[1400px] mx-auto px-4 md:px-8 text-center">
+        <h1 class="text-3xl md:text-5xl font-bold mb-3">เสียงจากลูกค้า</h1>
+        <p class="text-blue-200 text-lg max-w-2xl mx-auto">ความไว้วางใจที่เราภูมิใจนำเสนอ</p>
+    </div>
+</section>
+
+<!-- Statistics Bar -->
+<section class="border-b border-brand-light/50">
+    <div class="max-w-[1400px] mx-auto px-4 md:px-8 py-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+                <div class="text-3xl font-bold text-brand-navy">1,000+</div>
+                <div class="text-xs text-brand-gray mt-1">ครอบครัวที่ไว้วางใจ</div>
+            </div>
+            <div>
+                <div class="text-3xl font-bold text-brand-navy">98%</div>
+                <div class="text-xs text-brand-gray mt-1">ความพึงพอใจลูกค้า</div>
+            </div>
+            <div>
+                <div class="text-3xl font-bold text-brand-navy">4.9⭐</div>
+                <div class="text-xs text-brand-gray mt-1">คะแนนรีวิวเฉลี่ย</div>
+            </div>
+            <div>
+                <div class="text-3xl font-bold text-brand-navy">15+</div>
+                <div class="text-xs text-brand-gray mt-1">ปีที่ให้บริการ</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Grid -->
+<section class="py-16">
+    <div class="max-w-[1400px] mx-auto px-4 md:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover-card flex flex-col">
+                <div class="flex items-center gap-1 text-yellow-400 mb-2">
+                    <i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i>                </div>
+                <span class="text-[10px] font-bold text-brand-navy bg-brand-light px-3 py-1 rounded-full w-fit mb-3">ประกันชีวิต</span>
+                <p class="text-sm text-brand-text leading-relaxed flex-1">"ขอบคุณพี่ป๊อบมากครับ ที่ช่วยแนะนำแผนประกันชีวิตที่เหมาะกับเราจริงๆ หลังจากคุยกันพี่ป๊อบเข้าใจความต้องการของเรามาก แนะนำแผนที่คุ้มค่าและตรงกับที่เราต้องการ ไม่ได้ขายแบบยัดเยียดเลย ไว้ต่ออายุจะมาหาพี่ป๊อบอีก"</p>
+                <div class="flex items-center gap-3 mt-4 pt-3 border-t border-gray-100">
+                    <div class="w-9 h-9 rounded-full bg-brand-navy flex items-center justify-center text-white font-bold text-sm">ุ</div>
+                    <div class="font-bold text-sm text-brand-navy">คุณธนธัช</div>
+                </div>
+            </div>
+                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover-card flex flex-col">
+                <div class="flex items-center gap-1 text-yellow-400 mb-2">
+                    <i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i>                </div>
+                <span class="text-[10px] font-bold text-brand-navy bg-brand-light px-3 py-1 rounded-full w-fit mb-3">ประกันสุขภาพ</span>
+                <p class="text-sm text-brand-text leading-relaxed flex-1">"ประทับใจมากค่ะ พี่ป๊อบดูแลอย่างดีตั้งแต่แรกจนถึงตอนเคลม เคยเคลมประกันสุขภาพไปรอบนึง พี่ป๊อบช่วยดำเนินการให้ทุกอย่าง เคลมไวมาก ได้เงินเร็ว ไม่ต้องปวดหัวกับเอกสารเลย แนะนำให้เพื่อนๆ มาหาพี่ป๊อบกันหลายคนแล้ว"</p>
+                <div class="flex items-center gap-3 mt-4 pt-3 border-t border-gray-100">
+                    <div class="w-9 h-9 rounded-full bg-brand-navy flex items-center justify-center text-white font-bold text-sm">ุ</div>
+                    <div class="font-bold text-sm text-brand-navy">คุณพรรณนิภา</div>
+                </div>
+            </div>
+                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover-card flex flex-col">
+                <div class="flex items-center gap-1 text-yellow-400 mb-2">
+                    <i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i>                </div>
+                <span class="text-[10px] font-bold text-brand-navy bg-brand-light px-3 py-1 rounded-full w-fit mb-3">ประกันชีวิต</span>
+                <p class="text-sm text-brand-text leading-relaxed flex-1">"ไว้ใจพี่ป๊อบมาตลอด 10 ปี ตั้งแต่ทำประกันชีวิตกับพี่ป๊อบตอนแรกก็รู้สึกดีที่ได้รับคำแนะนำที่ดี พี่ป๊อบไม่เคยทิ้ง ดูแลต่อเนื่องทุกปี มีอะไรอัปเดตก็แจ้งตลอด ผมแนะนำให้คนในครอบครัวมาทำกับพี่ป๊อบทุกคน"</p>
+                <div class="flex items-center gap-3 mt-4 pt-3 border-t border-gray-100">
+                    <div class="w-9 h-9 rounded-full bg-brand-navy flex items-center justify-center text-white font-bold text-sm">ุ</div>
+                    <div class="font-bold text-sm text-brand-navy">คุณวีรัตน์</div>
+                </div>
+            </div>
+                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover-card flex flex-col">
+                <div class="flex items-center gap-1 text-yellow-400 mb-2">
+                    <i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i>                </div>
+                <span class="text-[10px] font-bold text-brand-navy bg-brand-light px-3 py-1 rounded-full w-fit mb-3">ประกันอุบัติเหตุ</span>
+                <p class="text-sm text-brand-text leading-relaxed flex-1">"พี่ป๊อบเป็นกันเองมาก ให้คำปรึกษาดีมาก ไม่ได้ขายอย่างเดียว แต่ให้ความรู้เกี่ยวกับการวางแผนการเงินด้วย ทำให้เราเข้าใจมากขึ้นว่าทำไมต้องมีประกันแต่ละแบบ สุดยอดครับ"</p>
+                <div class="flex items-center gap-3 mt-4 pt-3 border-t border-gray-100">
+                    <div class="w-9 h-9 rounded-full bg-brand-navy flex items-center justify-center text-white font-bold text-sm">ุ</div>
+                    <div class="font-bold text-sm text-brand-navy">คุณณัฐวุฒิ</div>
+                </div>
+            </div>
+                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover-card flex flex-col">
+                <div class="flex items-center gap-1 text-yellow-400 mb-2">
+                    <i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i>                </div>
+                <span class="text-[10px] font-bold text-brand-navy bg-brand-light px-3 py-1 rounded-full w-fit mb-3">ประกันสุขภาพเด็ก</span>
+                <p class="text-sm text-brand-text leading-relaxed flex-1">"ตอนแรกกังวลเรื่องทำประกันให้ลูกมาก ไม่รู้ว่าจะเลือกแบบไหน พี่ป๊อบแนะนำละเอียดมาก ทั้งข้อดีข้อเสียของแต่ละแผน ทำให้ตัดสินใจได้ง่ายขึ้น ตอนนี้ลูกสบายใจ อุ่นใจที่มีประกันให้ลูก"</p>
+                <div class="flex items-center gap-3 mt-4 pt-3 border-t border-gray-100">
+                    <div class="w-9 h-9 rounded-full bg-brand-navy flex items-center justify-center text-white font-bold text-sm">ุ</div>
+                    <div class="font-bold text-sm text-brand-navy">คุณกัญญา</div>
+                </div>
+            </div>
+                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover-card flex flex-col">
+                <div class="flex items-center gap-1 text-yellow-400 mb-2">
+                    <i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i><i data-lucide="star" class="w-4 h-4 fill-current"></i>                </div>
+                <span class="text-[10px] font-bold text-brand-navy bg-brand-light px-3 py-1 rounded-full w-fit mb-3">ประกันบำนาญ</span>
+                <p class="text-sm text-brand-text leading-relaxed flex-1">"วางแผนเกษียณกับพี่ป๊อบ รู้สึกมั่นใจมากขึ้น พี่ป๊อบคำนวณให้เห็นเป็นรูปธรรมว่าเราต้องมีเงินเท่าไหร่ถึงจะเกษียณอย่างสบาย และเลือกแผนประกันที่ช่วยให้เราไปถึงเป้าหมายนั้นได้"</p>
+                <div class="flex items-center gap-3 mt-4 pt-3 border-t border-gray-100">
+                    <div class="w-9 h-9 rounded-full bg-brand-navy flex items-center justify-center text-white font-bold text-sm">ุ</div>
+                    <div class="font-bold text-sm text-brand-navy">คุณสมชาย</div>
+                </div>
+            </div>
+                    </div>
+
+        <!-- Pagination -->
+                <div class="flex justify-center mt-10 gap-2">
+                                                <span class="w-10 h-10 rounded-xl bg-brand-navy text-white font-bold text-sm inline-flex items-center justify-center">1</span>
+                                                                <a href="?page=2" class="w-10 h-10 rounded-xl border border-gray-200 text-brand-text font-bold text-sm inline-flex items-center justify-center hover:bg-brand-light transition">2</a>
+                                    </div>
+            </div>
+</section>
+
+<!-- CTA -->
+<section class="py-16 bg-brand-navy text-white text-center">
+    <div class="max-w-[1400px] mx-auto px-4 md:px-8">
+        <h2 class="text-2xl md:text-3xl font-bold mb-4">ร่วมเป็นครอบครัวผู้ประกันใจกับเรา</h2>
+        <p class="text-blue-200 mb-8">ปรึกษาฟรี! ไม่มีค่าใช้จ่าย พร้อมแนะนำแผนที่ใช่สำหรับคุณ</p>
+        <div class="flex flex-wrap justify-center gap-4">
+            <a href="https://lin.ee/QngrNQ3" target="_blank" class="inline-flex items-center gap-2 bg-brand-green hover:bg-brand-greenHover text-white font-bold px-8 py-3.5 rounded-full transition shadow-md">
+                <img src="/assets/icon/line.svg" class="w-5 h-5"> ปรึกษาฟรีผ่าน LINE
+            </a>
+            <a href="tel:092-515-9991" class="inline-flex items-center gap-2 bg-white text-brand-navy font-bold px-8 py-3.5 rounded-full hover:bg-gray-100 transition shadow-md">
+                <i data-lucide="phone" class="w-5 h-5"></i> โทร 092-515-9991
+            </a>
+        </div>
+    </div>
+</section>
+
+    <!-- 8. PRE-FOOTER CONTACT BAR -->
+    <section class="bg-brand-light border-y border-gray-200">
+        <div class="max-w-[1400px] mx-auto px-4 md:px-8 py-6 flex flex-col lg:flex-row items-center justify-between gap-6">
+            
+            <div class="text-center lg:text-left">
+                <h3 class="text-lg font-bold text-brand-navy mb-1">ปรึกษาและวางแผนการเงินกับเรา</h3>
+                <p class="text-xs text-brand-gray">ยินดีให้คำแนะนำ ฟรี! ไม่มีค่าใช้จ่าย</p>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-6 md:gap-12">
+                <a href="tel:092-515-9991" class="flex items-center gap-3 text-brand-text hover:text-brand-navy transition group">
+                    <i data-lucide="phone" class="w-6 h-6 group-hover:scale-110 transition"></i>
+                    <span class="font-bold text-lg">092-515-9991</span>
+                </a>
+                <a href="https://lin.ee/QngrNQ3" target="_blank" class="flex items-center gap-3 text-brand-text hover:text-brand-green transition group">
+                    <img src="/assets/icon/line.svg" class="w-7 h-7 hover:scale-110 transition" alt="LINE">
+                    <span class="font-bold text-lg">@945ampel</span>
+                </a>
+                <a href="https://facebook.com/pp.insure168" target="_blank" class="flex items-center gap-3 text-brand-text hover:text-blue-600 transition group">
+                    <img src="/assets/icon/facebook.svg" class="w-7 h-7 hover:scale-110 transition" alt="Facebook">
+                    <span class="font-bold text-lg">pp.insure168</span>
+                </a>
+            </div>
+
+            <div class="flex items-center gap-4 bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100">
+                <!-- QR Code LINE -->
+                <img src="/assets/qrcode/qrcode-line.jpg" class="w-12 h-12 rounded" alt="QR LINE">
+                <div class="leading-tight">
+                    <div class="text-xs font-bold text-brand-navy">สแกนเพิ่มเพื่อน</div>
+                    <div class="text-[10px] text-brand-gray">รับคำปรึกษาฟรี</div>
+                </div>
+                <img src="/assets/icon/line.svg" class="w-6 h-6 ml-2" alt="LINE">
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 9. FOOTER -->
+    <footer class="bg-brand-navy text-white">
+        <div class="max-w-[1400px] mx-auto px-4 md:px-8 py-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            
+            <!-- Logos -->
+            <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 border-b sm:border-b-0 sm:border-r border-white/20 pb-4 sm:pb-0 pr-0 sm:pr-6">
+                <!-- Allianz -->
+                <div class="flex items-center gap-1.5">
+                    <div class="flex gap-[1px] mt-0.5">
+                        <div class="w-1 h-4 bg-white rounded-t-full"></div>
+                        <div class="w-1 h-5 bg-white rounded-t-full -mt-1"></div>
+                        <div class="w-1 h-4 bg-white rounded-t-full"></div>
+                    </div>
+                    <div class="flex flex-col leading-none text-white">
+                        <span class="font-bold text-sm tracking-tight">Allianz</span>
+                        <span class="font-medium text-[7px] tracking-[0.2em] uppercase">Ayudhya</span>
+                    </div>
+                </div>
+                <!-- ประกันจริงใจ by ปกป้อง -->
+                <div class="flex flex-col leading-none items-center sm:items-start">
+                    <span class="font-signature text-xl font-bold -mb-1">ประกันจริงใจ by ปกป้อง</span>
+                    <span class="text-[7px] font-medium text-blue-200 tracking-wider">Insurance Advisor</span>
+                </div>
+            </div>
+
+            <!-- Links & Copyright -->
+            <div class="flex-1 flex flex-col items-center md:items-start text-center md:text-left">
+                <div class="flex flex-wrap justify-center md:justify-start gap-4 text-xs font-medium text-blue-200 mb-2">
+                    <a href="/index.php" class="hover:text-white flex items-center gap-1"><i data-lucide="home" class="w-3 h-3"></i> หน้าแรก</a> <span class="text-white/20">|</span>
+                    <a href="/about.php" class="hover:text-white flex items-center gap-1"><i data-lucide="user" class="w-3 h-3"></i> เกี่ยวกับผม</a> <span class="text-white/20">|</span>
+                    <a href="/life.php" class="hover:text-white flex items-center gap-1"><i data-lucide="shield" class="w-3 h-3"></i> ประกันของเรา</a> <span class="text-white/20">|</span>
+                    <a href="/career.php" class="hover:text-white flex items-center gap-1"><i data-lucide="handshake" class="w-3 h-3"></i> ร่วมงานกับเรา</a> <span class="text-white/20">|</span>
+                    <a href="/seminar.php" class="hover:text-white flex items-center gap-1"><i data-lucide="presentation" class="w-3 h-3"></i> สัมมนา & คอร์ส</a> <span class="text-white/20">|</span>
+                    <a href="/articles.php" class="hover:text-white flex items-center gap-1"><i data-lucide="file-text" class="w-3 h-3"></i> บทความ</a> <span class="text-white/20">|</span>
+                    <a href="/contact.php" class="hover:text-white flex items-center gap-1"><i data-lucide="phone" class="w-3 h-3"></i> ติดต่อเรา</a>
+                </div>
+                <div class="text-[10px] text-blue-300 leading-relaxed">
+                    &copy; 2026 NextGen Digital Solutions. All rights reserved.<br>
+                    <a href="/privacy.php" class="hover:text-white underline">นโยบายความเป็นส่วนตัว</a> · <a href="/terms.php" class="hover:text-white underline">ข้อกำหนดและเงื่อนไข</a> · <a href="/claim.php" class="hover:text-white underline">ขั้นตอนการเคลม</a>
+                </div>
+                <div class="mt-1 text-[10px] text-blue-300 leading-relaxed">
+                    เว็บไซต์นี้เป็นของตัวแทนประกันชีวิต Allianz Ayudhya
+                </div>
+            </div>
+
+            <!-- Social Icons -->
+            <div class="flex gap-2 pb-4 md:pb-0">
+                <a href="https://facebook.com/pp.insure168" target="_blank" rel="noopener"><img src="/assets/icon/facebook.svg" class="w-8 h-8 hover:scale-110 transition" alt="Facebook"></a>
+                <a href="https://lin.ee/QngrNQ3" target="_blank" rel="noopener"><img src="/assets/icon/line.svg" class="w-8 h-8 hover:scale-110 transition" alt="LINE"></a>
+                <a href="https://youtube.com" target="_blank" rel="noopener"><img src="/assets/icon/youtube.svg" class="w-8 h-8 hover:scale-110 transition" alt="YouTube"></a>
+                <a href="https://instagram.com" target="_blank" rel="noopener"><img src="/assets/icon/instagram.svg" class="w-8 h-8 hover:scale-110 transition" alt="Instagram"></a>
+                <a href="https://www.tiktok.com/@945ampel" target="_blank" rel="noopener"><img src="/assets/icon/tiktok.svg" class="w-8 h-8 hover:scale-110 transition" alt="TikTok"></a>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- Floating Contact Button -->
+    <a href="tel:092-515-9991" class="fixed bottom-6 right-6 w-14 h-14 bg-brand-navy rounded-full shadow-2xl flex items-center justify-center text-white hover:scale-110 hover:bg-brand-navyHover transition z-50" id="floating-phone">
+        <i data-lucide="phone" class="w-6 h-6 fill-current"></i>
+    </a>
+
+    <script>lucide.createIcons();</script>
+    <script>
+    // Move floating button above cookie banner
+    (function(){
+        var banner = document.getElementById('cookies-banner');
+        var phone = document.getElementById('floating-phone');
+        if (banner && phone) {
+            var mo = new MutationObserver(function(){
+                if (banner.style.display !== 'none' && !localStorage.getItem('cookies_accepted')) {
+                    phone.style.bottom = '90px';
+                } else {
+                    phone.style.bottom = '24px';
+                }
+            });
+            mo.observe(banner, {attributes: true, attributeFilter: ['style']});
+            if (banner.style.display !== 'none') phone.style.bottom = '90px';
+        }
+    })();
+    // MutationObserver for Lucide icons (re-render on class/style changes)
+    new MutationObserver(function(){lucide.createIcons();}).observe(document.documentElement,{attributes:true,attributeFilter:['class','style'],subtree:true});
+    </script>
+
+    <!-- Main JavaScript -->
+    <script src="/assets/js/main.js"></script>
+
+    <!-- Development Notice Popup -->
+    <div id="dev-popup" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300" style="opacity:0; pointer-events:none;">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-[90%] p-8 text-center relative transform scale-90 transition-transform duration-300">
+            <!-- Icon -->
+            <div class="w-20 h-20 mx-auto mb-5 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M14.7 2.34a1 1 0 0 0-1.4 0l-10 10a1 1 0 0 0 0 1.4l10 10a1 1 0 0 0 1.4 0l10-10a1 1 0 0 0 0-1.4Z"/><path d="M12 16.5v.5"/></svg>
+            </div>
+            <!-- Text -->
+            <h4 class="text-xl font-bold text-gray-900 mb-2">🚧 เว็บไซต์กำลังพัฒนา</h4>
+            <p class="text-sm text-gray-500 mb-6 leading-relaxed">
+                เว็บไซต์นี้อยู่ระหว่างการพัฒนา<br>เพื่อประสบการณ์ที่ดีที่สุดสำหรับคุณ
+            </p>
+            <!-- Button -->
+            <button onclick="closeDevPopup()" class="bg-brand-navy hover:bg-brand-navyHover text-white font-bold px-8 py-3 rounded-xl transition text-sm w-full shadow-md">
+                รับทราบ เข้าเว็บไซต์
+            </button>
+        </div>
+    </div>
+    <script>
+    function closeDevPopup() {
+        var popup = document.getElementById('dev-popup');
+        popup.style.opacity = '0';
+        popup.style.pointerEvents = 'none';
+        popup.querySelector('div').style.transform = 'scale(0.9)';
+        localStorage.setItem('dev_popup_closed', '1');
+    }
+    (function(){
+        if (!localStorage.getItem('dev_popup_closed')) {
+            var popup = document.getElementById('dev-popup');
+            setTimeout(function() {
+                popup.style.opacity = '1';
+                popup.style.pointerEvents = 'auto';
+                popup.querySelector('div').style.transform = 'scale(1)';
+            }, 800);
+        }
+    })();
+    </script>
+</body>
