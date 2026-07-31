@@ -38,6 +38,28 @@ $gallery = [
     ['file' => '1784911056104.webp', 'cat' => 'สอบ',              'aspect' => 'aspect-[3/2]'],
     ['file' => '1784911056614.webp', 'cat' => 'ทีม',              'aspect' => 'aspect-[3/4]'],
 ];
+
+// ═══ สัมมนาจาก DB (ถ้ามีข้อมูล) — fallback: array ด้านบน ═══
+try {
+    if (function_exists('getDB')) {
+        $__stmt = getDB()->query('SELECT title, img, location, event_date FROM seminars WHERE is_active = 1 AND img != "" ORDER BY sort_order, id LIMIT 30');
+        $__rows = $__stmt->fetchAll();
+        if (count($__rows) > 0) {
+            $gallery = [];
+            $__aspects = ['aspect-[3/4]', 'aspect-[4/3]', 'aspect-[2/3]', 'aspect-[3/2]'];
+            foreach ($__rows as $i => $__r) {
+                $__file = basename(parse_url($__r['img'], PHP_URL_PATH));
+                $gallery[] = [
+                    'file' => $__file,
+                    'cat' => $__r['location'] ?: 'สัมมนา',
+                    'aspect' => $__aspects[$i % 4],
+                ];
+            }
+        }
+    }
+} catch (Throwable $e) {
+    // DB ไม่พร้อม — ใช้ array เดิม
+}
 ?>
 
 <!-- GALLERY — Pure Image Masonry -->

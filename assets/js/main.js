@@ -21,8 +21,8 @@ function toggleMenu() {
 // btn uses inline onclick="toggleMenu()" in header.php
 overlay?.addEventListener('click', toggleMenu);
 
-// --- JSON DATA MODELS ---
-const categories = [
+// --- JSON DATA MODELS (DB first — index.php injects window.__DB_*) ---
+const categories = (typeof window.__DB_CATEGORIES !== 'undefined' && window.__DB_CATEGORIES.length > 0) ? window.__DB_CATEGORIES : [
     { icon: "heart", title: "ประกันชีวิต", desc: "คุ้มครองชีวิต<br>และคนที่คุณรัก" },
     { icon: "activity", title: "ประกันสุขภาพ", desc: "คุ้มครองค่ารักษา<br>โรคร้ายภัยเจอ" },
     { icon: "shield-alert", title: "ประกันโรคร้ายแรง", desc: "เจอ จ่าย จบ<br>ไม่กระทบอนาคต" },
@@ -33,14 +33,14 @@ const categories = [
     { icon: "arrow-right", title: "ดูทั้งหมด", desc: "ทุกแผนประกัน<br>คลิกที่นี่", isDark: true }
 ];
 
-const articles = [
+const articles = (typeof window.__DB_ARTICLES !== 'undefined' && window.__DB_ARTICLES.length > 0) ? window.__DB_ARTICLES : [
     { id: 1, img: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=400&q=80", tag: "ประกันชีวิต", title: "ทำประกันชีวิตไว้<br>ดีกับตัวเองและครอบครัวอย่างไร?" },
     { id: 2, img: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=400&q=80", tag: "ประกันสุขภาพ", title: "ประกันสุขภาพเหมาจ่าย<br>เลือกแบบไหนดี?" },
     { id: 3, img: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=400&q=80", tag: "การเงิน", title: "วางแผนการเงินฉบับเริ่มต้น<br>สำหรับคนทำงาน" },
     { id: 4, img: "https://images.unsplash.com/photo-1552581234-26160f608093?auto=format&fit=crop&w=400&q=80", tag: "เทคนิคการขาย", title: "5 เทคนิคสร้างความเชื่อมั่น<br>ในการขายประกัน" }
 ];
 
-const reviews = [
+const reviews = (typeof window.__DB_REVIEWS !== 'undefined' && window.__DB_REVIEWS.length > 0) ? window.__DB_REVIEWS : [
     { img: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=100&q=80", text: "คุณป้องดูแลดีมากครับ ให้คำแนะนำวางแผนได้ตรงกับความต้องการจริงๆ", name: "คุณธนธัช", desc: "เจ้าของธุรกิจ" },
     { img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=100&q=80", text: "ให้ความรู้เข้าใจง่าย และใส่ใจลูกค้าทุกคน ประทับใจมากค่ะ", name: "คุณพรรณนิภา", desc: "พนักงานบริษัท" },
     { img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=100&q=80", text: "วางแผนเกษียณและความปลอดภัย ช่วยให้ครอบครัวเรามั่นคงขึ้นอย่างเห็นได้ชัด", name: "คุณวีรัตน์", desc: "เจ้าของธุรกิจ" },
@@ -63,7 +63,7 @@ if (catGrid) {
             'ประกันบำนาญ': '/life.php',
             'ดูทั้งหมด': '/life.php',
         };
-        const linkUrl = linkMap[cat.title] || '#';
+        const linkUrl = (cat.link && cat.link !== '') ? cat.link : (linkMap[cat.title] || '#');
             
         if (cat.isDark) {
             catGrid.innerHTML += `
@@ -114,7 +114,7 @@ if (revGrid) {
                 <div class="flex text-yellow-400 mb-3"><i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i><i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i><i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i><i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i><i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i></div>
                 <p class="text-xs text-brand-text font-medium leading-relaxed mb-6">"${rev.text}"</p>
                 <div class="flex items-center gap-3">
-                    <img src="${rev.img}" class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm">
+                    ${rev.img ? `<img src="${rev.img}" class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm">` : `<div class="w-10 h-10 rounded-full bg-brand-navy text-white flex items-center justify-center font-bold text-sm border-2 border-white shadow-sm">${(rev.name || 'ค').charAt(0)}</div>`}
                     <div>
                         <h4 class="font-bold text-xs text-brand-navy">${rev.name}</h4>
                         <p class="text-[9px] text-brand-gray">${rev.desc}</p>

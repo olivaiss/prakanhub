@@ -392,6 +392,29 @@ $articles = [
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $article = $articles[$id] ?? null;
 
+// ═══ อ่านบทความจาก DB (ถ้ามี) — fallback: $articles array ด้านบน ═══
+try {
+    if (function_exists('getDB')) {
+        $__stmt = getDB()->prepare('SELECT * FROM articles WHERE id = ? AND is_active = 1 LIMIT 1');
+        $__stmt->execute([$id]);
+        $__dbArt = $__stmt->fetch();
+        if ($__dbArt) {
+            $article = [
+                'id' => (int)$__dbArt['id'],
+                'tag' => $__dbArt['tag'],
+                'title' => $__dbArt['title'],
+                'excerpt' => $__dbArt['excerpt'],
+                'date' => $__dbArt['publish_date'] ? date('j F Y', strtotime($__dbArt['publish_date'])) : '',
+                'cover' => $__dbArt['img'] ?: '',
+                'cover_alt' => $__dbArt['title'],
+                'content' => $__dbArt['content'] ?: '<p>กำลังเตรียมเนื้อหา...</p>',
+            ];
+        }
+    }
+} catch (Throwable $e) {
+    // DB ไม่พร้อม — ใช้ array เดิม
+}
+
 // หากไม่มี id หรือไม่พบบทความ → redirect ไป articles.php
 if (!$article) {
     header('Location: articles.php');
@@ -400,22 +423,46 @@ if (!$article) {
 
 // ===== Related articles (same tag, exclude current) =====
 $related = [];
-foreach ($articles as $a) {
-    if ($a['id'] !== $article['id'] && $a['tag'] === $article['tag']) {
-        $related[] = $a;
+try {
+    if (function_exists('getDB') && isset($__dbArt)) {
+        $__rel = getDB()->prepare('SELECT id, title, tag, excerpt, img FROM articles WHERE id != ? AND tag = ? AND is_active = 1 ORDER BY publish_date DESC LIMIT 2');
+        $__rel->execute([$id, $article['tag']]);
+        $__relRows = $__rel->fetchAll();
+        foreach ($__relRows as $__r) {
+            $related[] = ['id' => (int)$__r['id'], 'tag' => $__r['tag'], 'title' => $__r['title'], 'excerpt' => $__r['excerpt'], 'cover' => $__r['img']];
+        }
+        if (count($related) < 2) {
+            $__rel2 = getDB()->prepare('SELECT id, title, tag, excerpt, img FROM articles WHERE id != ? AND tag != ? AND is_active = 1 ORDER BY publish_date DESC LIMIT 2');
+            $__rel2->execute([$id, $article['tag']]);
+            foreach ($__rel2->fetchAll() as $__r) {
+                if (count($related) >= 3) break;
+                $related[] = ['id' => (int)$__r['id'], 'tag' => $__r['tag'], 'title' => $__r['title'], 'excerpt' => $__r['excerpt'], 'cover' => $__r['img']];
+            }
+        }
     }
+} catch (Throwable $e) {
+    $related = [];
 }
-// ถ้า related น้อยกว่า 2 ให้หาเพิ่มจาก category อื่น
-if (count($related) < 2) {
+
+// fallback related จาก array เดิม (ถ้า DB ไม่มี)
+if (empty($related)) {
     foreach ($articles as $a) {
-        if ($a['id'] !== $article['id'] && $a['tag'] !== $article['tag'] && count($related) < 3) {
+        if ($a['id'] !== $article['id'] && $a['tag'] === $article['tag']) {
             $related[] = $a;
+        }
+    }
+    if (count($related) < 2) {
+        foreach ($articles as $a) {
+            if ($a['id'] !== $article['id'] && $a['tag'] !== $article['tag'] && count($related) < 3) {
+                $related[] = $a;
+            }
         }
     }
 }
 
 // Page title
 $pageTitle = $article['title'];
+$pageDesc = $article['excerpt'] ?? '';
 ?>
 <?php require __DIR__ . '/includes/header.php'; ?>
 

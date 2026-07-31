@@ -20,11 +20,11 @@
                 </div>
 
                 <h1 class="text-[1.75rem] sm:text-5xl md:text-7xl font-bold text-brand-navy leading-[1.1] mb-2 tracking-tight">
-                    วางแผนอนาคต<br>อย่างมั่นใจ
+                    <?= $SITE['hero_title'] ?>
                 </h1>
-                <h2 class="text-2xl md:text-3xl font-semibold text-brand-navy/80 mb-6">พร้อมดูแลทุกเป้าหมายชีวิต</h2>
+                <h2 class="text-2xl md:text-3xl font-semibold text-brand-navy/80 mb-6"><?= $SITE['hero_subtitle'] ?></h2>
                 <p class="text-brand-gray text-base md:text-lg mb-10 max-w-lg leading-relaxed">
-                    ครบทุกความคุ้มครอง วางแผนให้เหมาะกับคุณ<br>ด้วยประสบการณ์และความจริงใจ
+                    <?= nl2br(htmlspecialchars($SITE['hero_desc'])) ?>
                 </p>
 
                 <!-- Action Buttons -->
@@ -49,15 +49,15 @@
                 <div class="flex flex-wrap items-center gap-6 md:gap-12">
                     <div class="flex items-center gap-3">
                         <div class="w-12 h-12 rounded-full border-2 border-brand-navy/20 flex items-center justify-center text-brand-navy"><i data-lucide="award" class="w-6 h-6 stroke-[1.5]"></i></div>
-                        <div class="leading-none"><div class="text-[10px] text-brand-gray mb-1">ประสบการณ์</div><div class="font-bold text-xl text-brand-navy mb-0.5">10+ ปี</div><div class="text-[10px] text-brand-gray">ในวงการประกันชีวิต</div></div>
+                        <div class="leading-none"><div class="text-[10px] text-brand-gray mb-1">ประสบการณ์</div><div class="font-bold text-xl text-brand-navy mb-0.5"><?= $SITE['stat_years'] ?></div><div class="text-[10px] text-brand-gray">ในวงการประกันชีวิต</div></div>
                     </div>
                     <div class="flex items-center gap-3">
                         <div class="w-12 h-12 rounded-full border-2 border-brand-navy/20 flex items-center justify-center text-brand-navy"><i data-lucide="users" class="w-6 h-6 stroke-[1.5]"></i></div>
-                        <div class="leading-none"><div class="text-[10px] text-brand-gray mb-1">ดูแลลูกค้า</div><div class="font-bold text-xl text-brand-navy mb-0.5">1,000+ คน</div><div class="text-[10px] text-brand-gray">วางแผนการเงินสำเร็จ</div></div>
+                        <div class="leading-none"><div class="text-[10px] text-brand-gray mb-1">ดูแลลูกค้า</div><div class="font-bold text-xl text-brand-navy mb-0.5"><?= $SITE['stat_clients'] ?></div><div class="text-[10px] text-brand-gray">วางแผนการเงินสำเร็จ</div></div>
                     </div>
                     <div class="flex items-center gap-3">
                         <div class="w-12 h-12 rounded-full border-2 border-brand-navy/20 flex items-center justify-center text-brand-navy"><i data-lucide="medal" class="w-6 h-6 stroke-[1.5]"></i></div>
-                        <div class="leading-none"><div class="text-[10px] text-brand-gray mb-1">รางวัลคุณวุฒิ</div><div class="font-bold text-xl text-brand-navy mb-0.5">MDRT</div><div class="text-[10px] text-brand-gray">ตัวแทนคุณภาพระดับสากล</div></div>
+                        <div class="leading-none"><div class="text-[10px] text-brand-gray mb-1">รางวัลคุณวุฒิ</div><div class="font-bold text-xl text-brand-navy mb-0.5"><?= $SITE['stat_qualification'] ?></div><div class="text-[10px] text-brand-gray">ตัวแทนคุณภาพระดับสากล</div></div>
                     </div>
                 </div>
             </div>
@@ -136,8 +136,8 @@
             </div>
             <div class="relative z-10 p-8 md:p-12 flex flex-col lg:flex-row items-center gap-8">
                 <div class="lg:w-2/3 text-center lg:text-left">
-                    <h3 class="text-2xl md:text-3xl font-bold text-white mb-2">ร่วมงานกับเรา สร้างรายได้ ไม่จำกัด</h3>
-                    <p class="text-blue-200 mb-6">เติบโตไปพร้อมกัน กับทีมคุณภาพ</p>
+                    <h3 class="text-2xl md:text-3xl font-bold text-white mb-2"><?= $SITE['career_title'] ?></h3>
+                    <p class="text-blue-200 mb-6"><?= $SITE['career_desc'] ?></p>
                     <div class="flex flex-wrap justify-center lg:justify-start gap-6 md:gap-10 mb-8 lg:mb-0">
                         <div><div class="text-2xl font-bold text-white mb-1"><i data-lucide="trending-up" class="w-5 h-5 inline text-green-300"></i> รายได้ดี</div><div class="text-xs text-blue-200">ไม่มีเพดาน</div></div>
                         <div><div class="text-2xl font-bold text-white mb-1"><i data-lucide="graduation-cap" class="w-5 h-5 inline text-green-300"></i> อบรมฟรี</div><div class="text-xs text-blue-200">โดยมืออาชีพ</div></div>
@@ -189,5 +189,41 @@
         </section>
 
     </main>
+
+    <?php
+    // ═══ ข้อมูลจาก DB สำหรับ main.js (fallback: array hardcode ใน main.js) ═══
+    $__DB_CATEGORIES = [];
+    $__DB_ARTICLES = [];
+    $__DB_REVIEWS = [];
+    try {
+        if (function_exists('getDB')) {
+            $__db = getDB();
+            foreach ($__db->query('SELECT title, icon, description, link_url, is_dark FROM categories WHERE is_active = 1 ORDER BY sort_order, id') as $__r) {
+                $__DB_CATEGORIES[] = [
+                    'icon' => $__r['icon'], 'title' => $__r['title'], 'desc' => $__r['description'],
+                    'isDark' => (bool)$__r['is_dark'], 'link' => $__r['link_url'],
+                ];
+            }
+            foreach ($__db->query('SELECT id, title, tag, img FROM articles WHERE is_active = 1 ORDER BY publish_date DESC, sort_order, id LIMIT 4') as $__r) {
+                $__DB_ARTICLES[] = [
+                    'id' => (int)$__r['id'], 'tag' => $__r['tag'], 'title' => $__r['title'],
+                    'img' => $__r['img'] ?: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&h=375&fit=crop',
+                ];
+            }
+            foreach ($__db->query('SELECT name, role, message, rating FROM testimonials WHERE is_active = 1 ORDER BY sort_order, id LIMIT 4') as $__r) {
+                $__DB_REVIEWS[] = [
+                    'img' => '', 'name' => $__r['name'], 'desc' => $__r['role'] ?: 'ลูกค้า', 'text' => $__r['message'],
+                ];
+            }
+        }
+    } catch (Throwable $e) {
+        // DB ไม่พร้อม — main.js ใช้ array เดิม
+    }
+    ?>
+    <script>
+    window.__DB_CATEGORIES = <?= json_encode($__DB_CATEGORIES, JSON_UNESCAPED_UNICODE) ?>;
+    window.__DB_ARTICLES = <?= json_encode($__DB_ARTICLES, JSON_UNESCAPED_UNICODE) ?>;
+    window.__DB_REVIEWS = <?= json_encode($__DB_REVIEWS, JSON_UNESCAPED_UNICODE) ?>;
+    </script>
 
 <?php include 'includes/footer.php'; ?>

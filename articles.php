@@ -1,6 +1,27 @@
 <?php
 $pageTitle = 'บทความทั้งหมด';
 include 'includes/header.php';
+
+// ═══ บทความจาก DB (fallback: JS array ด้านล่าง) ═══
+$__DB_ARTICLES = [];
+try {
+    if (function_exists('getDB')) {
+        $__stmt = getDB()->query('SELECT id, title, tag, excerpt, img, publish_date FROM articles WHERE is_active = 1 ORDER BY publish_date DESC, sort_order, id LIMIT 20');
+        foreach ($__stmt as $__r) {
+            $__DB_ARTICLES[] = [
+                'id' => (int)$__r['id'],
+                'tag' => $__r['tag'],
+                'title' => $__r['title'],
+                'excerpt' => $__r['excerpt'],
+                'date' => $__r['publish_date'] ? date('j M Y', strtotime($__r['publish_date'])) : '',
+                'cover' => $__r['img'] ?: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&h=375&fit=crop',
+                'coverAlt' => $__r['title'],
+            ];
+        }
+    }
+} catch (Throwable $e) {
+    // DB ไม่พร้อม — ใช้ JS array
+}
 ?>
 
 <!-- Page Hero -->
@@ -25,7 +46,8 @@ include 'includes/header.php';
 </section>
 
 <script>
-const articles = [
+const __DB_ARTICLES = <?= json_encode($__DB_ARTICLES, JSON_UNESCAPED_UNICODE) ?>;
+const articles = (typeof __DB_ARTICLES !== 'undefined' && __DB_ARTICLES.length > 0) ? __DB_ARTICLES : [
     {
         id: 1,
         tag: 'ประกันชีวิต',

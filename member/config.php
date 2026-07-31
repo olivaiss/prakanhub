@@ -8,6 +8,13 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// ให้ getDB() พร้อมใช้ (db.php มี credentials จริง — ถ้าไม่มีให้ fallback)
+try {
+    require_once __DIR__ . '/../includes/db.php';
+} catch (Throwable $e) {
+    // DB ไม่พร้อม — ใช้ $MEMBER_CODES fallback
+}
+
 /* ═══════════════════════════════════════════════
  * 🔑 รหัสสมาชิกที่ใช้ Login ได้ (18 หลัก)
  * ใครมีรหัสในรายการนี้ก็เข้าได้
@@ -30,12 +37,25 @@ function member_guard(): void {
     }
 }
 
-/** ตรวจรหัส 18 หลัก */
+/** ตรวจรหัส 18 หลัก — เช็คจากตาราง members (DB) ก่อน, fallback $MEMBER_CODES */
 function member_check_code(string $code): bool {
     global $MEMBER_CODES;
     if (!preg_match('/^[0-9]{18}$/', $code)) {
         return false;
     }
+    // DB first (ตาราง members — จัดการผ่าน admin)
+    try {
+        if (function_exists('getDB')) {
+            $__stmt = getDB()->prepare('SELECT id FROM members WHERE member_code = ? AND is_active = 1 LIMIT 1');
+            $__stmt->execute([$code]);
+            if ($__stmt->fetch()) {
+                return true;
+            }
+        }
+    } catch (Throwable $e) {
+        // DB ไม่พร้อม — ใช้ $MEMBER_CODES
+    }
+    // Fallback: รายการรหัสใน config นี้
     return in_array($code, $MEMBER_CODES, true);
 }
 

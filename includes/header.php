@@ -21,6 +21,14 @@ $SITE = [
     'instagram_url'=> 'https://www.instagram.com/',
     'tiktok_url'  => 'https://www.tiktok.com/',
     'address'     => 'กรุงเทพมหานคร ประเทศไทย',
+    'hero_title'  => 'วางแผนอนาคต<br>อย่างมั่นใจ',
+    'hero_subtitle' => 'พร้อมดูแลทุกเป้าหมายชีวิต',
+    'hero_desc'   => "ครบทุกความคุ้มครอง วางแผนให้เหมาะกับคุณ\nด้วยประสบการณ์และความจริงใจ",
+    'career_title' => 'ร่วมงานกับเรา สร้างรายได้ ไม่จำกัด',
+    'career_desc' => 'เติบโตไปพร้อมกัน กับทีมคุณภาพ',
+    'stat_years'  => '10+ ปี',
+    'stat_clients' => '1,000+ คน',
+    'stat_qualification' => 'MDRT',
 ];
 try {
     $__dbFile = __DIR__ . '/db.php';
@@ -44,7 +52,7 @@ $__pageDesc = $pageDesc ?? $SITE['description'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($pageTitle) ?> | <?= htmlspecialchars($SITE['title']) ?></title>
+    <title><?= htmlspecialchars($pageTitle !== $SITE['title'] ? $pageTitle . ' | ' . $SITE['title'] : $pageTitle) ?></title>
     <meta name="description" content="<?= htmlspecialchars($__pageDesc) ?>">
     <meta name="keywords" content="<?= htmlspecialchars($SITE['keywords']) ?>">
     <link rel="canonical" href="<?= htmlspecialchars($__canonical) ?>">
@@ -52,13 +60,13 @@ $__pageDesc = $pageDesc ?? $SITE['description'];
     <!-- Open Graph / Social -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="ประกันจริงใจ by ปกป้อง">
-    <meta property="og:title" content="<?= htmlspecialchars($pageTitle) ?> | <?= htmlspecialchars($SITE['title']) ?>">
+    <meta property="og:title" content="<?= htmlspecialchars($pageTitle !== $SITE['title'] ? $pageTitle . ' | ' . $SITE['title'] : $pageTitle) ?>">
     <meta property="og:description" content="<?= htmlspecialchars($__pageDesc) ?>">
     <meta property="og:image" content="https://prakanhub.com<?= htmlspecialchars($SITE['og_image']) ?>">
     <meta property="og:url" content="<?= htmlspecialchars($__canonical) ?>">
     <meta property="og:locale" content="th_TH">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="<?= htmlspecialchars($pageTitle) ?> | <?= htmlspecialchars($SITE['title']) ?>">
+    <meta name="twitter:title" content="<?= htmlspecialchars($pageTitle !== $SITE['title'] ? $pageTitle . ' | ' . $SITE['title'] : $pageTitle) ?>">
     <meta name="twitter:description" content="<?= htmlspecialchars($__pageDesc) ?>">
     <meta name="twitter:image" content="https://prakanhub.com<?= htmlspecialchars($SITE['og_image']) ?>">
 
