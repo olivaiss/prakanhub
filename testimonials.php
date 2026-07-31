@@ -54,6 +54,27 @@ include 'includes/header.php';
                 ['name' => 'คุณมานพ', 'tag' => 'ประกันชีวิต', 'rating' => 5, 'text' => 'ซื้อประกันชีวิตกับพี่ป๊อบมา 5 ปีแล้ว ไม่เคยมีปัญหาอะไร พี่ป๊อบโทรมาอัปเดตข่าวสารและดูแลเราตลอด ทำให้รู้สึกอุ่นใจที่มีตัวแทนที่ดีแบบนี้'],
             ];
 
+            // ═══ อ่านรีวิวจากฐานข้อมูล (ถ้ามีข้อมูล) — fallback ใช้ array ด้านบน ═══
+            try {
+                if (function_exists('getDB')) {
+                    $__dbTesti = getDB()->query('SELECT name, role, rating, message FROM testimonials WHERE is_active = 1 ORDER BY sort_order, id');
+                    $__dbRows = $__dbTesti->fetchAll();
+                    if (count($__dbRows) > 0) {
+                        $testimonials = [];
+                        foreach ($__dbRows as $__r) {
+                            $testimonials[] = [
+                                'name' => $__r['name'],
+                                'tag' => $__r['role'] ?: 'ลูกค้า',
+                                'rating' => max(1, min(5, (int)$__r['rating'])),
+                                'text' => $__r['message'] ?: '',
+                            ];
+                        }
+                    }
+                }
+            } catch (Throwable $e) {
+                // DB ไม่พร้อม — ใช้ array เดิม
+            }
+
             $perPage = 6;
             $currentPage = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
             $totalItems = count($testimonials);

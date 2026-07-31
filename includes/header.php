@@ -1,18 +1,66 @@
 <?php $pageTitle = $pageTitle ?? 'ที่ปรึกษาประกันชีวิตและการเงิน';
 $currentPage = basename($_SERVER['SCRIPT_NAME']);
 function navActive($page, $current) {
-    return $page === $current ? 'text-brand-navy font-bold border-b-2 border-brand-navy' : 'text-brand-text hover:text-brand-navy';
+    return $page === $current ? 'text-brand-navy font-bold border-b-2 border-brand-navy' : 'brand-text hover:text-brand-navy';
 }
 function mobActive($page, $current) {
     return $page === $current ? 'text-brand-navy font-bold border-l-2 border-brand-navy pl-1.5' : 'text-brand-text pl-2';
 }
+
+// ═══ ตั้งค่าจาก DB (fallback: ค่า default ถ้า DB ไม่พร้อม) ═══
+$SITE = [
+    'title'       => 'ที่ปรึกษาประกันชีวิตและการเงิน',
+    'description' => 'ที่ปรึกษาประกันชีวิตและการเงิน Allianz Ayudhya วางแผนอนาคตอย่างมั่นใจ ครบทุกความคุ้มครอง ด้วยประสบการณ์และความจริงใจ',
+    'keywords'    => 'ประกันชีวิต, ประกันสุขภาพ, ประกันโรคร้ายแรง, ที่ปรึกษาประกัน, Allianz',
+    'og_image'    => '/assets/image/hero-portrait.webp',
+    'phone'       => '092-515-9991',
+    'line_id'     => '@945ampel',
+    'line_url'    => 'https://line.me/R/ti/p/@945ampel',
+    'facebook_url'=> 'https://www.facebook.com/pp.insure168',
+    'youtube_url' => 'https://www.youtube.com/',
+    'instagram_url'=> 'https://www.instagram.com/',
+    'tiktok_url'  => 'https://www.tiktok.com/',
+    'address'     => 'กรุงเทพมหานคร ประเทศไทย',
+];
+try {
+    $__dbFile = __DIR__ . '/db.php';
+    if (file_exists($__dbFile)) {
+        require_once $__dbFile;
+        $__stmt = getDB()->query("SELECT setting_key, setting_value FROM settings");
+        foreach ($__stmt as $__row) {
+            if (isset($SITE[$__row['setting_key']])) {
+                $SITE[$__row['setting_key']] = (string)$__row['setting_value'];
+            }
+        }
+    }
+} catch (Throwable $e) {
+    // DB ไม่พร้อม — ใช้ค่า default ต่อ
+}
+$__canonical = 'https://prakanhub.com' . ($_SERVER['REQUEST_URI'] ?? '/');
+$__pageDesc = $pageDesc ?? $SITE['description'];
 ?>
 <!DOCTYPE html>
 <html lang="th" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($pageTitle) ?> | ประกันจริงใจ by ปกป้อง | Insurance Advisor - Allianz Ayudhya</title>
+    <title><?= htmlspecialchars($pageTitle) ?> | <?= htmlspecialchars($SITE['title']) ?></title>
+    <meta name="description" content="<?= htmlspecialchars($__pageDesc) ?>">
+    <meta name="keywords" content="<?= htmlspecialchars($SITE['keywords']) ?>">
+    <link rel="canonical" href="<?= htmlspecialchars($__canonical) ?>">
+
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="ประกันจริงใจ by ปกป้อง">
+    <meta property="og:title" content="<?= htmlspecialchars($pageTitle) ?> | <?= htmlspecialchars($SITE['title']) ?>">
+    <meta property="og:description" content="<?= htmlspecialchars($__pageDesc) ?>">
+    <meta property="og:image" content="https://prakanhub.com<?= htmlspecialchars($SITE['og_image']) ?>">
+    <meta property="og:url" content="<?= htmlspecialchars($__canonical) ?>">
+    <meta property="og:locale" content="th_TH">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?= htmlspecialchars($pageTitle) ?> | <?= htmlspecialchars($SITE['title']) ?>">
+    <meta name="twitter:description" content="<?= htmlspecialchars($__pageDesc) ?>">
+    <meta name="twitter:image" content="https://prakanhub.com<?= htmlspecialchars($SITE['og_image']) ?>">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -95,20 +143,20 @@ function mobActive($page, $current) {
         "@context": "https://schema.org",
         "@type": "LocalBusiness",
         "name": "ประกันจริงใจ by ปกป้อง - Allianz Ayudhya",
-        "description": "ที่ปรึกษาประกันชีวิตและการเงิน Allianz Ayudhya",
-        "image": "https://pokpong-insurance.com/assets/icon/line.svg",
-        "telephone": "092-515-9991",
-        "email": "pokpong@pokpong-insurance.com",
-        "url": "https://pokpong-insurance.com",
+        "description": <?= json_encode($SITE['description'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>,
+        "image": "https://prakanhub.com<?= htmlspecialchars($SITE['og_image']) ?>",
+        "telephone": "<?= htmlspecialchars($SITE['phone']) ?>",
+        "url": "https://prakanhub.com",
         "sameAs": [
-            "https://facebook.com/pp.insure168",
-            "https://lin.ee/QngrNQ3",
-            "https://youtube.com",
-            "https://instagram.com",
-            "https://www.tiktok.com/@945ampel"
+            <?= json_encode($SITE['facebook_url'], JSON_UNESCAPED_SLASHES) ?>,
+            <?= json_encode($SITE['line_url'], JSON_UNESCAPED_SLASHES) ?>,
+            <?= json_encode($SITE['youtube_url'], JSON_UNESCAPED_SLASHES) ?>,
+            <?= json_encode($SITE['instagram_url'], JSON_UNESCAPED_SLASHES) ?>,
+            <?= json_encode($SITE['tiktok_url'], JSON_UNESCAPED_SLASHES) ?>
         ],
         "address": {
             "@type": "PostalAddress",
+            "streetAddress": <?= json_encode($SITE['address'], JSON_UNESCAPED_UNICODE) ?>,
             "addressCountry": "TH"
         },
         "knowsAbout": ["ประกันชีวิต", "ประกันสุขภาพ", "ประกันภัยทั่วไป", "การวางแผนการเงิน"],
