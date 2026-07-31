@@ -2,6 +2,8 @@
 require_once __DIR__ . '/includes/auth.php';
 admin_guard();
 
+$db = admin_db();
+
 // ═══ ข้อมูลกราฟ: ฟอร์ม/ข้อความ 14 วันล่าสุด ═══
 $__chart = ['labels' => [], 'contacts' => [], 'submissions' => []];
 try {
@@ -17,7 +19,6 @@ $adminPageTitle = 'แดชบอร์ด';
 $adminMenu = 'dashboard';
 include __DIR__ . '/includes/header.php';
 
-$db = admin_db();
 
 // Stats
 $stats = [];
