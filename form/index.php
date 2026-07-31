@@ -373,7 +373,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         <div>
                             <label for="id_card" class="form-label">เลขบัตรประชาชน <span class="req">*</span></label>
-                            <input type="text" id="id_card" name="id_card" required pattern="[0-9]{13}" maxlength="13" inputmode="numeric" class="form-input" placeholder="เลข 13 หลัก" autocomplete="off">
+                            <input type="text" id="id_card" name="id_card" required pattern="[0-9]-[0-9]{4}-[0-9]{5}-[0-9]{2}-[0-9]" maxlength="17" inputmode="numeric" class="form-input idcard-mask" placeholder="1-2345-67890-12-3" autocomplete="off">
                         </div>
                         <div>
                             <label for="id_laser" class="form-label">รหัสหลังบัตรประชาชน <span class="req">*</span></label>
@@ -773,6 +773,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     });
     document.getElementById('prev-btn').addEventListener('click', function () {
         showStep(current - 1);
+    });
+
+    // ─── ID card mask: X-XXXX-XXXXX-XX-X (auto dash) ───
+    document.querySelectorAll('input.idcard-mask').forEach(function (inp) {
+        inp.addEventListener('input', function () {
+            var d = inp.value.replace(/\D/g, '').slice(0, 13);
+            var out = '';
+            if (d.length > 0) out = d.slice(0, 1);
+            if (d.length > 1) out += '-' + d.slice(1, 5);
+            if (d.length > 5) out += '-' + d.slice(5, 10);
+            if (d.length > 10) out += '-' + d.slice(10, 12);
+            if (d.length > 12) out += '-' + d.slice(12, 13);
+            inp.value = out;
+        });
     });
 
     // ─── Laser code mask: XXX-NNNNNNN-NN (auto dash + uppercase) ───
