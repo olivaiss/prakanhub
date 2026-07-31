@@ -1,0 +1,14 @@
+# ─── Security: ไฟล์สำคัญ ห้ามขึ้น git ───
+# ข้อมูลส่วนบุคคลลูกค้าจากฟอร์มทำประกัน (เก็บ .htaccess ไว้)
+form/submissions/*.json
+
+# ฐานข้อมูลจริง (มีรหัสผ่าน production) — ใช้ db.sample.php แทน
+includes/db.php
+
+# ─── OS / Editor junk ───
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/
+*.swp

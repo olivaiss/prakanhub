@@ -1,0 +1,183 @@
+/* ============================================
+   ประกันจริงใจ by ปกป้อง - Custom Styles
+   ============================================ */
+
+body {
+    font-family: 'Prompt', sans-serif;
+    background-color: #FFFFFF;
+    color: #1E293B;
+    overflow-x: hidden;
+}
+
+/* Hide Scrollbar */
+.hide-scroll::-webkit-scrollbar { display: none; }
+.hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Hero Background Gradient */
+.hero-gradient {
+    background: linear-gradient(110deg, #E6F0F9 0%, #D4E4F3 50%, #C3D8EA 100%);
+}
+
+/* Card Hover Effects */
+.hover-card { transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+.hover-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px -5px rgba(0, 55, 129, 0.15); }
+
+/* Mobile Menu */
+#mobile-menu { transition: transform 0.3s ease-in-out; }
+.menu-open { transform: translateX(0) !important; }
+
+/* Mobile Submenu */
+.mob-sub .mob-sub-content { display: none; }
+.mob-sub.open .mob-sub-content { display: block; }
+.mob-sub.open .mob-chev { transform: rotate(180deg); }
+
+/* Mobile Menu Focus */
+.mob-sub > button:focus-visible {
+    outline: 2px solid #003781;
+    border-radius: 8px;
+}
+
+/* Reveal Scroll Animations */
+.reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease-out;
+}
+.reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* FAQ */
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 24px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* About Hero Mobile */
+@media (max-width: 640px) {
+    .hero-section { min-height: 60vh; }
+}
+
+/* ============================================
+   Gallery/Masonry Styles — seminar.php
+   ============================================ */
+
+/* Masonry Grid */
+.masonry-grid {
+    column-count: 1;
+    column-gap: 1.5rem;
+}
+@media (min-width: 640px) {
+    .masonry-grid { column-count: 2; }
+}
+@media (min-width: 1024px) {
+    .masonry-grid { column-count: 3; }
+}
+.masonry-item {
+    break-inside: avoid;
+    margin-bottom: 1.5rem;
+}
+.masonry-item .gallery-card {
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.masonry-item .gallery-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px -8px rgba(0, 55, 129, 0.2);
+}
+
+/* Gallery Image Zoom */
+.gallery-img {
+    transition: transform 0.7s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.masonry-item:hover .gallery-img {
+    transform: scale(1.1);
+}
+
+/* Gallery Overlay */
+.gallery-overlay {
+    transition: opacity 0.5s ease;
+}
+.gallery-overlay-content {
+    transition: all 0.4s ease;
+    transform: translateY(10px);
+}
+.masonry-item:hover .gallery-overlay-content {
+    transform: translateY(0);
+}
+
+/* Gradient Overlay */
+.gallery-gradient {
+    background: linear-gradient(to top, rgba(0, 55, 129, 0.85) 0%, rgba(0, 55, 129, 0.1) 60%, transparent 100%);
+}
+
+/* Filter Buttons */
+.filter-btn {
+    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    background-color: #EEF4F9;
+    color: #003781;
+    white-space: nowrap;
+}
+.filter-btn:hover {
+    background-color: #003781;
+    color: white;
+}
+.filter-btn.active {
+    background-color: #003781;
+    color: white;
+    border-color: #003781;
+    box-shadow: 0 4px 12px rgba(0, 55, 129, 0.25);
+}
+
+/* Lightbox */
+.lightbox-open {
+    overflow: hidden;
+}
+#lightbox-overlay {
+    transition: opacity 0.3s ease;
+}
+#lightbox-img {
+    transition: transform 0.3s ease;
+}
+
+/* Scroll Reveal for Gallery */
+.gallery-reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease-out;
+}
+.gallery-reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Carousel scroll bar for filter pills on mobile */
+.filter-scroll {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.filter-scroll::-webkit-scrollbar { display: none; }
+
+/* Hero decorative pattern */
+.hero-pattern {
+    background-image: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.03) 0%, transparent 50%);
+}
+
+/* Category icon circle pulse */
+.cat-icon-wrap {
+    transition: all 0.4s ease;
+}
+.cat-icon-wrap:hover .cat-icon-inner {
+    transform: scale(1.1);
+}
+.cat-icon-inner {
+    transition: transform 0.4s ease;
+}
