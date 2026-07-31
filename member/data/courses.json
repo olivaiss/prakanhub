@@ -1,0 +1,95 @@
+[
+    {
+        "id": 1,
+        "title": "ปูพื้นฐานประกันชีวิต",
+        "category": "ความรู้พื้นฐาน",
+        "desc": "เข้าใจหลักการประกันชีวิต แบบประกันแต่ละประเภท และวิธีอธิบายให้ลูกค้าเข้าใจง่าย",
+        "thumb": "https://img.youtube.com/vi/aqz-KE-bpKQ/hqdefault.jpg",
+        "sections": [
+            {
+                "name": "บทที่ 1 — แนะนำคอร์ส",
+                "lessons": [
+                    { "title": "แนะนำคอร์สนี้เรียนอะไรบ้าง", "video": "aqz-KE-bpKQ", "duration": "8:12" },
+                    { "title": "ประกันชีวิตคืออะไร", "video": "aqz-KE-bpKQ", "duration": "10:05" }
+                ]
+            },
+            {
+                "name": "บทที่ 2 — แบบประกันแต่ละประเภท",
+                "lessons": [
+                    { "title": "แบบสะสมทรัพย์ vs แบบชั่วระยะเวลา", "video": "aqz-KE-bpKQ", "duration": "12:30" },
+                    { "title": "แบบตลอดชีพ ต่างจากแบบอื่นยังไง", "video": "aqz-KE-bpKQ", "duration": "9:45" },
+                    { "title": "สรุปบทที่ 2 + แบบฝึกหัด", "video": "aqz-KE-bpKQ", "duration": "6:20" }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "title": "วางแผนการเงินเบื้องต้น",
+        "category": "การเงิน",
+        "desc": "หลักการวางแผนการเงินส่วนบุคคล การบริหารรายรับ-รายจ่าย และการตั้งเป้าหมายการเงิน",
+        "thumb": "https://img.youtube.com/vi/aqz-KE-bpKQ/hqdefault.jpg",
+        "sections": [
+            {
+                "name": "บทที่ 1 — พื้นฐานการเงินส่วนบุคคล",
+                "lessons": [
+                    { "title": "ทำไมต้องวางแผนการเงิน", "video": "aqz-KE-bpKQ", "duration": "7:30" },
+                    { "title": "บัญชีรายรับ-รายจ่ายฉบับเข้าใจง่าย", "video": "aqz-KE-bpKQ", "duration": "11:15" }
+                ]
+            },
+            {
+                "name": "บทที่ 2 — ตั้งเป้าหมายการเงิน",
+                "lessons": [
+                    { "title": "เป้าหมายระยะสั้น-กลาง-ยาว", "video": "aqz-KE-bpKQ", "duration": "9:00" },
+                    { "title": "กองทุนฉุกเฉิน สำคัญแค่ไหน", "video": "aqz-KE-bpKQ", "duration": "8:40" }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "title": "เทคนิคการขายประกัน สำหรับตัวแทน",
+        "category": "ทักษะการขาย",
+        "desc": "กระบวนการขายแบบมืออาชีพ ตั้งแต่หาลูกค้า วิเคราะห์ความต้องการ ไปจนถึงปิดการขาย",
+        "thumb": "https://img.youtube.com/vi/aqz-KE-bpKQ/hqdefault.jpg",
+        "sections": [
+            {
+                "name": "บทที่ 1 — เตรียมตัวก่อนขาย",
+                "lessons": [
+                    { "title": "ค้นหาลูกค้าเป้าหมาย (Prospecting)", "video": "aqz-KE-bpKQ", "duration": "13:20" },
+                    { "title": "วิเคราะห์ความต้องการลูกค้า (Need Analysis)", "video": "aqz-KE-bpKQ", "duration": "14:05" }
+                ]
+            },
+            {
+                "name": "บทที่ 2 — ปิดการขาย",
+                "lessons": [
+                    { "title": "เทคนิคจัดการข้อโต้แย้ง", "video": "aqz-KE-bpKQ", "duration": "10:50" },
+                    { "title": "การปิดการขาย + ขอรีเฟอร์รัล", "video": "aqz-KE-bpKQ", "duration": "8:30" }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "title": "รู้จักผลิตภัณฑ์ Allianz Ayudhya",
+        "category": "ผลิตภัณฑ์",
+        "desc": "เจาะลึกแบบประกันหลักของ Allianz Ayudhya เพื่อแนะนำลูกค้าได้ตรงความต้องการ",
+        "thumb": "https://img.youtube.com/vi/aqz-KE-bpKQ/hqdefault.jpg",
+        "sections": [
+            {
+                "name": "บทที่ 1 — ภาพรวมผลิตภัณฑ์",
+                "lessons": [
+                    { "title": "พอร์ตผลิตภัณฑ์ Allianz Ayudhya", "video": "aqz-KE-bpKQ", "duration": "11:00" },
+                    { "title": "ประกันสุขภาพเหมาจ่าย", "video": "aqz-KE-bpKQ", "duration": "12:25" }
+                ]
+            },
+            {
+                "name": "บทที่ 2 — ใช้คู่มือเสนอขาย",
+                "lessons": [
+                    { "title": "อ่านใบเสนอเบี้ยประกันยังไง", "video": "aqz-KE-bpKQ", "duration": "9:35" },
+                    { "title": "สรุปคอร์ส", "video": "aqz-KE-bpKQ", "duration": "5:10" }
+                ]
+            }
+        ]
+    }
+]
