@@ -377,7 +377,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         <div>
                             <label for="id_laser" class="form-label">รหัสหลังบัตรประชาชน <span class="req">*</span></label>
-                            <input type="text" id="id_laser" name="id_laser" required pattern="[0-9]{2}" maxlength="2" inputmode="numeric" class="form-input" placeholder="2 หลักหลังบัตร" autocomplete="off">
+                            <input type="text" id="id_laser" name="id_laser" required pattern="[A-Z0-9]{3}-[0-9]{7}-[0-9]{2}" maxlength="14" class="form-input laser-mask" placeholder="เช่น ME9-9999999-99" autocomplete="off">
                         </div>
                         <div>
                             <label for="id_expiry" class="form-label">วันที่บัตรหมดอายุ <span class="req">*</span></label>
@@ -773,6 +773,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     });
     document.getElementById('prev-btn').addEventListener('click', function () {
         showStep(current - 1);
+    });
+
+    // ─── Laser code mask: XXX-NNNNNNN-NN (auto dash + uppercase) ───
+    document.querySelectorAll('input.laser-mask').forEach(function (inp) {
+        inp.addEventListener('input', function () {
+            var v = inp.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12);
+            var out = '';
+            if (v.length > 0) out = v.slice(0, 3);
+            if (v.length > 3) out += '-' + v.slice(3, 10);
+            if (v.length > 10) out += '-' + v.slice(10, 12);
+            inp.value = out;
+        });
     });
 
     // ─── Date mask: วว/ดด/ปป (auto insert /) ───
