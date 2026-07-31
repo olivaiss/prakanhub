@@ -128,41 +128,4 @@ $formUrl = $isFormSubdomain ? '/index.php' : '/form/';
     <!-- Main JavaScript -->
     <script src="/assets/js/main.js"></script>
 
-    <!-- Development Notice Popup -->
-    <div id="dev-popup" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300" style="opacity:0; pointer-events:none;">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-[90%] p-8 text-center relative transform scale-90 transition-transform duration-300">
-            <!-- Icon -->
-            <div class="w-20 h-20 mx-auto mb-5 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M14.7 2.34a1 1 0 0 0-1.4 0l-10 10a1 1 0 0 0 0 1.4l10 10a1 1 0 0 0 1.4 0l10-10a1 1 0 0 0 0-1.4Z"/><path d="M12 16.5v.5"/></svg>
-            </div>
-            <!-- Text -->
-            <h4 class="text-xl font-bold text-gray-900 mb-2">🚧 เว็บไซต์กำลังพัฒนา</h4>
-            <p class="text-sm text-gray-500 mb-6 leading-relaxed">
-                เว็บไซต์นี้อยู่ระหว่างการพัฒนา<br>เพื่อประสบการณ์ที่ดีที่สุดสำหรับคุณ
-            </p>
-            <!-- Button -->
-            <button onclick="closeDevPopup()" class="bg-brand-navy hover:bg-brand-navyHover text-white font-bold px-8 py-3 rounded-xl transition text-sm w-full shadow-md">
-                รับทราบ เข้าเว็บไซต์
-            </button>
-        </div>
-    </div>
-    <script>
-    function closeDevPopup() {
-        var popup = document.getElementById('dev-popup');
-        popup.style.opacity = '0';
-        popup.style.pointerEvents = 'none';
-        popup.querySelector('div').style.transform = 'scale(0.9)';
-        localStorage.setItem('dev_popup_closed', '1');
-    }
-    (function(){
-        if (!localStorage.getItem('dev_popup_closed')) {
-            var popup = document.getElementById('dev-popup');
-            setTimeout(function() {
-                popup.style.opacity = '1';
-                popup.style.pointerEvents = 'auto';
-                popup.querySelector('div').style.transform = 'scale(1)';
-            }, 800);
-        }
-    })();
-    </script>
 </body>
