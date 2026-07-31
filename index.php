@@ -135,10 +135,10 @@
                 </div>
             </div>
             <div class="relative z-10 p-8 md:p-12 flex flex-col lg:flex-row items-center gap-8">
-                <div class="lg:w-2/3">
+                <div class="lg:w-2/3 text-center lg:text-left">
                     <h3 class="text-2xl md:text-3xl font-bold text-white mb-2">ร่วมงานกับเรา สร้างรายได้ ไม่จำกัด</h3>
                     <p class="text-blue-200 mb-6">เติบโตไปพร้อมกัน กับทีมคุณภาพ</p>
-                    <div class="flex flex-wrap gap-6 md:gap-10 mb-8 lg:mb-0">
+                    <div class="flex flex-wrap justify-center lg:justify-start gap-6 md:gap-10 mb-8 lg:mb-0">
                         <div><div class="text-2xl font-bold text-white mb-1"><i data-lucide="trending-up" class="w-5 h-5 inline text-green-300"></i> รายได้ดี</div><div class="text-xs text-blue-200">ไม่มีเพดาน</div></div>
                         <div><div class="text-2xl font-bold text-white mb-1"><i data-lucide="graduation-cap" class="w-5 h-5 inline text-green-300"></i> อบรมฟรี</div><div class="text-xs text-blue-200">โดยมืออาชีพ</div></div>
                         <div><div class="text-2xl font-bold text-white mb-1"><i data-lucide="heart-handshake" class="w-5 h-5 inline text-green-300"></i> ระบบดูแล</div><div class="text-xs text-blue-200">ครบวงจร</div></div>
