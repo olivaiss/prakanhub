@@ -36,6 +36,8 @@ if (isset($_GET['import'])) {
 // ─── CRUD ───
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_verify();
+    if (($_POST['action'] ?? '') === 'import') { header('Location: courses.php?import=1'); exit; }
+    if (($_POST['action'] ?? '') === 'import') { header('Location: courses.php?import=1'); exit; }
     $action = $_POST['action'] ?? '';
     try {
         if ($action === 'save') {
@@ -113,7 +115,7 @@ include __DIR__ . '/includes/header.php';
         </div>
         <div class="col-md-4">
             <div class="float-end">
-                <a href="courses.php?import=1" class="btn btn-outline-info waves-effect me-1" onclick="return confirm('Import จาก courses.json (ล้างข้อมูลเดิม)?')"><i class="ti ti-download me-1"></i> Import</a>
+                <form method="post" class="d-inline me-1"><input type="hidden" name="action" value="import"><button type="submit" class="btn btn-outline-info waves-effect btn-del"><i class="ti ti-download me-1"></i>Import</button></form>
                 <a href="courses.php?new=1" class="btn btn-primary waves-effect"><i class="ti ti-plus me-1"></i> เพิ่มคอร์ส</a>
             </div>
         </div>
@@ -240,9 +242,9 @@ if (initialSections.length) {
                                 </td>
                                 <td>
                                     <a href="courses.php?edit=<?= (int)$r['id'] ?>" class="btn btn-sm btn-soft-primary"><i class="ti ti-pencil"></i></a>
-                                    <form method="post" class="d-inline" onsubmit="return confirm('ลบคอร์สนี้?')">
+                                    <form method="post" class="d-inline" >
                                         <input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
-                                        <button type="submit" class="btn btn-sm btn-soft-danger"><i class="ti ti-trash"></i></button>
+                                        <button type="submit" class="btn btn-sm btn-soft-danger btn-del"><i class="ti ti-trash"></i></button>
                                     </form>
                                 </td>
                             </tr>

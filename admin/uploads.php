@@ -91,11 +91,11 @@ include __DIR__ . '/includes/header.php';
                                 <p class="text-truncate small mb-2" title="<?= admin_e($name) ?>"><?= admin_e($name) ?></p>
                                 <div class="d-flex gap-1">
                                     <button class="btn btn-sm btn-soft-primary" onclick="navigator.clipboard.writeText('<?= admin_e($url) ?>');this.textContent='✓'">URL</button>
-                                    <form method="post" class="d-inline" onsubmit="return confirm('ลบไฟล์นี้?')">
+                                    <form method="post" class="d-inline" >
                                         <input type="hidden" name="csrf" value="<?= csrf_token() ?>">
                                         <input type="hidden" name="action" value="delete">
                                         <input type="hidden" name="file" value="<?= admin_e($name) ?>">
-                                        <button type="submit" class="btn btn-sm btn-soft-danger"><i class="ti ti-trash"></i></button>
+                                        <button type="submit" class="btn btn-sm btn-soft-danger btn-del"><i class="ti ti-trash"></i></button>
                                     </form>
                                 </div>
                             </div>

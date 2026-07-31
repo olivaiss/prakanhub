@@ -51,6 +51,7 @@ if (isset($_GET['import'])) {
 // ─── CRUD ───
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_verify();
+    if (($_POST['action'] ?? '') === 'import') { header('Location: products.php?import=1'); exit; }
     $action = $_POST['action'] ?? '';
     try {
         if ($action === 'save') {
@@ -83,6 +84,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $cat = $_GET['cat'] ?? '';
 $catClause = in_array($cat, ['life', 'health', 'general'], true) ? ' WHERE category = ' . $db->quote($cat) : '';
+// ─── Edit mode (หน้าเต็ม ไม่มี popup) ───
+$edit = null;
+if (isset($_GET['edit'])) {
+    $stmt = $db->prepare('SELECT * FROM products WHERE id = ?');
+    $stmt->execute([(int)$_GET['edit']]);
+    $edit = $stmt->fetch();
+    if (!$edit) { header('Location: products.php'); exit; }
+}
+
 $rows = $db->query("SELECT * FROM products$catClause ORDER BY category, sort_order, id")->fetchAll();
 $counts = [];
 foreach ($db->query('SELECT category, COUNT(*) c FROM products GROUP BY category') as $r) {
@@ -92,7 +102,55 @@ $adminDataTable = true;
 include __DIR__ . '/includes/header.php';
 ?>
 
+<?php if ($edit || isset($_GET['new'])): ?>
+<?php $e = $edit ?: [
+    'title' => '',
+    'badge' => '',
+    'category' => '',
+    'desc_text' => '',
+    'img' => '',
+    'link_url' => '',
+    'sort_order' => '',
+    'is_active' => 1,
+];
+$__isEdit = $edit ? 'แก้ไข' : 'เพิ่ม';
+?>
 <div class="page-title-box">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h6 class="page-title"><?= $__isEdit ?>แผนประกัน</h6>
+            <ol class="breadcrumb m-0"><li class="breadcrumb-item"><a href="index.php">Admin</a></li><li class="breadcrumb-item"><a href="products.php">แผนประกัน</a></li><li class="breadcrumb-item active"><?= $__isEdit ?></li></ol>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="post" class="row g-3">
+                    <input type="hidden" name="action" value="save">
+                    <input type="hidden" name="id" value="<?= (int)$e['id'] ?>">
+<div class="col-md-6"><label class="form-label">ชื่อแผน</label><input type="text" class="form-control" name="title" value="<?= admin_e($e['title']) ?>" required></div>
+<div class="col-md-6"><label class="form-label">กลุ่ม (badge)</label><input type="text" class="form-control" name="badge" value="<?= admin_e($e['badge']) ?>" ></div>
+<div class="col-md-4"><label class="form-label">หมวดหมู่</label><select class="form-select" name="category"><option value="life" <?= $e['category'] == "life" ? 'selected' : '' ?>>life</option><option value="health" <?= $e['category'] == "health" ? 'selected' : '' ?>>health</option><option value="general" <?= $e['category'] == "general" ? 'selected' : '' ?>>general</option></select></div>
+<div class="col-12"><label class="form-label">คำอธิบาย/จุดเด่น</label><textarea class="form-control" name="desc_text" rows="4"><?= admin_e($e['desc_text']) ?></textarea></div>
+<div class="col-md-6"><label class="form-label">URL รูปภาพ</label><input type="text" class="form-control" name="img" value="<?= admin_e($e['img']) ?>" ></div>
+<div class="col-md-6"><label class="form-label">ลิงก์</label><input type="text" class="form-control" name="link_url" value="<?= admin_e($e['link_url']) ?>" ></div>
+<div class="col-md-4"><label class="form-label">เรียงลำดับ</label><input type="number" class="form-control" name="sort_order" value="<?= (int)$e['sort_order'] ?>"></div>
+<div class="col-md-4"><div class="form-check form-switch mt-4"><input type="checkbox" class="form-check-input" name="is_active" id="e_is_active" value="1" <?= $e['is_active'] ? 'checked' : '' ?>><label class="form-check-label" for="e_is_active">แสดงผล</label></div></div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary waves-effect"><i class="ti ti-check me-1"></i> บันทึก</button>
+                        <a href="products.php" class="btn btn-secondary waves-effect">ย้อนกลับ</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php else: ?>
+
     <div class="row align-items-center">
         <div class="col-md-8">
             <h6 class="page-title">แผนประกัน (<?= count($rows) ?>)</h6>
@@ -100,8 +158,8 @@ include __DIR__ . '/includes/header.php';
         </div>
         <div class="col-md-4">
             <div class="float-end">
-                <a href="products.php?import=1" class="btn btn-outline-info waves-effect me-1" onclick="return confirm('Import ใหม่จาก insurance-data.json (ล้างข้อมูลเดิม)?')"><i class="ti ti-download me-1"></i> Import JSON</a>
-                <button class="btn btn-primary waves-effect" data-bs-toggle="modal" data-bs-target="#pModal" onclick="resetForm()"><i class="ti ti-plus me-1"></i> เพิ่มแผน</button>
+                <form method="post" class="d-inline me-1"><input type="hidden" name="action" value="import"><button type="submit" class="btn btn-outline-info waves-effect btn-del"><i class="ti ti-download me-1"></i>Import JSON</button></form>
+                <a href="products.php?new=1" class="btn btn-primary waves-effect"><i class="ti ti-plus me-1"></i></a>
             </div>
         </div>
     </div>
@@ -137,9 +195,9 @@ include __DIR__ . '/includes/header.php';
                                 </td>
                                 <td>
                                     <button class="btn btn-sm btn-soft-primary" onclick='editRow(<?= json_encode($r, JSON_UNESCAPED_UNICODE) ?>)'><i class="ti ti-pencil"></i></button>
-                                    <form method="post" class="d-inline" onsubmit="return confirm('ลบแผนนี้?')">
+                                    <form method="post" class="d-inline" >
                                         <input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
-                                        <button type="submit" class="btn btn-sm btn-soft-danger"><i class="ti ti-trash"></i></button>
+                                        <button type="submit" class="btn btn-sm btn-soft-danger btn-del"><i class="ti ti-trash"></i></button>
                                     </form>
                                 </td>
                             </tr>
@@ -152,32 +210,7 @@ include __DIR__ . '/includes/header.php';
     </div>
 </div>
 
-<div class="modal fade" id="pModal" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <form method="post">
-                <input type="hidden" name="action" value="save"><input type="hidden" name="id" id="f_id" value="0">
-                <div class="modal-header"><h5 class="modal-title" id="modalTitle">เพิ่มแผนประกัน</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-4 mb-3"><label class="form-label">หมวด</label><select class="form-select" name="category" id="f_cat"><option value="life">Life</option><option value="health">Health</option><option value="general">General</option></select></div>
-                        <div class="col-md-4 mb-3"><label class="form-label">กลุ่ม (badge)</label><input type="text" class="form-control" name="badge" id="f_badge"></div>
-                        <div class="col-md-4 mb-3"><label class="form-label">เรียงลำดับ</label><input type="number" class="form-control" name="sort_order" id="f_sort" value="0"></div>
-                        <div class="col-12 mb-3"><label class="form-label">ชื่อแผน <span class="required-flag">*</span></label><input type="text" class="form-control" name="title" id="f_title" required></div>
-                        <div class="col-12 mb-3"><label class="form-label">รายละเอียด</label><textarea class="form-control" name="desc_text" id="f_desc" rows="3"></textarea></div>
-                        <div class="col-md-6 mb-3"><label class="form-label">รูป (URL)</label><input type="text" class="form-control" name="img" id="f_img"></div>
-                        <div class="col-md-6 mb-3"><label class="form-label">ลิงก์</label><input type="text" class="form-control" name="link_url" id="f_link"></div>
-                        <div class="col-12 mb-3"><div class="form-check form-switch"><input type="checkbox" class="form-check-input" name="is_active" id="f_active" value="1" checked><label class="form-check-label" for="f_active">แสดงผล</label></div></div>
-                    </div>
-                </div>
-                <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button><button type="submit" class="btn btn-primary">บันทึก</button></div>
-            </form>
-        </div>
-    </div>
-</div>
-<script>
-function resetForm(){document.getElementById('modalTitle').textContent='เพิ่มแผนประกัน';document.getElementById('f_id').value=0;['f_badge','f_title','f_desc','f_img','f_link'].forEach(function(i){document.getElementById(i).value='';});document.getElementById('f_cat').value='life';document.getElementById('f_sort').value=0;document.getElementById('f_active').checked=true;}
-function editRow(r){document.getElementById('modalTitle').textContent='แก้ไขแผน';document.getElementById('f_id').value=r.id;document.getElementById('f_cat').value=r.category;document.getElementById('f_badge').value=r.badge;document.getElementById('f_title').value=r.title;document.getElementById('f_desc').value=r.desc_text;document.getElementById('f_img').value=r.img;document.getElementById('f_link').value=r.link_url;document.getElementById('f_sort').value=r.sort_order;document.getElementById('f_active').checked=r.is_active==1;new bootstrap.Modal(document.getElementById('pModal')).show();}
-</script>
+
+<?php endif; ?>
 
 <?php include __DIR__ . '/includes/footer.php'; ?>

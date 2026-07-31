@@ -34,6 +34,18 @@ $unread = [
     'applications' => (int)$db->query("SELECT COUNT(*) FROM agent_applications WHERE is_read = 0")->fetchColumn(),
     'form_submissions' => (int)$db->query("SELECT COUNT(*) FROM form_submissions WHERE is_read = 0")->fetchColumn(),
 ];
+
+// ─── View mode (หน้าเต็ม ไม่มี popup) ───
+$viewRow = null;
+if (isset($_GET['view'])) {
+    $__v = $db->prepare("SELECT * FROM `$tab` WHERE id = ?");
+    $__v->execute([(int)$_GET['view']]);
+    $viewRow = $__v->fetch();
+    if ($viewRow) {
+        $db->prepare("UPDATE `$tab` SET is_read = 1 WHERE id = ?")->execute([(int)$_GET['view']]);
+    }
+}
+
 $adminDataTable = true;
 include __DIR__ . '/includes/header.php';
 ?>
@@ -46,9 +58,9 @@ include __DIR__ . '/includes/header.php';
         </div>
         <div class="col-md-4">
             <div class="float-end">
-                <form method="post" class="d-inline" onsubmit="return confirm('ล้างข้อมูลทั้งหมดในแท็บนี้?')">
+                <form method="post" class="d-inline" >
                     <input type="hidden" name="action" value="delete_all">
-                    <button type="submit" class="btn btn-outline-danger waves-effect"><i class="ti ti-trash me-1"></i> ล้างทั้งหมด</button>
+                    <button type="submit" class="btn btn-outline-danger waves-effect btn-del"><i class="ti ti-trash me-1"></i> ล้างทั้งหมด</button>
                 </form>
             </div>
         </div>
@@ -61,6 +73,52 @@ include __DIR__ . '/includes/header.php';
     <li class="nav-item"><a class="nav-link <?= $tab === 'form_submissions' ? 'active' : '' ?>" href="inbox.php?tab=form_submissions">ใบสมัครทำประกัน <?php if ($unread['form_submissions'] > 0): ?><span class="badge bg-danger ms-1"><?= $unread['form_submissions'] ?></span><?php endif; ?></a></li>
 </ul>
 
+<?php if ($viewRow): ?>
+<!-- ═══ View mode: ข้อมูลเต็ม (ไม่มี popup) ═══ -->
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="card-title mb-0">รายละเอียด #<?= (int)$viewRow['id'] ?> <?= $viewRow['is_read'] ? '' : '<span class="badge bg-danger">ใหม่</span>' ?></h4>
+            <a href="inbox.php?tab=<?= $tab ?>" class="btn btn-secondary waves-effect btn-sm"><i class="ti ti-arrow-left me-1"></i> กลับ</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered mb-0">
+                <?php foreach ($viewRow as $k => $v): ?>
+                <?php if ($k === 'id') continue; ?>
+                <tr>
+                    <th style="width:180px" class="align-top"><?= admin_e($k) ?></th>
+                    <td class="text-break" style="white-space:pre-wrap">
+                        <?php if ($k === 'payload' && $v): ?>
+                            <?php
+                            $__pp = json_decode((string)$v, true);
+                            if (is_array($__pp)) {
+                                echo '<pre style="max-height:420px;overflow:auto;font-size:12px">' . admin_e(json_encode($__pp, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) . '</pre>';
+                            } else {
+                                echo admin_e((string)$v);
+                            }
+                            ?>
+                        <?php else: ?>
+                            <?= admin_e($k === 'created_at' ? date('d/m/Y H:i:s', strtotime((string)$v)) : (string)$v) ?>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </table>
+        </div>
+        <div class="mt-3 d-flex gap-2">
+            <form method="post" class="d-inline">
+                <input type="hidden" name="action" value="read"><input type="hidden" name="id" value="<?= (int)$viewRow['id'] ?>">
+                <button type="submit" class="btn btn-soft-primary waves-effect"><i class="ti ti-check me-1"></i> ทำเครื่องหมายอ่านแล้ว</button>
+            </form>
+            <form method="post" class="d-inline">
+                <input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$viewRow['id'] ?>">
+                <button type="submit" class="btn btn-outline-danger waves-effect btn-del"><i class="ti ti-trash me-1"></i> ลบ</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<?php else: ?>
 <div class="card">
     <div class="card-body">
         <?php if (empty($rows)): ?>
@@ -79,7 +137,7 @@ include __DIR__ . '/includes/header.php';
                 </thead>
                 <tbody>
                 <?php foreach ($rows as $r): ?>
-                    <tr class="<?= $r['is_read'] ? '' : 'table-primary' ?>" style="cursor:pointer" onclick="viewRow(<?= (int)$r['id'] ?>, '<?= $tab ?>')">
+                    <tr class="<?= $r['is_read'] ? '' : 'table-primary' ?>" style="cursor:pointer" onclick="location.href='inbox.php?view=<?= (int)$r['id'] ?>&tab=<?= $tab ?>'">
                     <?php if ($tab === 'contacts'): ?>
                         <td><?= (int)$r['id'] ?></td>
                         <td class="fw-semibold"><?= admin_e($r['name']) ?></td>
@@ -93,9 +151,9 @@ include __DIR__ . '/includes/header.php';
                                 <input type="hidden" name="action" value="read"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
                                 <button type="submit" class="btn btn-sm btn-soft-primary" title="ทำเครื่องหมายอ่านแล้ว"><i class="ti ti-check"></i></button>
                             </form>
-                            <form method="post" class="d-inline" onsubmit="return confirm('ลบรายการนี้?')" onclick="event.stopPropagation()">
+                            <form method="post" class="d-inline"  onclick="event.stopPropagation()">
                                 <input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
-                                <button type="submit" class="btn btn-sm btn-soft-danger"><i class="ti ti-trash"></i></button>
+                                <button type="submit" class="btn btn-sm btn-soft-danger btn-del"><i class="ti ti-trash"></i></button>
                             </form>
                         </td>
                     <?php elseif ($tab === 'applications'): ?>
@@ -112,9 +170,9 @@ include __DIR__ . '/includes/header.php';
                                 <input type="hidden" name="action" value="read"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
                                 <button type="submit" class="btn btn-sm btn-soft-primary" title="อ่านแล้ว"><i class="ti ti-check"></i></button>
                             </form>
-                            <form method="post" class="d-inline" onsubmit="return confirm('ลบรายการนี้?')" onclick="event.stopPropagation()">
+                            <form method="post" class="d-inline"  onclick="event.stopPropagation()">
                                 <input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
-                                <button type="submit" class="btn btn-sm btn-soft-danger"><i class="ti ti-trash"></i></button>
+                                <button type="submit" class="btn btn-sm btn-soft-danger btn-del"><i class="ti ti-trash"></i></button>
                             </form>
                         </td>
                     <?php else: ?>
@@ -133,9 +191,9 @@ include __DIR__ . '/includes/header.php';
                                 <input type="hidden" name="action" value="read"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
                                 <button type="submit" class="btn btn-sm btn-soft-primary" title="อ่านแล้ว"><i class="ti ti-check"></i></button>
                             </form>
-                            <form method="post" class="d-inline" onsubmit="return confirm('ลบรายการนี้?')" onclick="event.stopPropagation()">
+                            <form method="post" class="d-inline"  onclick="event.stopPropagation()">
                                 <input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
-                                <button type="submit" class="btn btn-sm btn-soft-danger"><i class="ti ti-trash"></i></button>
+                                <button type="submit" class="btn btn-sm btn-soft-danger btn-del"><i class="ti ti-trash"></i></button>
                             </form>
                         </td>
                     <?php endif; ?>
@@ -147,40 +205,6 @@ include __DIR__ . '/includes/header.php';
         <?php endif; ?>
     </div>
 </div>
-
-<!-- View modal -->
-<div class="modal fade" id="viewModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">รายละเอียด</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body" id="viewModalBody"></div>
-        </div>
-    </div>
-</div>
-
-<script>
-var __rows = <?= json_encode($rows, JSON_UNESCAPED_UNICODE) ?>;
-function viewRow(id, tab) {
-    var row = __rows.find(function (r) { return String(r.id) === String(id); });
-    if (!row) return;
-    var html = '<table class="table table-sm table-bordered mb-0">';
-    Object.keys(row).forEach(function (k) {
-        var v = row[k];
-        if (k === 'payload' && v) {
-            try { v = JSON.stringify(JSON.parse(v), null, 2); } catch (e) { /* raw */ }
-        }
-        html += '<tr><th style="width:160px" class="align-top">' + k + '</th><td class="text-break" style="white-space:pre-wrap">' + escHtml(v) + '</td></tr>';
-    });
-    html += '</table>';
-    document.getElementById('viewModalBody').innerHTML = html;
-    new bootstrap.Modal(document.getElementById('viewModal')).show();
-}
-function escHtml(s) {
-    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-</script>
+<?php endif; ?>
 
 <?php include __DIR__ . '/includes/footer.php'; ?>

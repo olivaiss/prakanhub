@@ -37,6 +37,27 @@
             f.appendChild(inp);
         });
     })();
+
+    // ═══ ปุ่มลบแบบ 2 ขั้นตอน (ไม่มี popup): คลิก 1 = "แน่ใจ?" คลิก 2 = ลบจริง ═══
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.btn-del');
+        if (!btn) return;
+        if (btn.dataset.arm !== '1') {
+            e.preventDefault();
+            e.stopPropagation();
+            btn.dataset.arm = '1';
+            var old = btn.innerHTML;
+            btn.innerHTML = 'แน่ใจ?';
+            btn.classList.remove('btn-soft-danger');
+            btn.classList.add('btn-danger');
+            setTimeout(function () {
+                btn.dataset.arm = '0';
+                btn.innerHTML = old;
+                btn.classList.remove('btn-danger');
+                btn.classList.add('btn-soft-danger');
+            }, 3000);
+        }
+    });
 </script>
 
 <?php if (!empty($adminDataTable)): ?>

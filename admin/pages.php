@@ -123,9 +123,9 @@ include __DIR__ . '/includes/header.php';
                                 </td>
                                 <td>
                                     <a href="pages.php?edit=<?= (int)$r['id'] ?>" class="btn btn-sm btn-soft-primary"><i class="ti ti-pencil"></i></a>
-                                    <form method="post" class="d-inline" onsubmit="return confirm('ลบหน้านี้?')">
+                                    <form method="post" class="d-inline" >
                                         <input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
-                                        <button type="submit" class="btn btn-sm btn-soft-danger"><i class="ti ti-trash"></i></button>
+                                        <button type="submit" class="btn btn-sm btn-soft-danger btn-del"><i class="ti ti-trash"></i></button>
                                     </form>
                                 </td>
                             </tr>

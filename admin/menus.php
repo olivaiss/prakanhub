@@ -40,18 +40,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
+// ─── Edit mode (หน้าเต็ม ไม่มี popup) ───
+$edit = null;
+if (isset($_GET['edit'])) {
+    $stmt = $db->prepare('SELECT * FROM menus WHERE id = ?');
+    $stmt->execute([(int)$_GET['edit']]);
+    $edit = $stmt->fetch();
+    if (!$edit) { header('Location: menus.php'); exit; }
+}
+
 $rows = $db->query('SELECT * FROM menus ORDER BY location, sort_order, id')->fetchAll();
 $adminDataTable = true;
 include __DIR__ . '/includes/header.php';
 ?>
 
+<?php if ($edit || isset($_GET['new'])): ?>
+<?php $e = $edit ?: [
+    'label' => '',
+    'link_url' => '',
+    'location' => '',
+    'target' => '',
+    'sort_order' => '',
+    'is_active' => 1,
+];
+$__isEdit = $edit ? 'แก้ไข' : 'เพิ่ม';
+?>
 <div class="page-title-box">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h6 class="page-title"><?= $__isEdit ?>เมนู</h6>
+            <ol class="breadcrumb m-0"><li class="breadcrumb-item"><a href="index.php">Admin</a></li><li class="breadcrumb-item"><a href="menus.php">เมนู</a></li><li class="breadcrumb-item active"><?= $__isEdit ?></li></ol>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="post" class="row g-3">
+                    <input type="hidden" name="action" value="save">
+                    <input type="hidden" name="id" value="<?= (int)$e['id'] ?>">
+<div class="col-md-6"><label class="form-label">ชื่อเมนู</label><input type="text" class="form-control" name="label" value="<?= admin_e($e['label']) ?>" required></div>
+<div class="col-md-6"><label class="form-label">ลิงก์ (URL)</label><input type="text" class="form-control" name="link_url" value="<?= admin_e($e['link_url']) ?>" ></div>
+<div class="col-md-4"><label class="form-label">ตำแหน่ง</label><select class="form-select" name="location"><option value="header" <?= $e['location'] == "header" ? 'selected' : '' ?>>header</option><option value="footer" <?= $e['location'] == "footer" ? 'selected' : '' ?>>footer</option></select></div>
+<div class="col-md-4"><label class="form-label">เปิดในแท็บใหม่</label><select class="form-select" name="target"><option value="_self" <?= $e['target'] == "_self" ? 'selected' : '' ?>>_self</option><option value="_blank" <?= $e['target'] == "_blank" ? 'selected' : '' ?>>_blank</option></select></div>
+<div class="col-md-4"><label class="form-label">เรียงลำดับ</label><input type="number" class="form-control" name="sort_order" value="<?= (int)$e['sort_order'] ?>"></div>
+<div class="col-md-4"><div class="form-check form-switch mt-4"><input type="checkbox" class="form-check-input" name="is_active" id="e_is_active" value="1" <?= $e['is_active'] ? 'checked' : '' ?>><label class="form-check-label" for="e_is_active">แสดงผล</label></div></div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary waves-effect"><i class="ti ti-check me-1"></i> บันทึก</button>
+                        <a href="menus.php" class="btn btn-secondary waves-effect">ย้อนกลับ</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php else: ?>
+
     <div class="row align-items-center">
         <div class="col-md-8">
             <h6 class="page-title">เมนู</h6>
             <ol class="breadcrumb m-0"><li class="breadcrumb-item"><a href="index.php">Admin</a></li><li class="breadcrumb-item active">เมนู</li></ol>
         </div>
-        <div class="col-md-4"><div class="float-end"><button class="btn btn-primary waves-effect" data-bs-toggle="modal" data-bs-target="#menuModal" onclick="resetForm()"><i class="ti ti-plus me-1"></i> เพิ่มเมนู</button></div></div>
+        <div class="col-md-4"><div class="float-end"><a href="menus.php?new=1" class="btn btn-primary waves-effect"><i class="ti ti-plus me-1"></i></a></div></div>
     </div>
 </div>
 
@@ -80,9 +133,9 @@ include __DIR__ . '/includes/header.php';
                                 </td>
                                 <td>
                                     <button class="btn btn-sm btn-soft-primary" onclick='editRow(<?= json_encode($r, JSON_UNESCAPED_UNICODE) ?>)'><i class="ti ti-pencil"></i></button>
-                                    <form method="post" class="d-inline" onsubmit="return confirm('ลบเมนูนี้?')">
+                                    <form method="post" class="d-inline" >
                                         <input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
-                                        <button type="submit" class="btn btn-sm btn-soft-danger"><i class="ti ti-trash"></i></button>
+                                        <button type="submit" class="btn btn-sm btn-soft-danger btn-del"><i class="ti ti-trash"></i></button>
                                     </form>
                                 </td>
                             </tr>
@@ -95,30 +148,7 @@ include __DIR__ . '/includes/header.php';
     </div>
 </div>
 
-<div class="modal fade" id="menuModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <form method="post">
-                <input type="hidden" name="action" value="save"><input type="hidden" name="id" id="f_id" value="0">
-                <div class="modal-header"><h5 class="modal-title" id="modalTitle">เพิ่มเมนู</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-                <div class="modal-body">
-                    <div class="mb-3"><label class="form-label">ชื่อเมนู <span class="required-flag">*</span></label><input type="text" class="form-control" name="label" id="f_label" required></div>
-                    <div class="mb-3"><label class="form-label">ลิงก์ <span class="required-flag">*</span></label><input type="text" class="form-control" name="link_url" id="f_url" placeholder="/about.php หรือ https://..." required></div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3"><label class="form-label">ตำแหน่ง</label><select class="form-select" name="location" id="f_loc"><option value="footer">Footer</option><option value="header">Header</option></select></div>
-                        <div class="col-md-6 mb-3"><label class="form-label">เปิดใน</label><select class="form-select" name="target" id="f_target"><option value="_self">หน้าเดิม</option><option value="_blank">แท็บใหม่</option></select></div>
-                        <div class="col-md-6 mb-3"><label class="form-label">เรียงลำดับ</label><input type="number" class="form-control" name="sort_order" id="f_sort" value="0"></div>
-                        <div class="col-md-6 mb-3"><div class="form-check form-switch mt-4"><input type="checkbox" class="form-check-input" name="is_active" id="f_active" value="1" checked><label class="form-check-label" for="f_active">แสดงผล</label></div></div>
-                    </div>
-                </div>
-                <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button><button type="submit" class="btn btn-primary">บันทึก</button></div>
-            </form>
-        </div>
-    </div>
-</div>
-<script>
-function resetForm(){document.getElementById('modalTitle').textContent='เพิ่มเมนู';document.getElementById('f_id').value=0;document.getElementById('f_label').value='';document.getElementById('f_url').value='';document.getElementById('f_loc').value='footer';document.getElementById('f_target').value='_self';document.getElementById('f_sort').value=0;document.getElementById('f_active').checked=true;}
-function editRow(r){document.getElementById('modalTitle').textContent='แก้ไขเมนู';document.getElementById('f_id').value=r.id;document.getElementById('f_label').value=r.label;document.getElementById('f_url').value=r.link_url;document.getElementById('f_loc').value=r.location;document.getElementById('f_target').value=r.target;document.getElementById('f_sort').value=r.sort_order;document.getElementById('f_active').checked=r.is_active==1;new bootstrap.Modal(document.getElementById('menuModal')).show();}
-</script>
+
+<?php endif; ?>
 
 <?php include __DIR__ . '/includes/footer.php'; ?>
