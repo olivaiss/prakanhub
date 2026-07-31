@@ -85,6 +85,7 @@ $adminMenu = isset($adminMenu) ? $adminMenu : 'dashboard';
                     <li><a href="menus.php" class="waves-effect <?= $adminMenu === 'menus' ? 'active' : '' ?>"><i class="ti ti-menu"></i><span>เมนู</span></a></li>
 
                     <li class="menu-title">ระบบสมาชิก</li>
+                    <li><a href="courses.php" class="waves-effect <?= $adminMenu === 'courses' ? 'active' : '' ?>"><i class="ti ti-video-clapper"></i><span>คอร์สเรียน</span></a></li>
                     <li><a href="members.php" class="waves-effect <?= $adminMenu === 'members' ? 'active' : '' ?>"><i class="ti ti-user"></i><span>รหัสสมาชิก</span></a></li>
 
                     <li class="menu-title">ตั้งค่า</li>

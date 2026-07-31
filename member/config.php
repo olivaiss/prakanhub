@@ -59,14 +59,40 @@ function member_check_code(string $code): bool {
     return in_array($code, $MEMBER_CODES, true);
 }
 
-/** โหลดข้อมูลคอร์สจาก JSON */
+/** โหลดข้อมูลคอร์ส — จากตาราง courses (DB) ก่อน, fallback: data/courses.json */
 function member_courses(): array {
-    $path = __DIR__ . '/data/courses.json';
-    if (!file_exists($path)) {
-        return [];
+    $courses = [];
+    try {
+        if (function_exists('getDB')) {
+            $__stmt = getDB()->query('SELECT id, title, category, description, thumb, sections FROM courses WHERE is_active = 1 ORDER BY sort_order, id');
+            foreach ($__stmt as $__r) {
+                $sections = json_decode((string)$__r['sections'], true);
+                if (!is_array($sections)) {
+                    $sections = [];
+                }
+                $courses[] = [
+                    'id' => (int)$__r['id'],
+                    'title' => $__r['title'],
+                    'category' => $__r['category'],
+                    'desc' => $__r['description'],
+                    'thumb' => $__r['thumb'],
+                    'sections' => $sections,
+                ];
+            }
+        }
+    } catch (Throwable $e) {
+        // DB ไม่พร้อม — fallback ด้านล่าง
     }
-    $data = json_decode(file_get_contents($path), true);
-    return is_array($data) ? $data : [];
+    if (empty($courses)) {
+        $path = __DIR__ . '/data/courses.json';
+        if (file_exists($path)) {
+            $data = json_decode(file_get_contents($path), true);
+            if (is_array($data)) {
+                $courses = $data;
+            }
+        }
+    }
+    return $courses;
 }
 
 /** หาคอร์สตาม id */
