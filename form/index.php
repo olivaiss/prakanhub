@@ -273,17 +273,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             ['plane', 'ประกันเดินทาง'],
                             ['sparkles', 'อื่นๆ / ให้แนะนำ'],
                         ];
-                        $firstPlan = true;
                         foreach ($planList as $p):
                         ?>
                         <label class="relative cursor-pointer">
-                            <input type="checkbox" name="plans[]" value="<?= $p[1] ?>" <?= $firstPlan ? 'required' : '' ?> class="peer sr-only">
+                            <input type="checkbox" name="plans[]" value="<?= $p[1] ?>" class="peer sr-only">
                             <div class="border border-gray-200 rounded-xl px-3 py-3 flex items-center gap-2 hover:border-brand-navy transition peer-checked:border-brand-navy peer-checked:bg-brand-light peer-checked:shadow-sm">
                                 <i data-lucide="<?= $p[0] ?>" class="w-4 h-4 text-brand-navy shrink-0"></i>
                                 <span class="text-xs font-medium text-brand-text"><?= $p[1] ?></span>
                             </div>
                         </label>
-                        <?php $firstPlan = false; endforeach; ?>
+                        <?php endforeach; ?>
                     </div>
                 </fieldset>
 
@@ -749,6 +748,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (f.disabled || f.type === 'hidden') continue;
             if (!f.checkValidity()) {
                 f.reportValidity();
+                return false;
+            }
+        }
+        // แผนประกัน: ต้องเลือกอย่างน้อย 1 แผน (required บน checkbox ตรวจเป็นรายตัวไม่ได้)
+        if (n === 1) {
+            var planGroup = steps[0].querySelectorAll('input[name="plans[]"]');
+            var anyPlan = false;
+            for (var j = 0; j < planGroup.length; j++) {
+                if (planGroup[j].checked) { anyPlan = true; break; }
+            }
+            if (!anyPlan) {
+                planGroup[0].setCustomValidity('กรุณาเลือกแผนประกันอย่างน้อย 1 แผน');
+                planGroup[0].reportValidity();
+                planGroup[0].setCustomValidity('');
                 return false;
             }
         }
