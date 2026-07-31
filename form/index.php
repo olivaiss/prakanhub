@@ -369,7 +369,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label for="birthdate" class="form-label">วัน เดือน ปี เกิด <span class="req">*</span></label>
-                            <input type="date" id="birthdate" name="birthdate" required autocomplete="bday" class="form-input">
+                            <input type="text" id="birthdate" name="birthdate" required pattern="[0-9]{2}/[0-9]{2}/[0-9]{2}" maxlength="8" inputmode="numeric" class="form-input date-mask" placeholder="วว/ดด/ปป เช่น 15/01/33" autocomplete="off">
                         </div>
                         <div>
                             <label for="id_card" class="form-label">เลขบัตรประชาชน <span class="req">*</span></label>
@@ -381,7 +381,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         <div>
                             <label for="id_expiry" class="form-label">วันที่บัตรหมดอายุ <span class="req">*</span></label>
-                            <input type="date" id="id_expiry" name="id_expiry" required class="form-input">
+                            <input type="text" id="id_expiry" name="id_expiry" required pattern="[0-9]{2}/[0-9]{2}/[0-9]{2}" maxlength="8" inputmode="numeric" class="form-input date-mask" placeholder="วว/ดด/ปป เช่น 15/01/38" autocomplete="off">
                         </div>
                         <div>
                             <label for="marital_status" class="form-label">สถานภาพ <span class="req">*</span></label>
@@ -773,6 +773,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     });
     document.getElementById('prev-btn').addEventListener('click', function () {
         showStep(current - 1);
+    });
+
+    // ─── Date mask: วว/ดด/ปป (auto insert /) ───
+    document.querySelectorAll('input.date-mask').forEach(function (inp) {
+        inp.addEventListener('input', function () {
+            var digits = inp.value.replace(/\D/g, '').slice(0, 6);
+            var out = '';
+            if (digits.length > 0) out = digits.slice(0, 2);
+            if (digits.length > 2) out += '/' + digits.slice(2, 4);
+            if (digits.length > 4) out += '/' + digits.slice(4, 6);
+            inp.value = out;
+        });
     });
 
     // ─── Plan cards: คลิกการ์ดแล้ว toggle เอง (กัน browser ที่ label activation ไม่ทำงาน) ───
