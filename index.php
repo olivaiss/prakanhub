@@ -138,20 +138,20 @@
                 <div class="lg:w-2/3">
                     <h3 class="text-2xl md:text-3xl font-bold text-white mb-2">ร่วมงานกับเรา สร้างรายได้ ไม่จำกัด</h3>
                     <p class="text-blue-200 mb-6">เติบโตไปพร้อมกัน กับทีมคุณภาพ</p>
-                    <div class="flex flex-wrap gap-6 md:gap-10 mb-8">
+                    <div class="flex flex-wrap gap-6 md:gap-10 mb-8 lg:mb-0">
                         <div><div class="text-2xl font-bold text-white mb-1"><i data-lucide="trending-up" class="w-5 h-5 inline text-green-300"></i> รายได้ดี</div><div class="text-xs text-blue-200">ไม่มีเพดาน</div></div>
                         <div><div class="text-2xl font-bold text-white mb-1"><i data-lucide="graduation-cap" class="w-5 h-5 inline text-green-300"></i> อบรมฟรี</div><div class="text-xs text-blue-200">โดยมืออาชีพ</div></div>
                         <div><div class="text-2xl font-bold text-white mb-1"><i data-lucide="heart-handshake" class="w-5 h-5 inline text-green-300"></i> ระบบดูแล</div><div class="text-xs text-blue-200">ครบวงจร</div></div>
                         <div><div class="text-2xl font-bold text-white mb-1"><i data-lucide="plane" class="w-5 h-5 inline text-green-300"></i> โบนัสทริป</div><div class="text-xs text-blue-200">และรางวัลมากมาย</div></div>
                     </div>
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="/career.php" class="bg-white text-brand-navy font-bold px-6 py-3 rounded-xl hover:bg-gray-100 transition flex items-center gap-2 text-sm">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="user-plus" class="lucide lucide-user-plus w-4 h-4"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" x2="19" y1="8" y2="14"></line><line x1="22" x2="16" y1="11" y2="11"></line></svg> สมัครตัวแทน
-                        </a>
-                        <a href="https://line.me/R/ti/p/@945ampel" target="_blank" rel="noopener noreferrer" class="bg-brand-green hover:bg-brand-greenHover text-white font-bold px-6 py-3 rounded-xl flex items-center gap-2 transition text-sm">
-                            <img src="assets/icon/line.svg" class="w-4 h-4" alt="LINE"> แชทกับผม ผ่าน LINE OA
-                        </a>
-                    </div>
+                </div>
+                <div class="lg:w-1/3 flex flex-col sm:flex-row lg:flex-col gap-4 lg:items-stretch lg:justify-center">
+                    <a href="/career.php" class="bg-white text-brand-navy font-bold px-6 py-3.5 rounded-xl hover:bg-gray-100 transition flex items-center justify-center gap-2 text-sm lg:w-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="user-plus" class="lucide lucide-user-plus w-4 h-4"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" x2="19" y1="8" y2="14"></line><line x1="22" x2="16" y1="11" y2="11"></line></svg> สมัครตัวแทน
+                    </a>
+                    <a href="https://line.me/R/ti/p/@945ampel" target="_blank" rel="noopener noreferrer" class="bg-brand-green hover:bg-brand-greenHover text-white font-bold px-6 py-3.5 rounded-xl flex items-center justify-center gap-2 transition text-sm lg:w-full">
+                        <img src="assets/icon/line.svg" class="w-4 h-4" alt="LINE"> แชทกับผม ผ่าน LINE OA
+                    </a>
                 </div>
             </div>
         </section>
