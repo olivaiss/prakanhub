@@ -148,9 +148,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     @media (min-width: 768px) {
         .review-row { grid-template-columns: 260px 1fr; gap: 1rem; }
     }
-
-    /* ─── หน้าแบบฟอร์ม: ซ่อน popup dev (บังการกรอกฟอร์ม) ─── */
-    #dev-popup { display: none !important; }
 </style>
 
 <!-- PAGE HERO -->
