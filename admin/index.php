@@ -133,6 +133,9 @@ $recentMembers = $db->query('SELECT id, member_code, display_name, is_active FRO
                 <div class="table-responsive">
                     <table class="table table-sm mb-0">
                         <tbody>
+                        <?php if (empty($recentArticles)): ?>
+                            <tr><td colspan="3" class="text-center text-muted py-3">ยังไม่มีบทความ</td></tr>
+                        <?php else: ?>
                         <?php foreach ($recentArticles as $a): ?>
                             <tr>
                                 <td class="text-truncate" style="max-width:180px"><?= admin_e($a['title']) ?></td>
@@ -140,6 +143,7 @@ $recentMembers = $db->query('SELECT id, member_code, display_name, is_active FRO
                                 <td><?= $a['is_active'] ? '<span class="badge bg-success">แสดง</span>' : '<span class="badge bg-secondary">ซ่อน</span>' ?></td>
                             </tr>
                         <?php endforeach; ?>
+                        <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
@@ -153,6 +157,9 @@ $recentMembers = $db->query('SELECT id, member_code, display_name, is_active FRO
                 <div class="table-responsive">
                     <table class="table table-sm mb-0">
                         <tbody>
+                        <?php if (empty($recentTestimonials)): ?>
+                            <tr><td colspan="3" class="text-center text-muted py-3">ยังไม่มีรีวิว</td></tr>
+                        <?php else: ?>
                         <?php foreach ($recentTestimonials as $t): ?>
                             <tr>
                                 <td><?= admin_e($t['name']) ?></td>
@@ -160,6 +167,7 @@ $recentMembers = $db->query('SELECT id, member_code, display_name, is_active FRO
                                 <td><?= $t['is_active'] ? '<span class="badge bg-success">แสดง</span>' : '<span class="badge bg-secondary">ซ่อน</span>' ?></td>
                             </tr>
                         <?php endforeach; ?>
+                        <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
@@ -173,6 +181,9 @@ $recentMembers = $db->query('SELECT id, member_code, display_name, is_active FRO
                 <div class="table-responsive">
                     <table class="table table-sm mb-0">
                         <tbody>
+                        <?php if (empty($recentMembers)): ?>
+                            <tr><td colspan="3" class="text-center text-muted py-3">ยังไม่มีรหัสสมาชิก — เพิ่มที่หน้ารหัสสมาชิก</td></tr>
+                        <?php else: ?>
                         <?php foreach ($recentMembers as $m): ?>
                             <tr>
                                 <td class="font-monospace"><?= admin_e($m['member_code']) ?></td>
@@ -180,6 +191,7 @@ $recentMembers = $db->query('SELECT id, member_code, display_name, is_active FRO
                                 <td><?= $m['is_active'] ? '<span class="badge bg-success">ใช้งาน</span>' : '<span class="badge bg-secondary">ปิด</span>' ?></td>
                             </tr>
                         <?php endforeach; ?>
+                        <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
