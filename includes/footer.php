@@ -88,7 +88,7 @@ $__siteTt = $SITE['tiktok_url'] ?? '#';
                 <div class="flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-1.5 text-xs font-medium text-blue-200 mb-2">
                     <a href="/index.php" class="hover:text-white">หน้าแรก</a> <span class="text-white/20">|</span>
                     <a href="/about.php" class="hover:text-white">เกี่ยวกับผม</a> <span class="text-white/20">|</span>
-                    <a href="/life.php" class="hover:text-white">ประกันของเรา</a> <span class="text-white/20">|</span>
+                    <a href="/category.php?slug=life" class="hover:text-white">ประกันของเรา</a> <span class="text-white/20">|</span>
                     <a href="<?= $formUrl ?>" class="hover:text-white">แบบฟอร์มทำประกัน</a> <span class="text-white/20">|</span>
                     <a href="<?= $memberUrl ?>" class="hover:text-white">ระบบสมาชิก</a> <span class="text-white/20">|</span>
                     <a href="/career.php" class="hover:text-white">ร่วมงานกับเรา</a> <span class="text-white/20">|</span>

@@ -1,116 +1,104 @@
 <?php
-$data = json_decode(file_get_contents(__DIR__ . '/assets/data/insurance-data.json'), true);
-$sections = $data['health'] ?? [];
+$pageTitle = 'ประกันสุขภาพ';
+try {
+    require_once __DIR__ . '/includes/db.php';
+} catch (Throwable $e) { /* no DB */ }
 
-// ═══ อ่านแผนประกันจากฐานข้อมูล (ตาราง products) — fallback: JSON ด้านบน ═══
+// ═══ หมวดย่อยของประกันสุขภาพ (จาก DB categories — ลิงก์ไปหน้าแยก) ═══
+$__subSlugs = ['critical', 'cancer', 'kids', 'nocopay', 'additional', 'income', 'senior'];
+$__subs = [];
 try {
     if (function_exists('getDB')) {
-        $__stmt = getDB()->query("SELECT title, desc_text, badge FROM products WHERE category = 'health' AND is_active = 1 ORDER BY sort_order, id");
-        $__rows = $__stmt->fetchAll();
-        if (count($__rows) > 0) {
-            $sections = [];
-            foreach ($__rows as $__r) {
-                $__g = $__r['badge'] ?: 'อื่นๆ';
-                if (!isset($sections[$__g])) $sections[$__g] = [];
-                $__highlights = array_values(array_filter(array_map('trim', explode(',', (string)$__r['desc_text']))));
-                $sections[$__g][] = [
-                    'name' => $__r['title'],
-                    'type' => $__r['badge'],
-                    'highlights' => $__highlights ?: ['ติดต่อเราเพื่อดูรายละเอียด'],
-                    'id' => (int)$__r['id'],
-                    'premium_from' => $__r['premium_from'],
-                ];
+        $__rows = getDB()->query('SELECT slug, title, icon, description, link_url FROM categories WHERE is_active = 1 ORDER BY sort_order, id')->fetchAll();
+        foreach ($__rows as $__c) {
+            if (in_array($__c['slug'], $__subSlugs, true)) {
+                $__subs[] = $__c;
             }
         }
     }
-} catch (Throwable $e) {
-    // DB ไม่พร้อม — ใช้ JSON
-}
-?>
-<?php include 'includes/header.php'; ?>
+} catch (Throwable $e) { /* fallback below */ }
 
-<section class="bg-brand-navy text-white py-12">
+// fallback ถ้าไม่มี DB
+if (empty($__subs)) {
+    $__subs = [
+        ['slug' => 'critical', 'title' => 'ประกันโรคร้ายแรง', 'icon' => 'shield-alert', 'description' => 'คุ้มครองโรคหนักแบบรู้กัน เจอ จ่าย จบ', 'link_url' => '/category.php?slug=critical'],
+        ['slug' => 'cancer', 'title' => 'ประกันมะเร็ง', 'icon' => 'shield-plus', 'description' => 'คุ้มครองมะเร็งทุกชนิด ทุกระยะ ตรวจเจอปุ๊บ จ่ายปั๊บ', 'link_url' => '/category.php?slug=cancer'],
+        ['slug' => 'kids', 'title' => 'ประกันเด็ก', 'icon' => 'baby', 'description' => 'วางแผนอนาคตให้ลูกน้อย ตั้งแต่ออมถึงคุ้มครอง', 'link_url' => '/category.php?slug=kids'],
+        ['slug' => 'nocopay', 'title' => 'ประกันสุขภาพไม่มีส่วนร่วมจ่าย', 'icon' => 'credit-card', 'description' => 'จ่ายตรงไม่ต้องสำรองจ่าย ไม่มีค่าใช้จ่ายส่วนแรก', 'link_url' => '/category.php?slug=nocopay'],
+        ['slug' => 'additional', 'title' => 'ประกันสุขภาพเพิ่มเติมจากสวัสดิการ', 'icon' => 'layers', 'description' => 'เสริมความคุ้มครองจากสวัสดิการบริษัท/ประกันกลุ่ม', 'link_url' => '/category.php?slug=additional'],
+        ['slug' => 'income', 'title' => 'ประกันชดเชยรายได้', 'icon' => 'dollar-sign', 'description' => 'เจ็บป่วยไม่หยุด รายได้ไม่ขาด', 'link_url' => '/category.php?slug=income'],
+        ['slug' => 'senior', 'title' => 'ประกันผู้สูงอายุ', 'icon' => 'users', 'description' => 'อุ่นใจในวัยเกษียณด้วยความคุ้มครองที่ออกแบบมาสำหรับผู้สูงอายุ', 'link_url' => '/category.php?slug=senior'],
+    ];
+}
+
+// นับจำนวนแผนต่อหมวด (badge map)
+$__badgeMap = [
+    'critical' => ['critical'], 'cancer' => ['cancer'], 'kids' => ['kids'], 'nocopay' => ['nocopay'],
+    'additional' => ['additional'], 'income' => ['income'], 'senior' => ['senior50'],
+];
+$__counts = [];
+try {
+    if (function_exists('getDB')) {
+        $__plans = getDB()->query('SELECT badge, COUNT(*) c FROM products WHERE category = "health" AND is_active = 1 GROUP BY badge')->fetchAll();
+        foreach ($__plans as $__p) {
+            $__counts[$__p['badge']] = (int)$__p['c'];
+        }
+    }
+} catch (Throwable $e) { /* ignore */ }
+
+include 'includes/header.php';
+?>
+
+<!-- Hero -->
+<section class="bg-brand-navy text-white py-12 md:py-16">
     <div class="max-w-[1400px] mx-auto px-4 md:px-8">
         <nav class="text-sm text-blue-200 mb-3">
-            <a href="/index.php" class="hover:text-white transition">หน้าแรก</a><span class="mx-2">/</span>
+            <a href="/index.php" class="hover:text-white transition">หน้าแรก</a>
+            <span class="mx-2">/</span>
             <span class="text-white">ประกันสุขภาพ</span>
         </nav>
-        <h1 class="text-3xl md:text-4xl font-bold mb-3">ประกันสุขภาพ</h1>
-        <p class="text-blue-200 text-lg max-w-3xl">ดูแลสุขภาพคุณและคนที่คุณรัก ด้วยแผนประกันสุขภาพที่ครอบคลุมทุกระดับ ตั้งแต่วัยเด็กจนถึงผู้สูงอายุ</p>
+        <h1 class="text-3xl md:text-5xl font-bold mb-4">ประกันสุขภาพ</h1>
+        <p class="text-blue-200 text-lg max-w-3xl">สุขภาพดีคือทรัพย์สินที่มีค่าที่สุด วางแผนค่ารักษาพยาบาลล่วงหน้า ด้วยประกันสุขภาพจากอลิอันซ์ อยุธยา ครอบคลุมทั้งโรคร้ายแรง มะเร็ง เด็ก และผู้สูงอายุ</p>
     </div>
 </section>
 
-<?php
-$section_config = [
-    'critical'  => ['icon' => 'shield-alert', 'title' => 'ประกันโรคร้ายแรง', 'sub' => 'พร้อมรับมือโรคร้ายด้วยแผนประกันที่ครอบคลุม 48 โรคร้าย'],
-    'cancer'    => ['icon' => 'activity', 'title' => 'ประกันมะเร็ง', 'sub' => 'พร้อมรับมือโรคมะเร็งทุกระยะ ตั้งแต่วินิจฉัยจนถึงรักษาหาย'],
-    'nocopay'   => ['icon' => 'heart', 'title' => 'ประกันสุขภาพเหมาจ่าย', 'sub' => 'จ่ายค่ารักษาตามจริง ไม่ต้องสำรองจ่าย หลากหลายแผนจาก 750,000 ถึง 200 ล้านบาท'],
-    'kids'      => ['icon' => 'baby', 'title' => 'ประกันสุขภาพเด็ก', 'sub' => 'อุ่นใจทั้งครอบครัว ดูแลสุขภาพลูกน้อยอย่างสมบูรณ์ ตั้งแต่แรกเกิด'],
-    'senior50'  => ['icon' => 'users', 'title' => 'ประกันสุขภาพผู้สูงอายุ (50 ปีขึ้นไป)', 'sub' => 'ดูแลสุขภาพอย่างมั่นใจในทุกวัย แผนประกันที่ออกแบบสำหรับผู้สูงอายุ'],
-    'additional'=> ['icon' => 'file-check-2', 'title' => 'ประกันสุขภาพเสริมสวัสดิการ', 'sub' => 'เสริมวงเงินรักษาพยาบาลให้อุ่นใจยิ่งขึ้น จาก 500,000 ถึง 60 ล้านบาท'],
-    'income'    => ['icon' => 'dollar-sign', 'title' => 'ประกันชดเชยรายได้', 'sub' => 'ไม่ต้องกังวลเรื่องขาดรายได้เมื่อเจ็บป่วยนอนโรงพยาบาล'],
-];
-// ═══ badge → หมวดในฟอร์ม (สำหรับปุ่ม "เลือกแผนนี้") ═══
-$__formPlanMap = [
-    'critical' => 'ประกันโรคร้ายแรง',
-    'cancer' => 'ประกันโรคร้ายแรง',
-    'nocopay' => 'ประกันสุขภาพ',
-    'kids' => 'ประกันเด็ก',
-    'senior50' => 'ประกันสุขภาพ',
-    'additional' => 'ประกันสุขภาพ',
-    'income' => 'ประกันชดเชยรายได้',
-];
-$bg_alt = false;
-foreach ($sections as $key => $products):
-    $cfg = $section_config[$key] ?? ['icon' => 'check-circle-2', 'title' => $key, 'sub' => ''];
-    $bg_alt = !$bg_alt;
-?>
-<section id="<?= $key ?>" class="py-12 scroll-mt-20 <?= $bg_alt ? 'bg-brand-light' : '' ?>">
+<!-- หมวดย่อย -->
+<section class="py-12">
     <div class="max-w-[1400px] mx-auto px-4 md:px-8">
-        <h2 class="text-2xl font-bold text-brand-navy mb-1 flex items-center gap-2"><i data-lucide="<?= $cfg['icon'] ?>" class="w-6 h-6"></i> <?= $cfg['title'] ?></h2>
-        <p class="text-brand-gray mb-8"><?= $cfg['sub'] ?></p>
+        <h2 class="text-2xl font-bold text-brand-navy mb-2">หมวดย่อยประกันสุขภาพ</h2>
+        <p class="text-brand-gray mb-8">เลือกหมวดที่ตรงกับความต้องการของคุณ — แต่ละหมวดมีรายละเอียดแผนและเบี้ยให้เปรียบเทียบ</p>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <?php foreach ($products as $p): ?>
-            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover-card flex flex-col">
-                <div class="flex items-center gap-2 mb-3 flex-wrap">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-brand-navy bg-brand-light px-3 py-1 rounded-full"><?= $p['type'] ?? '' ?></span>
-                    <?php if (!empty($p['coverage'])): ?>
-                    <span class="text-[10px] font-bold text-white bg-brand-navy px-3 py-1 rounded-full"><?= $p['coverage'] ?></span>
-                    <?php endif; ?>
+            <?php foreach ($__subs as $s): ?>
+            <?php
+            $__cnt = 0;
+            foreach (($__badgeMap[$s['slug']] ?? []) as $__b) { $__cnt += $__counts[$__b] ?? 0; }
+            ?>
+            <a href="<?= htmlspecialchars($s['link_url']) ?>" class="group bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg hover:border-brand-navy/20 transition flex flex-col">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-brand-light flex items-center justify-center group-hover:bg-brand-navy transition-colors">
+                        <i data-lucide="<?= htmlspecialchars($s['icon'] ?: 'shield') ?>" class="w-6 h-6 text-brand-navy group-hover:text-white transition-colors"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-brand-gray bg-gray-100 px-2.5 py-1 rounded-full"><?= $__cnt ?> แผน</span>
                 </div>
-                <h3 class="text-lg font-bold text-brand-navy mb-3"><?= $p['name'] ?></h3>
-                <?php if (!empty($p['plans'])): ?>
-                <p class="text-xs text-brand-gray mb-2"><i data-lucide="layers" class="w-3 h-3 inline"></i> <?= $p['plans'] ?></p>
-                <?php endif; ?>
-                <?php if (!empty($p['room_rate'])): ?>
-                <p class="text-xs text-brand-gray mb-2"><i data-lucide="bed" class="w-3 h-3 inline"></i> ค่าห้อง: <?= $p['room_rate'] ?></p>
-                <?php endif; ?>
-                <?php if (!empty($p['area'])): ?>
-                <p class="text-xs text-brand-gray mb-2"><i data-lucide="globe" class="w-3 h-3 inline"></i> พื้นที่คุ้มครอง: <?= $p['area'] ?></p>
-                <?php endif; ?>
-                <ul class="space-y-1.5 text-sm text-brand-text mb-4 flex-1">
-                    <?php foreach ($p['highlights'] as $h): ?>
-                    <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-green-600 shrink-0 mt-0.5"></i> <?= $h ?></li>
-                    <?php endforeach; ?>
-                </ul>
-                <div class="flex gap-2 mt-auto pt-3 border-t border-gray-100">
-                    <a href="<?= !empty($p['id']) ? '/plan.php?id=' . (int)$p['id'] : '/contact.php' ?>" class="flex-1 text-center text-sm font-bold text-brand-navy border border-brand-navy hover:bg-brand-light rounded-lg py-2 transition">ดูรายละเอียด</a>
-                    <a href="/form/?plan=<?= urlencode($__formPlanMap[$key] ?? '') ?>&plan_name=<?= urlencode($p['name']) ?>" class="flex-1 text-center text-sm font-bold text-white bg-brand-green hover:bg-brand-greenHover rounded-lg py-2 transition">เลือกแผนนี้</a>
-                </div>
-            </div>
+                <h3 class="font-bold text-brand-navy text-lg mb-2 group-hover:text-brand-navyHover transition"><?= htmlspecialchars($s['title']) ?></h3>
+                <p class="text-sm text-brand-gray leading-relaxed mb-4 flex-1"><?= htmlspecialchars(str_replace('<br>', ' ', (string)$s['description'])) ?></p>
+                <div class="text-sm font-semibold text-brand-green flex items-center gap-1 group-hover:gap-2 transition-all">ดูแผนทั้งหมด <span>→</span></div>
+            </a>
             <?php endforeach; ?>
         </div>
     </div>
 </section>
-<?php endforeach; ?>
 
-<section class="py-12 bg-brand-navy text-white text-center">
+<!-- CTA -->
+<section class="pb-16">
     <div class="max-w-[1400px] mx-auto px-4 md:px-8">
-        <h2 class="text-2xl md:text-3xl font-bold mb-4">เลือกแผนประกันสุขภาพไม่ถูก? ให้เราช่วยคุณ!</h2>
-        <p class="text-blue-200 mb-6">ให้คำปรึกษาฟรี! ไม่มีค่าใช้จ่าย พร้อมแนะนำแผนที่ใช่สำหรับคุณ</p>
-        <div class="flex flex-wrap justify-center gap-4">
-            <a href="https://lin.ee/QngrNQ3" target="_blank" class="inline-flex items-center gap-2 bg-white text-brand-navy font-bold px-8 py-3 rounded-full hover:bg-gray-100 transition shadow-md">ปรึกษาฟรี</a>
-            <a href="https://lin.ee/QngrNQ3" target="_blank" class="inline-flex items-center gap-2 bg-brand-green text-white font-bold px-8 py-3 rounded-full hover:bg-brand-greenHover transition shadow-md"><img src="assets/icon/line.svg" class="w-5 h-5" alt="LINE"> แชทผ่าน LINE</a>
+        <div class="bg-brand-navy rounded-2xl py-10 text-center">
+            <h2 class="text-2xl md:text-3xl font-bold mb-4 text-white">สนใจประกันสุขภาพ?</h2>
+            <p class="text-blue-200 mb-6">ให้คำปรึกษาฟรี! ไม่มีค่าใช้จ่าย พร้อมแนะนำแผนที่ใช่สำหรับคุณ</p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="/form/" class="inline-flex items-center gap-2 bg-white text-brand-navy font-bold px-8 py-3 rounded-full hover:bg-gray-100 transition shadow-md">ปรึกษาฟรี</a>
+                <a href="https://lin.ee/QngrNQ3" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-brand-green text-white font-bold px-8 py-3 rounded-full hover:bg-brand-greenHover transition shadow-md"><img src="assets/icon/line.svg" class="w-5 h-5" alt="LINE"> แชทผ่าน LINE</a>
+            </div>
         </div>
     </div>
 </section>

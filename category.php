@@ -40,19 +40,15 @@ try {
                     'savings' => ['saving', 'tax'], 'pension' => ['retirement'], 'income' => ['income'],
                     'critical' => ['critical', 'cancer'], 'accident' => ['accident'], 'kids' => ['kids'],
                     'car' => ['motor'], 'travel' => ['travel'], 'group' => ['group'], 'corporate' => ['property'],
+                    'tax' => ['tax'], 'inheritance' => ['inheritance'], 'unit-linked' => ['unit-linked'],
+                    'senior' => ['senior', 'senior50'], 'cancer' => ['cancer'],
+                    'nocopay' => ['nocopay'], 'additional' => ['additional'], 'property' => ['property'],
                 ];
                 $__wanted = $__badgeMap[$slug] ?? [];
-                if ($__mainCat && isset($__map[$__mainCat])) {
-                    foreach ($__map[$__mainCat] as $__p) {
+                // ค้นทุกหมวด (ไม่จำกัด mainCat — link_url ตอนนี้ชี้ category.php โดยตรง)
+                foreach ($__map as $__catPlans) {
+                    foreach ($__catPlans as $__p) {
                         if (in_array($__p['badge'], $__wanted, true)) $plans[] = $__p;
-                    }
-                }
-                // ถ้ายังว่าง → ลองทุกหมวด
-                if (empty($plans)) {
-                    foreach ($__map as $__catPlans) {
-                        foreach ($__catPlans as $__p) {
-                            if (in_array($__p['badge'], $__wanted, true)) $plans[] = $__p;
-                        }
                     }
                 }
             }
