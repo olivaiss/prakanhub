@@ -102,7 +102,7 @@ $recentMembers = $db->query('SELECT id, member_code, display_name, is_active FRO
             <div class="card-body">
                 <h4 class="card-title">📊 ข้อมูลลูกค้า 14 วันล่าสุด</h4>
                 <p class="card-title-desc">ข้อความติดต่อ + ใบสมัครทำประกัน ต่อวัน</p>
-                <div id="chart-inbox" class="ct-chart ct-perfect-fourth" style="height:260px"></div>
+                <div id="chart-inbox" class="ct-chart" style="height:260px"></div>
             </div>
         </div>
     </div>
