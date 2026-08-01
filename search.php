@@ -74,7 +74,7 @@ include 'includes/header.php';
                 'life' => '/life.php', 'health' => '/health.php', default => '/general.php',
             };
             ?>
-            <a href="<?= $catPage ?>#<?= htmlspecialchars($p['badge']) ?>" class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover-card group">
+            <a href="/plan.php?id=<?= (int)$p['id'] ?>" class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover-card group">
                 <span class="text-[10px] font-bold text-brand-navy bg-brand-light px-3 py-1 rounded-full"><?= htmlspecialchars($p['badge']) ?></span>
                 <h3 class="font-bold text-brand-text mt-3 group-hover:text-brand-navy transition"><?= htmlspecialchars($p['title']) ?></h3>
                 <p class="text-xs text-brand-gray mt-2"><?= htmlspecialchars(mb_substr((string)$p['desc_text'], 0, 100)) ?>…</p>

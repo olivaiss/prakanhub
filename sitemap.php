@@ -24,10 +24,16 @@ $pages = [
 
 // บทความจาก DB (fallback: id 1-4)
 $articleIds = [1, 2, 3, 4];
+$catSlugs = [];
+$planIds = [];
 try {
     require_once __DIR__ . '/includes/db.php';
     $__stmt = getDB()->query('SELECT id FROM articles WHERE is_active = 1 ORDER BY id');
     $articleIds = array_column($__stmt->fetchAll(), 'id');
+    $__stmt = getDB()->query('SELECT slug FROM categories WHERE is_active = 1 ORDER BY id');
+    $catSlugs = array_column($__stmt->fetchAll(), 'slug');
+    $__stmt = getDB()->query('SELECT id FROM products WHERE is_active = 1 ORDER BY id');
+    $planIds = array_column($__stmt->fetchAll(), 'id');
 } catch (Throwable $e) {
     // fallback
 }
@@ -40,5 +46,11 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 <?php endforeach; ?>
 <?php foreach ($articleIds as $aid): ?>
     <url><loc><?= $BASE ?>/article.php?id=<?= (int)$aid ?></loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+<?php endforeach; ?>
+<?php foreach ($catSlugs as $cslug): ?>
+    <url><loc><?= $BASE ?>/category.php?slug=<?= htmlspecialchars($cslug) ?></loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+<?php endforeach; ?>
+<?php foreach ($planIds as $pid): ?>
+    <url><loc><?= $BASE ?>/plan.php?id=<?= (int)$pid ?></loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
 <?php endforeach; ?>
 </urlset>

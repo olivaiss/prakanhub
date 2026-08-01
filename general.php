@@ -17,6 +17,8 @@ try {
                     'name' => $__r['title'],
                     'type' => $__r['badge'],
                     'highlights' => $__highlights ?: ['ติดต่อเราเพื่อดูรายละเอียด'],
+                    'id' => (int)$__r['id'],
+                    'premium_from' => $__r['premium_from'],
                 ];
             }
         }

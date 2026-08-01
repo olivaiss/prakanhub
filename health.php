@@ -17,6 +17,8 @@ try {
                     'name' => $__r['title'],
                     'type' => $__r['badge'],
                     'highlights' => $__highlights ?: ['ติดต่อเราเพื่อดูรายละเอียด'],
+                    'id' => (int)$__r['id'],
+                    'premium_from' => $__r['premium_from'],
                 ];
             }
         }
@@ -81,7 +83,7 @@ foreach ($sections as $key => $products):
                     <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-green-600 shrink-0 mt-0.5"></i> <?= $h ?></li>
                     <?php endforeach; ?>
                 </ul>
-                <a href="/contact.php" class="text-sm font-bold text-brand-navy hover:underline flex items-center gap-1 mt-auto pt-3 border-t border-gray-100">สนใจแผนนี้ <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+                <a href="<?= !empty($p['id']) ? '/plan.php?id=' . (int)$p['id'] : '/contact.php' ?>" class="text-sm font-bold text-brand-navy hover:underline flex items-center gap-1 mt-auto pt-3 border-t border-gray-100">ดูรายละเอียด <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
             </div>
             <?php endforeach; ?>
         </div>

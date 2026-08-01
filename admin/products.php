@@ -59,13 +59,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $cat = in_array($_POST['category'] ?? '', ['life', 'health', 'general'], true) ? $_POST['category'] : 'life';
             $title = trim($_POST['title'] ?? '');
             if ($title === '') throw new Exception('กรุณากรอกชื่อแผน');
-            $data = [$cat, $title, trim($_POST['desc_text'] ?? ''), trim($_POST['img'] ?? ''), trim($_POST['link_url'] ?? ''), trim($_POST['badge'] ?? ''), (int)($_POST['sort_order'] ?? 0), !empty($_POST['is_active']) ? 1 : 0];
+            $data = [$cat, $title, trim($_POST['desc_text'] ?? ''), trim($_POST['img'] ?? ''), trim($_POST['link_url'] ?? ''), trim($_POST['badge'] ?? ''), (int)($_POST['sort_order'] ?? 0), !empty($_POST['is_active']) ? 1 : 0,
+                trim($_POST['company'] ?? ''), trim($_POST['premium_from'] ?? ''), trim($_POST['coverage'] ?? ''), trim($_POST['plans'] ?? ''),
+                trim($_POST['room_rate'] ?? ''), trim($_POST['area'] ?? ''), trim($_POST['key_benefits'] ?? ''), trim($_POST['age_range'] ?? ''), trim($_POST['details_url'] ?? '')];
             if ($id > 0) {
                 $data[] = $id;
-                $db->prepare('UPDATE products SET category=?, title=?, desc_text=?, img=?, link_url=?, badge=?, sort_order=?, is_active=? WHERE id=?')->execute($data);
+                $db->prepare('UPDATE products SET category=?, title=?, desc_text=?, img=?, link_url=?, badge=?, sort_order=?, is_active=?, company=?, premium_from=?, coverage=?, plans=?, room_rate=?, area=?, key_benefits=?, age_range=?, details_url=? WHERE id=?')->execute($data);
                 admin_flash('บันทึกแผนเรียบร้อย');
             } else {
-                $db->prepare('INSERT INTO products (category, title, desc_text, img, link_url, badge, sort_order, is_active) VALUES (?,?,?,?,?,?,?,?)')->execute($data);
+                $db->prepare('INSERT INTO products (category, title, desc_text, img, link_url, badge, sort_order, is_active, company, premium_from, coverage, plans, room_rate, area, key_benefits, age_range, details_url) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')->execute($data);
                 admin_flash('เพิ่มแผนเรียบร้อย');
             }
         } elseif ($action === 'delete') {
@@ -139,6 +141,17 @@ $__isEdit = $edit ? 'แก้ไข' : 'เพิ่ม';
 <div class="col-md-6"><label class="form-label">ลิงก์</label><input type="text" class="form-control" name="link_url" value="<?= admin_e($e['link_url']) ?>" ></div>
 <div class="col-md-4"><label class="form-label">เรียงลำดับ</label><input type="number" class="form-control" name="sort_order" value="<?= (int)$e['sort_order'] ?>"></div>
 <div class="col-md-4"><div class="form-check form-switch mt-4"><input type="checkbox" class="form-check-input" name="is_active" id="e_is_active" value="1" <?= $e['is_active'] ? 'checked' : '' ?>><label class="form-check-label" for="e_is_active">แสดงผล</label></div></div>
+
+<h6 class="mt-4 mb-3 text-muted fw-bold border-bottom pb-2">📋 รายละเอียดแผน (หน้า plan.php)</h6>
+<div class="col-md-4"><label class="form-label">บริษัทประกัน</label><input type="text" class="form-control" name="company" value="<?= admin_e($e['company']) ?>" placeholder="อลิอันซ์ อยุธยา"></div>
+<div class="col-md-4"><label class="form-label">เบี้ยเริ่มต้น</label><input type="text" class="form-control" name="premium_from" value="<?= admin_e($e['premium_from']) ?>" placeholder="เช่น เริ่มต้น 12,000 บาท/ปี"></div>
+<div class="col-md-4"><label class="form-label">อายุรับประกัน</label><input type="text" class="form-control" name="age_range" value="<?= admin_e($e['age_range']) ?>" placeholder="เช่น รับอายุ 1-60 ปี"></div>
+<div class="col-md-4"><label class="form-label">ค่าห้องรายวัน</label><input type="text" class="form-control" name="room_rate" value="<?= admin_e($e['room_rate']) ?>" placeholder="เช่น 4,000 บาท/วัน"></div>
+<div class="col-md-4"><label class="form-label">พื้นที่ให้บริการ</label><input type="text" class="form-control" name="area" value="<?= admin_e($e['area']) ?>" placeholder="เช่น ทั่วประเทศ"></div>
+<div class="col-md-4"><label class="form-label">URL ข้อมูลบริษัท</label><input type="text" class="form-control" name="details_url" value="<?= admin_e($e['details_url']) ?>" placeholder="https://www.allianz-ayudhya.co.th/..."></div>
+<div class="col-12"><label class="form-label">ความคุ้มครองหลัก (ทีละบรรทัด)</label><textarea class="form-control" name="key_benefits" rows="5"><?= admin_e($e['key_benefits']) ?></textarea></div>
+<div class="col-12"><label class="form-label">รายละเอียดความคุ้มครอง (ทีละบรรทัด)</label><textarea class="form-control" name="coverage" rows="6"><?= admin_e($e['coverage']) ?></textarea></div>
+<div class="col-12"><label class="form-label">แบบแผน/ระดับความคุ้มครอง (ทีละบรรทัด)</label><textarea class="form-control" name="plans" rows="4"><?= admin_e($e['plans']) ?></textarea></div>
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary waves-effect"><i class="ti ti-check me-1"></i> บันทึก</button>
                         <a href="products.php" class="btn btn-secondary waves-effect">ย้อนกลับ</a>
@@ -159,7 +172,7 @@ $__isEdit = $edit ? 'แก้ไข' : 'เพิ่ม';
         <div class="col-md-4">
             <div class="float-end">
                 <form method="post" class="d-inline me-1"><input type="hidden" name="action" value="import"><button type="submit" class="btn btn-outline-info waves-effect btn-del"><i class="ti ti-download me-1"></i>Import JSON</button></form>
-                <a href="products.php?new=1" class="btn btn-primary waves-effect"><i class="ti ti-plus me-1"></i></a>
+                <a href="products.php?new=1" class="btn btn-primary waves-effect"><i class="ti ti-plus me-1"></i> เพิ่มแผน</a>
             </div>
         </div>
     </div>
