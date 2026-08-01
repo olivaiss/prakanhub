@@ -86,9 +86,15 @@ $adminMenu = isset($adminMenu) ? $adminMenu : 'dashboard';
                     <i class="fa fa-fw fa-bars"></i>
                 </button>
                 <div class="navbar-brand-box">
-                    <a href="index.php" class="d-flex align-items-center gap-2 text-decoration-none">
-                        <span class="fw-bold" style="color:#003781;font-size:1rem;white-space:nowrap">📋 Admin</span>
-                        <small class="d-none d-sm-inline fw-medium" style="color:#5B6B82;font-size:.7rem">Prakanhub</small>
+                    <a href="index.php" class="d-flex align-items-center gap-2 text-decoration-none" title="Prakanhub Admin">
+                        <!-- โลโก้: โล่ + เครื่องหมายถูก (ธีมประกัน) -->
+                        <span class="d-inline-flex align-items-center justify-content-center rounded-lg shadow-sm" style="width:34px;height:34px;background:linear-gradient(135deg,#003781 0%,#0058A8 100%);color:#fff;font-size:1.05rem;flex-shrink:0">
+                            <i class="ti ti-shield-check"></i>
+                        </span>
+                        <span class="d-flex flex-column" style="line-height:1.1">
+                            <span class="fw-bold" style="color:#003781;font-size:.92rem;letter-spacing:.3px">Prakanhub</span>
+                            <small class="d-none d-sm-inline text-uppercase fw-semibold" style="color:#00A000;font-size:.55rem;letter-spacing:2px">Admin Panel</small>
+                        </span>
                     </a>
                 </div>
             </div>
