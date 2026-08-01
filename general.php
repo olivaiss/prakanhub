@@ -80,7 +80,7 @@ include 'includes/header.php';
                 </div>
                 <h3 class="font-bold text-brand-navy text-lg mb-2 group-hover:text-brand-navyHover transition"><?= htmlspecialchars($s['title']) ?></h3>
                 <p class="text-sm text-brand-gray leading-relaxed mb-4 flex-1"><?= htmlspecialchars(str_replace('<br>', ' ', (string)$s['description'])) ?></p>
-                <div class="text-sm font-semibold text-brand-green flex items-center gap-1 group-hover:gap-2 transition-all">ดูแผนทั้งหมด <span>→</span></div>
+                <span class="inline-flex items-center justify-center gap-1 text-sm font-bold text-white bg-brand-green hover:bg-brand-greenHover rounded-lg px-4 py-2 transition-all group-hover:gap-2">ดูแผนทั้งหมด <span>→</span></span>
             </a>
             <?php endforeach; ?>
         </div>
