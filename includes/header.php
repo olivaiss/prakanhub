@@ -266,7 +266,7 @@ function closeMenu(){toggleMenu()}
                             </div>
                         </div>
                         <div class="mt-4 pt-3 border-t border-gray-100 text-center">
-                            <a href="/category.php?slug=life" class="text-xs font-medium text-brand-navy hover:underline flex items-center justify-center gap-1">ดูประกันทั้งหมด <i data-lucide="arrow-right" class="w-3 h-3"></i></a>
+                            <a href="/plans.php" class="text-xs font-medium text-brand-navy hover:underline flex items-center justify-center gap-1">ดูประกันทั้งหมด <i data-lucide="arrow-right" class="w-3 h-3"></i></a>
                         </div>
                     </div>
                 </div>
@@ -336,7 +336,7 @@ function closeMenu(){toggleMenu()}
                                 <a href="/category.php?slug=travel" class="flex items-center gap-2 text-sm hover:text-brand-navy transition"><i data-lucide="plane" class="w-3.5 h-3.5 text-brand-navy shrink-0"></i> ประกันเดินทาง</a>
                             </div>
                         </div>
-                        <a href="/category.php?slug=life" class="flex items-center gap-1 text-xs font-medium text-brand-navy hover:underline pt-1 pl-1">ดูประกันทั้งหมด <i data-lucide="arrow-right" class="w-3 h-3"></i></a>
+                        <a href="/plans.php" class="flex items-center gap-1 text-xs font-medium text-brand-navy hover:underline pt-1 pl-1">ดูประกันทั้งหมด <i data-lucide="arrow-right" class="w-3 h-3"></i></a>
                     </div>
                 </div>
                 <a href="/career.php" class="mob-link <?= mobActive('career.php', $currentPage) ?> flex items-center gap-2 py-2 rounded-lg"><i data-lucide="handshake" class="w-4 h-4"></i> ร่วมงานกับเรา</a>

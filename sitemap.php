@@ -18,6 +18,7 @@ $pages = [
     ['privacy.php', '0.3', 'yearly'],
     ['terms.php', '0.3', 'yearly'],
     ['faq.php', '0.5', 'monthly'],
+    ['plans.php', '0.8', 'weekly'],
     ['form/', '0.6', 'monthly'],
     ['member/', '0.4', 'monthly'],
 ];
