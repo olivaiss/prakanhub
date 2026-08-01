@@ -46,10 +46,19 @@ try {
                     'nocopay' => ['nocopay'], 'additional' => ['additional'], 'property' => ['property'],
                 ];
                 $__wanted = $__badgeMap[$slug] ?? [];
-                // ค้นทุกหมวด (ไม่จำกัด mainCat — link_url ตอนนี้ชี้ category.php โดยตรง)
-                foreach ($__map as $__catPlans) {
-                    foreach ($__catPlans as $__p) {
-                        if (in_array($__p['badge'], $__wanted, true)) $plans[] = $__p;
+                // หมวด corporate → เฉพาะแผนที่ category='corporate' (SME — ไม่ปนบ้าน)
+                if ($slug === 'corporate') {
+                    foreach ($__map['corporate'] ?? [] as $__p) {
+                        $plans[] = $__p;
+                    }
+                } else {
+                    // ค้นทุกหมวด (ไม่จำกัด mainCat — link_url ตอนนี้ชี้ category.php โดยตรง)
+                    foreach ($__map as $__catPlans) {
+                        foreach ($__catPlans as $__p) {
+                            // property (บ้าน) ไม่รวมแผนของหมวด corporate (SME)
+                            if ($slug === 'property' && ($__p['category'] ?? '') === 'corporate') continue;
+                            if (in_array($__p['badge'], $__wanted, true)) $plans[] = $__p;
+                        }
                     }
                 }
             }
