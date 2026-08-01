@@ -28,6 +28,18 @@ $adminMenu = isset($adminMenu) ? $adminMenu : 'dashboard';
         .sidebar-logo small { color: #8ba4c0; font-weight: 500; }
 
         /* ═══ Responsive ทุกโหมด (มือถือ/แท็บเล็ต/แล็ปท็อป/เดสก์ท็อป) ═══ */
+        /* โลโก้ topbar: ใหญ่ + กึ่งกลางในกล่องแบรนด์ */
+        .navbar-brand-box { display: flex; align-items: center; justify-content: center; min-width: 240px; padding: 0 .75rem; text-align: center; }
+        .navbar-brand-box .logo { display: inline-flex; align-items: center; justify-content: center; margin: 0; }
+        .navbar-brand-box .logo-sm img, .navbar-brand-box .logo-lg img { display: block; }
+        /* ทำให้ topbar + กล่องโลโก้ + sidebar เป็นสีเดียวกัน — ไม่มีเส้นแบ่ง/ขอบ */
+        #page-topbar, .navbar-brand-box { background-color: var(--bs-sidebar-dark-bg) !important; }
+        @media (max-width: 991.98px) {
+            .navbar-brand-box { min-width: 0; padding: 0 1rem; }
+        }
+        @media (max-width: 575.98px) {
+            .navbar-brand-box { padding: 0 .5rem; }
+        }
         /* ฟอร์มฟิลด์ไม่เล็กเกินบนมือถือ */
         @media (max-width: 575.98px) {
             .form-control, .form-select { font-size: 16px; } /* กัน iOS zoom */
@@ -80,12 +92,12 @@ $adminMenu = isset($adminMenu) ? $adminMenu : 'dashboard';
                 <!-- LOGO (ตาม template Veltrix) -->
                 <div class="navbar-brand-box">
                     <a href="index.php" class="logo logo-dark">
-                        <span class="logo-sm"><img src="assets/images/logo-sm.png" alt="Prakanhub" height="24"></span>
-                        <span class="logo-lg"><img src="assets/images/logo-dark.png" alt="Prakanhub Admin" height="20"></span>
+                        <span class="logo-sm"><img src="assets/images/logo-sm.png" alt="Prakanhub" height="42"></span>
+                        <span class="logo-lg"><img src="assets/images/logo-dark.png" alt="Prakanhub Admin" height="38"></span>
                     </a>
                     <a href="index.php" class="logo logo-light">
-                        <span class="logo-sm"><img src="assets/images/logo-sm.png" alt="Prakanhub" height="24"></span>
-                        <span class="logo-lg"><img src="assets/images/logo-light.png" alt="Prakanhub Admin" height="20"></span>
+                        <span class="logo-sm"><img src="assets/images/logo-sm.png" alt="Prakanhub" height="42"></span>
+                        <span class="logo-lg"><img src="assets/images/logo-light.png" alt="Prakanhub Admin" height="38"></span>
                     </a>
                 </div>
 
