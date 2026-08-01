@@ -26,6 +26,47 @@ $adminMenu = isset($adminMenu) ? $adminMenu : 'dashboard';
         .sidebar-logo { padding: 1.2rem 1.5rem; font-weight: 800; letter-spacing: .5px; }
         .sidebar-logo span { color: #fff; }
         .sidebar-logo small { color: #8ba4c0; font-weight: 500; }
+
+        /* ═══ Responsive ทุกโหมด (มือถือ/แท็บเล็ต/แล็ปท็อป/เดสก์ท็อป) ═══ */
+        /* ฟอร์มฟิลด์ไม่เล็กเกินบนมือถือ */
+        @media (max-width: 575.98px) {
+            .form-control, .form-select { font-size: 16px; } /* กัน iOS zoom */
+            .card-body { padding: 1rem; }
+            .page-title-box { padding: 0.75rem 0; }
+            h4.card-title { font-size: 1rem; }
+            .btn { white-space: normal; }
+            /* ปุ่มในแถวตารางไม่ล้นจอ */
+            .table .btn { padding: .25rem .4rem; font-size: .72rem; }
+            /* ฟอร์มโหมดแก้ไข: ปุ่มเต็มความกว้าง */
+            .col-12 > .btn, .col-12 .d-flex .btn { font-size: .85rem; }
+        }
+        @media (min-width: 576px) and (max-width: 767.98px) {
+            .card-body { padding: 1.1rem; }
+        }
+        /* ตารางบังคับเลื่อนแนวนอนใน card (เผื่อ wrapper ไม่มี) */
+        .table-responsive { -webkit-overflow-scrolling: touch; }
+        .table-responsive .table { min-width: 720px; }
+        /* Datatable control บนมือถือ */
+        @media (max-width: 767.98px) {
+            .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {
+                width: 100%; text-align: left; margin-bottom: .5rem;
+            }
+            .dataTables_wrapper .dataTables_filter input { width: 100% !important; }
+        }
+        /* Uploads grid */
+        .upload-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .75rem; }
+        @media (max-width: 575.98px) {
+            .upload-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: .5rem; }
+        }
+        /* Topbar: ซ่อนข้อความยาวบนจอเล็ก */
+        @media (max-width: 575.98px) {
+            .navbar-brand-box .sidebar-logo small { display: none; }
+            .navbar-brand-box .sidebar-logo { padding: 1rem .75rem; font-size: .9rem; }
+        }
+        /* Flash alert กระชับบนมือถือ */
+        @media (max-width: 575.98px) {
+            .alert { font-size: .85rem; padding: .65rem .9rem; }
+        }
     </style>
 </head>
 <body data-sidebar="dark" data-layout-mode="light">
@@ -76,7 +117,7 @@ $adminMenu = isset($adminMenu) ? $adminMenu : 'dashboard';
 
                     <li class="menu-title">จัดการเนื้อหา</li>
                     <li><a href="categories.php" class="waves-effect <?= $adminMenu === 'categories' ? 'active' : '' ?>"><i class="ti ti-layout-grid2"></i><span>หมวดหมู่ประกัน</span></a></li>
-                    <li><a href="products.php" class="waves-effect <?= $adminMenu === 'products' ? 'active' : '' ?>"><i class="ti ti-package"></i><span>แผนประกัน (53)</span></a></li>
+                    <li><a href="products.php" class="waves-effect <?= $adminMenu === 'products' ? 'active' : '' ?>"><i class="ti ti-package"></i><span>แผนประกัน (60)</span></a></li>
                     <li><a href="articles.php" class="waves-effect <?= $adminMenu === 'articles' ? 'active' : '' ?>"><i class="ti ti-bookmark-alt"></i><span>บทความ</span></a></li>
                     <li><a href="testimonials.php" class="waves-effect <?= $adminMenu === 'testimonials' ? 'active' : '' ?>"><i class="ti ti-face-smile"></i><span>รีวิวลูกค้า</span></a></li>
                     <li><a href="seminars.php" class="waves-effect <?= $adminMenu === 'seminars' ? 'active' : '' ?>"><i class="ti ti-camera"></i><span>สัมมนา</span></a></li>

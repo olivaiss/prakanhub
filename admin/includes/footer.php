@@ -70,6 +70,7 @@
 <script>
 $(document).ready(function () {
     $('.datatable').DataTable({
+        responsive: true,
         language: {
             search: "ค้นหา:",
             lengthMenu: "แสดง _MENU_ รายการ",
