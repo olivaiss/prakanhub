@@ -28,11 +28,6 @@ $adminMenu = isset($adminMenu) ? $adminMenu : 'dashboard';
         .sidebar-logo small { color: #8ba4c0; font-weight: 500; }
 
         /* ═══ Responsive ทุกโหมด (มือถือ/แท็บเล็ต/แล็ปท็อป/เดสก์ท็อป) ═══ */
-        /* Fix topbar brand (Veltrix ซ่อน logo-dark/light + brand-box กว้าง 240px) */
-        .navbar-brand-box { width: auto; padding: 0 .75rem; text-align: left; background: transparent !important; }
-        @media (max-width: 575.98px) {
-            .navbar-brand-box { padding: 0 .35rem; }
-        }
         /* ฟอร์มฟิลด์ไม่เล็กเกินบนมือถือ */
         @media (max-width: 575.98px) {
             .form-control, .form-select { font-size: 16px; } /* กัน iOS zoom */
@@ -82,21 +77,21 @@ $adminMenu = isset($adminMenu) ? $adminMenu : 'dashboard';
     <header id="page-topbar">
         <div class="navbar-header">
             <div class="d-flex">
-                <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect" id="vertical-menu-btn">
-                    <i class="fa fa-fw fa-bars"></i>
-                </button>
+                <!-- LOGO (ตาม template Veltrix) -->
                 <div class="navbar-brand-box">
-                    <a href="index.php" class="d-flex align-items-center gap-2 text-decoration-none" title="Prakanhub Admin">
-                        <!-- โลโก้: โล่ + เครื่องหมายถูก (ธีมประกัน) -->
-                        <span class="d-inline-flex align-items-center justify-content-center rounded-lg shadow-sm" style="width:34px;height:34px;background:linear-gradient(135deg,#003781 0%,#0058A8 100%);color:#fff;font-size:1.05rem;flex-shrink:0">
-                            <i class="ti ti-shield-check"></i>
-                        </span>
-                        <span class="d-flex flex-column" style="line-height:1.1">
-                            <span class="fw-bold" style="color:#003781;font-size:.92rem;letter-spacing:.3px">Prakanhub</span>
-                            <small class="d-none d-sm-inline text-uppercase fw-semibold" style="color:#00A000;font-size:.55rem;letter-spacing:2px">Admin Panel</small>
-                        </span>
+                    <a href="index.php" class="logo logo-dark">
+                        <span class="logo-sm"><img src="assets/images/logo-sm.png" alt="Prakanhub" height="24"></span>
+                        <span class="logo-lg"><img src="assets/images/logo-dark.png" alt="Prakanhub Admin" height="20"></span>
+                    </a>
+                    <a href="index.php" class="logo logo-light">
+                        <span class="logo-sm"><img src="assets/images/logo-sm.png" alt="Prakanhub" height="24"></span>
+                        <span class="logo-lg"><img src="assets/images/logo-light.png" alt="Prakanhub Admin" height="20"></span>
                     </a>
                 </div>
+
+                <button type="button" class="btn btn-sm px-3 font-size-24 header-item waves-effect" id="vertical-menu-btn">
+                    <i class="mdi mdi-menu"></i>
+                </button>
             </div>
             <div class="d-flex ms-auto align-items-center">
                 <a href="../index.php" target="_blank" class="btn btn-sm btn-light me-3 d-none d-md-inline-flex align-items-center gap-1 waves-effect">
