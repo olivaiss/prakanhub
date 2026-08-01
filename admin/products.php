@@ -220,10 +220,10 @@ $__isEdit = $edit ? 'แก้ไข' : 'เพิ่ม';
                                     </form>
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-soft-primary" onclick='editRow(<?= json_encode($r, JSON_UNESCAPED_UNICODE) ?>)'><i class="ti ti-pencil"></i></button>
+                                    <a href="products.php?edit=<?= (int)$r['id'] ?>" class="btn btn-sm btn-soft-primary" title="แก้ไข"><i class="ti ti-pencil"></i></a>
                                     <form method="post" class="d-inline" >
                                         <input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
-                                        <button type="submit" class="btn btn-sm btn-soft-danger btn-del"><i class="ti ti-trash"></i></button>
+                                        <button type="submit" class="btn btn-sm btn-soft-danger btn-del" title="ลบ"><i class="ti ti-trash"></i></button>
                                     </form>
                                 </td>
                             </tr>
