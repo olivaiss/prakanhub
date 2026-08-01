@@ -20,7 +20,7 @@ try {
 
         if ($cat) {
             // แผนของหมวด: หมวดหลัก (life/health/general) = ทั้งหมดของหมวดแม่, หมวดย่อย = แผน badge ที่แมป
-            $__plans = getDB()->query('SELECT id, title, badge, category, desc_text, img, premium_from FROM products WHERE is_active = 1 ORDER BY category, sort_order, id')->fetchAll();
+            $__plans = getDB()->query('SELECT id, title, badge, category, desc_text, img, premium_from, company, company_color, company_logo FROM products WHERE is_active = 1 ORDER BY category, sort_order, id')->fetchAll();
             $__map = [];
             foreach ($__plans as $__p) {
                 $__map[$__p['category']][] = $__p;
@@ -126,6 +126,24 @@ include 'includes/header.php';
                 <span class="text-xs font-bold text-brand-green mb-2"><?= htmlspecialchars($__badgeTh[$p['badge']] ?? $p['badge']) ?></span>
                 <?php endif; ?>
                 <h2 class="font-bold text-brand-navy group-hover:text-brand-navyHover transition text-lg leading-snug mb-2"><?= htmlspecialchars($p['title']) ?></h2>
+                <?php
+                $__co = $p['company'] ?: 'อลิอันซ์ อยุธยา';
+                $__cColor = $p['company_color'] ?: '0058A8';
+                $__cLogo = $p['company_logo'] ?? '';
+                $__cShort = mb_substr($__co, 0, 4);
+                ?>
+                <div class="flex items-center gap-2 mb-3">
+                    <?php if (!empty($__cLogo)): ?>
+                    <div class="w-7 h-7 rounded-md bg-white border border-gray-200 flex items-center justify-center overflow-hidden shrink-0">
+                        <img src="<?= htmlspecialchars($__cLogo) ?>" alt="<?= htmlspecialchars($__co) ?>" class="w-full h-full object-contain p-0.5" loading="lazy">
+                    </div>
+                    <?php else: ?>
+                    <div class="w-7 h-7 rounded-md flex items-center justify-center overflow-hidden shrink-0" style="background:#<?= htmlspecialchars($__cColor) ?>">
+                        <span class="text-white font-bold text-[9px] leading-none px-0.5 text-center"><?= htmlspecialchars($__cShort) ?></span>
+                    </div>
+                    <?php endif; ?>
+                    <span class="text-xs font-semibold text-brand-gray"><?= htmlspecialchars($__co) ?></span>
+                </div>
                 <p class="text-sm text-brand-gray leading-relaxed mb-4 flex-1 line-clamp-3"><?= htmlspecialchars(implode(' ', array_slice(explode(',', (string)$p['desc_text']), 0, 3))) ?></p>
                 <?php if (!empty($p['premium_from'])): ?>
                 <div class="text-sm text-brand-text mb-4">เบี้ยเริ่มต้น <span class="font-bold text-brand-green"><?= htmlspecialchars(preg_replace('/^เริ่มต้น\s*/', '', (string)$p['premium_from'])) ?></span></div>

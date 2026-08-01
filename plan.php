@@ -166,8 +166,24 @@ $__planList = array_values(array_filter(array_map('trim', explode("\n", (string)
             <aside class="space-y-6">
                 <div class="bg-white rounded-2xl border border-gray-100 p-6">
                     <h3 class="font-bold text-brand-navy mb-4 flex items-center gap-2"><i data-lucide="building-2" class="w-4 h-4 text-brand-green"></i> บริษัทประกัน</h3>
-                    <p class="font-semibold text-brand-text"><?= htmlspecialchars($plan['company'] ?? 'อลิอันซ์ อยุธยา') ?></p>
-                    <p class="text-xs text-brand-gray mt-2 leading-relaxed">อลิอันซ์ อยุธยา — หนึ่งในกลุ่มบริษัทประกันชั้นนำของไทย ให้บริการครบทั้งชีวิต สุขภาพ และวินาศภัย</p>
+                    <?php
+                    $__pco = $plan['company'] ?: 'อลิอันซ์ อยุธยา';
+                    $__pcolor = $plan['company_color'] ?: '0058A8';
+                    $__plogo = $plan['company_logo'] ?? '';
+                    ?>
+                    <div class="flex items-center gap-3 mb-3">
+                        <?php if (!empty($__plogo)): ?>
+                        <div class="w-12 h-12 rounded-xl bg-white border border-gray-200 flex items-center justify-center overflow-hidden">
+                            <img src="<?= htmlspecialchars($__plogo) ?>" alt="<?= htmlspecialchars($__pco) ?>" class="w-full h-full object-contain p-1">
+                        </div>
+                        <?php else: ?>
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center overflow-hidden shrink-0" style="background:#<?= htmlspecialchars($__pcolor) ?>">
+                            <span class="text-white font-bold text-xs leading-none px-1 text-center"><?= htmlspecialchars(mb_substr($__pco, 0, 4)) ?></span>
+                        </div>
+                        <?php endif; ?>
+                        <p class="font-semibold text-brand-text"><?= htmlspecialchars($__pco) ?></p>
+                    </div>
+                    <p class="text-xs text-brand-gray mt-2 leading-relaxed"><?= htmlspecialchars($__pco) ?> — หนึ่งในกลุ่มบริษัทประกันชั้นนำของไทย ให้บริการครบทั้งชีวิต สุขภาพ และวินาศภัย</p>
                     <?php if (!empty($plan['details_url'])): ?>
                     <a href="<?= htmlspecialchars($plan['details_url']) ?>" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block text-sm font-semibold text-brand-navy hover:underline">ดูข้อมูลจากเว็บบริษัท →</a>
                     <?php endif; ?>

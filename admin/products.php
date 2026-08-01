@@ -61,13 +61,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($title === '') throw new Exception('กรุณากรอกชื่อแผน');
             $data = [$cat, $title, trim($_POST['desc_text'] ?? ''), trim($_POST['img'] ?? ''), trim($_POST['link_url'] ?? ''), trim($_POST['badge'] ?? ''), (int)($_POST['sort_order'] ?? 0), !empty($_POST['is_active']) ? 1 : 0,
                 trim($_POST['company'] ?? ''), trim($_POST['premium_from'] ?? ''), trim($_POST['coverage'] ?? ''), trim($_POST['plans'] ?? ''),
-                trim($_POST['room_rate'] ?? ''), trim($_POST['area'] ?? ''), trim($_POST['key_benefits'] ?? ''), trim($_POST['age_range'] ?? ''), trim($_POST['details_url'] ?? '')];
+                trim($_POST['room_rate'] ?? ''), trim($_POST['area'] ?? ''), trim($_POST['key_benefits'] ?? ''), trim($_POST['age_range'] ?? ''), trim($_POST['details_url'] ?? ''),
+                trim($_POST['company_logo'] ?? ''), trim(ltrim($_POST['company_color_text'] ?? ($_POST['company_color'] ?? ''), '#'))];
             if ($id > 0) {
                 $data[] = $id;
-                $db->prepare('UPDATE products SET category=?, title=?, desc_text=?, img=?, link_url=?, badge=?, sort_order=?, is_active=?, company=?, premium_from=?, coverage=?, plans=?, room_rate=?, area=?, key_benefits=?, age_range=?, details_url=? WHERE id=?')->execute($data);
+                $db->prepare('UPDATE products SET category=?, title=?, desc_text=?, img=?, link_url=?, badge=?, sort_order=?, is_active=?, company=?, premium_from=?, coverage=?, plans=?, room_rate=?, area=?, key_benefits=?, age_range=?, details_url=?, company_logo=?, company_color=? WHERE id=?')->execute($data);
                 admin_flash('บันทึกแผนเรียบร้อย');
             } else {
-                $db->prepare('INSERT INTO products (category, title, desc_text, img, link_url, badge, sort_order, is_active, company, premium_from, coverage, plans, room_rate, area, key_benefits, age_range, details_url) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')->execute($data);
+                $db->prepare('INSERT INTO products (category, title, desc_text, img, link_url, badge, sort_order, is_active, company, premium_from, coverage, plans, room_rate, area, key_benefits, age_range, details_url, company_logo, company_color) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')->execute($data);
                 admin_flash('เพิ่มแผนเรียบร้อย');
             }
         } elseif ($action === 'delete') {
@@ -142,8 +143,20 @@ $__isEdit = $edit ? 'แก้ไข' : 'เพิ่ม';
 <div class="col-md-4"><label class="form-label">เรียงลำดับ</label><input type="number" class="form-control" name="sort_order" value="<?= (int)$e['sort_order'] ?>"></div>
 <div class="col-md-4"><div class="form-check form-switch mt-4"><input type="checkbox" class="form-check-input" name="is_active" id="e_is_active" value="1" <?= $e['is_active'] ? 'checked' : '' ?>><label class="form-check-label" for="e_is_active">แสดงผล</label></div></div>
 
+<h6 class="mt-4 mb-3 text-muted fw-bold border-bottom pb-2">🏢 บริษัทประกัน (แสดงโลโก้บนการ์ด)</h6>
+<div class="col-md-4"><label class="form-label">บริษัทประกัน</label>
+    <select class="form-select" name="company">
+        <?php $__companies = ['อลิอันซ์ อยุธยา', 'เมืองไทยประกันชีวิต', 'FWD ประกันชีวิต', 'วิริยะประกันภัย', 'ทิพยประกันภัย', 'กรุงเทพประกันภัย', 'ไทยประกันชีวิต', 'AXA ประกันภัย', 'MSIG ประกันภัย', 'อื่นๆ (ระบุในช่องบริษัท)']; ?>
+        <?php foreach ($__companies as $__c): ?>
+        <option value="<?= admin_e($__c) ?>" <?= $e['company'] === $__c ? 'selected' : '' ?>><?= admin_e($__c) ?></option>
+        <?php endforeach; ?>
+    </select>
+</div>
+<div class="col-md-4"><label class="form-label">สีประจำบริษัท (hex)</label><div class="d-flex gap-2"><input type="color" class="form-control form-control-color" name="company_color" value="#<?= admin_e(ltrim($e['company_color'] ?? '', '#')) ?>" style="width:52px"><input type="text" class="form-control" name="company_color_text" value="<?= admin_e($e['company_color']) ?>" placeholder="เช่น 0058A8"></div></div>
+<div class="col-md-4"><label class="form-label">URL โลโก้บริษัท (ถ้ามี)</label><input type="text" class="form-control" name="company_logo" value="<?= admin_e($e['company_logo']) ?>" placeholder="/assets/logos/allianz.png — ว่าง=ใช้ชื่อย่อ+สี"></div>
+<div class="col-12"><div class="form-text">ไม่มีโลโก้ → การ์ดแสดงกล่องสีประจำบริษัท + ชื่อย่ออัตโนมัติ</div></div>
+
 <h6 class="mt-4 mb-3 text-muted fw-bold border-bottom pb-2">📋 รายละเอียดแผน (หน้า plan.php)</h6>
-<div class="col-md-4"><label class="form-label">บริษัทประกัน</label><input type="text" class="form-control" name="company" value="<?= admin_e($e['company']) ?>" placeholder="อลิอันซ์ อยุธยา"></div>
 <div class="col-md-4"><label class="form-label">เบี้ยเริ่มต้น</label><input type="text" class="form-control" name="premium_from" value="<?= admin_e($e['premium_from']) ?>" placeholder="เช่น เริ่มต้น 12,000 บาท/ปี"></div>
 <div class="col-md-4"><label class="form-label">อายุรับประกัน</label><input type="text" class="form-control" name="age_range" value="<?= admin_e($e['age_range']) ?>" placeholder="เช่น รับอายุ 1-60 ปี"></div>
 <div class="col-md-4"><label class="form-label">ค่าห้องรายวัน</label><input type="text" class="form-control" name="room_rate" value="<?= admin_e($e['room_rate']) ?>" placeholder="เช่น 4,000 บาท/วัน"></div>
