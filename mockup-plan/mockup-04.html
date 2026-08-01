@@ -3,96 +3,138 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sticky CTA มือถือ + คูปองโค้ด | Mockup</title>
+<title>04 — โฟกัสที่ปรึกษา (Advisor Focus) | Mockup v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-tailwind.config = { theme: { extend: { colors: { navy: '#003781', navyHover: '#00265A', light: '#EEF4F9', green: '#00C300', greenHover: '#00A000', text: '#1E293B', gray: '#64748B' } } } }
+tailwind.config = { theme: { extend: { colors: { navy: '#003781', navyHover: '#00265A', light: '#F4F7FB', green: '#00B74F', greenHover: '#009E44', text: '#1B2A41', gray: '#5B6B82' } } } }
 </script>
 <style>
-body { font-family: 'Sarabun', 'Prompt', system-ui, sans-serif; }
+body { font-family: 'Kanit', sans-serif; }
 </style>
 </head>
-<body class="bg-gray-50">
-<!-- Header (site context) -->
-<header class="bg-white shadow-sm sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
-    <a href="#" class="font-bold text-navy text-lg tracking-tight">Allianz <span class="text-navy/60">AYUDHYA</span></a>
-    <nav class="hidden lg:flex items-center gap-6 text-sm font-medium text-gray">
+<body class="bg-[#F7F9FC] text-text">
+<!-- ===== Header ===== -->
+<header class="bg-white/95 backdrop-blur border-b border-gray-100 sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg bg-[#0058A8] flex items-center justify-center text-white font-extrabold text-sm">A</div>
+      <div class="leading-tight">
+        <div class="font-extrabold text-[15px] text-[#0058A8] tracking-tight">Allianz <span class="text-navy">Ayudhya</span></div>
+        <div class="text-[9px] text-gray font-medium">ประกันจริงใจ by ปกป้อง</div>
+      </div>
+    </div>
+    <nav class="hidden md:flex items-center gap-6 text-[13px] font-medium text-gray">
       <a href="#" class="hover:text-navy transition">หน้าแรก</a>
       <a href="#" class="hover:text-navy transition">ประกันของเรา</a>
       <a href="#" class="hover:text-navy transition">บทความ</a>
       <a href="#" class="hover:text-navy transition">ติดต่อเรา</a>
     </nav>
     <div class="flex items-center gap-3">
-      <a href="tel:0925159991" class="hidden md:flex items-center gap-1.5 text-sm font-bold text-navy"><span class="text-green text-lg">📞</span> 092-515-9991</a>
-      <a href="#" class="bg-navy text-white text-sm font-bold px-4 py-2 rounded-full hover:bg-navyHover transition">LINE ปรึกษาฟรี</a>
+      <a href="tel:0925159991" class="hidden sm:flex items-center gap-1.5 text-[13px] font-bold text-navy">📞 092-515-9991</a>
+      <a href="#" class="bg-navy text-white text-[13px] font-bold px-4 py-2 rounded-full hover:bg-navyHover transition">LINE ปรึกษาฟรี</a>
     </div>
   </div>
 </header>
 <main>
-<!-- 04: Sticky CTA ล่าง (มือถือ) + ส่วนลดโค้ด -->
-<div class="bg-gradient-to-r from-[#E4002B] via-[#FF5A5F] to-[#E4002B] text-white text-center text-sm font-bold py-2 px-4">
-  🎉 โปรโมชันพิเศษ — รับส่วนลดเบี้ย 15% + ผ่อน 0% นาน 10 เดือน (เฉพาะช่วงนี้เท่านั้น!)
+
+<div class="max-w-6xl mx-auto px-4 md:px-8">
+  <nav class="text-[11px] text-gray flex items-center gap-1.5 pt-6">
+    <a href="#" class="hover:text-navy">หน้าแรก</a><span>›</span>
+    <a href="#" class="hover:text-navy">ประกันออมทรัพย์</a><span>›</span>
+    <span class="text-navy font-medium">มาย ดับเบิล พลัส</span>
+  </nav>
+  <div class="grid lg:grid-cols-[1fr_380px] gap-8 pt-8">
+    <div class="space-y-6">
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2">
+  <div class="w-7 h-7 rounded-md bg-[#0058A8] flex items-center justify-center text-white font-extrabold text-[10px]">A</div>
+  <div class="leading-tight">
+    <div class="text-[11px] font-bold text-[#0058A8]">Allianz Ayudhya</div>
+    <div class="text-[8px] text-gray">อลิอันซ์ อยุธยา</div>
+  </div>
 </div>
-<section class="max-w-4xl mx-auto px-4 md:px-8 py-10 pb-32 md:pb-16">
-  <nav class="text-xs text-gray mb-4 flex gap-1.5"><a href="#" class="hover:text-navy">หน้าแรก</a><span>›</span><span class="text-navy font-medium">มาย ดับเบิล พลัส</span></nav>
-  <div class="bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm">
-    <div class="md:grid md:grid-cols-2">
-      <img src="https://images.unsplash.com/photo-1601597111158-2fceff292cdc?w=800&h=700&fit=crop" alt="วางแผนออมเงิน" class="w-full h-64 md:h-full object-cover">
-      <div class="p-6 md:p-10">
-        <span class="text-[10px] font-bold text-green bg-green/10 px-2.5 py-1 rounded-full">ออมทรัพย์</span>
-        <h1 class="text-2xl md:text-4xl font-bold text-navy mt-3 mb-3">มาย ดับเบิล พลัส</h1>
-        <p class="text-gray text-sm leading-relaxed mb-6">วางแผนการออมได้ทั้งระยะสั้นและระยะยาว ชำระเบี้ย 6-20 ปี คุ้มครองถึงอายุ 99 ปี</p>
-        <div class="flex items-center gap-3 mb-6">
-          <div class="bg-light rounded-xl px-4 py-3"><div class="text-[10px] text-gray">เบี้ยเริ่มต้น</div><div class="font-bold text-navy">12,000 บาท/ปี</div></div>
-          <div class="bg-light rounded-xl px-4 py-3"><div class="text-[10px] text-gray">ลดเหลือ</div><div class="font-bold text-green">10,200 บาท/ปี</div></div>
+        <span class="ml-auto text-[10px] font-bold text-green bg-green/10 px-3 py-1 rounded-full">ประกันออมทรัพย์</span>
+      </div>
+      <h1 class="text-[34px] md:text-[42px] font-bold text-navy leading-[1.12]">มาย ดับเบิล พลัส</h1>
+      <p class="text-[14px] text-gray leading-relaxed max-w-xl">วางแผนการออมได้ทั้งระยะสั้นและระยะยาว เลือกระยะเวลาชำระเบี้ยได้ตั้งแต่ 6–20 ปี แนบความคุ้มครองด้านสุขภาพเพิ่มได้</p>
+      <div class="flex items-center gap-4 bg-white rounded-2xl border border-gray-100 p-5 max-w-xl">
+        <div class="text-[12px] text-gray line-through">12,000 บาท/ปี</div>
+        <div class="text-[26px] font-bold text-navy">10,200 <span class="text-[12px] text-gray font-medium">บาท/ปี</span></div>
+        <span class="bg-red-50 text-red-500 text-[10px] font-bold px-2.5 py-1 rounded-full">ลด 15%</span>
+        <div class="ml-auto text-right"><div class="text-[10px] text-gray">ผ่อน 0% 10 เดือน</div><div class="font-bold text-green text-[13px]">1,020 บาท/เดือน</div></div>
+      </div>
+      <div class="bg-white rounded-3xl border border-gray-100 p-7">
+        <h2 class="font-bold text-navy text-[18px] mb-5">ความคุ้มครองหลัก</h2>
+        <ul class="space-y-3.5">
+          <li class="flex gap-3 text-[14px] text-text"><span class="w-5 h-5 rounded-full bg-green/15 text-green flex items-center justify-center text-[11px] font-bold shrink-0 mt-0.5">✓</span> รับเงินก้อนเมื่อครบสัญญา + เงินปันผลรายปี</li>
+          <li class="flex gap-3 text-[14px] text-text"><span class="w-5 h-5 rounded-full bg-green/15 text-green flex items-center justify-center text-[11px] font-bold shrink-0 mt-0.5">✓</span> คุ้มครองชีวิตถึงอายุ 99 ปี</li>
+          <li class="flex gap-3 text-[14px] text-text"><span class="w-5 h-5 rounded-full bg-green/15 text-green flex items-center justify-center text-[11px] font-bold shrink-0 mt-0.5">✓</span> ลดหย่อนภาษีได้สูงสุด 100,000 บาท/ปี</li>
+          <li class="flex gap-3 text-[14px] text-text"><span class="w-5 h-5 rounded-full bg-green/15 text-green flex items-center justify-center text-[11px] font-bold shrink-0 mt-0.5">✓</span> แนบความคุ้มครองด้านสุขภาพเพิ่มได้</li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-3xl border border-gray-100 p-7">
+        <h2 class="font-bold text-navy text-[18px] mb-5">แบบแผนให้เลือก</h2>
+        <div class="grid grid-cols-3 gap-3 text-center">
+          <div class="bg-light rounded-2xl p-4"><div class="font-bold text-navy text-[14px]">แบบ 5/99</div><div class="text-[11px] text-gray mt-1">ชำระ 5 ปี · คืน 115%</div></div>
+          <div class="bg-navy rounded-2xl p-4"><div class="font-bold text-white text-[14px]">แบบ 10/99 ⭐</div><div class="text-[11px] text-blue-200 mt-1">ชำระ 10 ปี · คืน 128%</div></div>
+          <div class="bg-light rounded-2xl p-4"><div class="font-bold text-navy text-[14px]">แบบ 20/99</div><div class="text-[11px] text-gray mt-1">ชำระ 20 ปี · คืน 140%</div></div>
         </div>
-        <div class="border-2 border-dashed border-green/40 rounded-xl p-4 bg-green/5 flex items-center gap-3">
-          <span class="text-2xl">🎟️</span>
-          <div class="flex-1">
-            <div class="text-xs font-bold text-navy">คูปองส่วนลด 15%</div>
-            <div class="text-[10px] text-gray">คัดลอกโค้ดไปใช้ที่หน้าชำระเงิน</div>
-          </div>
-          <span class="bg-navy text-white text-xs font-bold px-3 py-2 rounded-lg cursor-pointer">PH15</span>
-        </div>
-        <a href="#" class="block bg-green hover:bg-greenHover text-white font-bold py-3.5 rounded-xl text-center mt-6 transition">เลือกแผนนี้เลย</a>
       </div>
     </div>
+    <!-- advisor sidebar -->
+    <aside class="space-y-4">
+      <div class="bg-white rounded-3xl border border-gray-100 shadow-xl shadow-navy/5 p-7 text-center">
+        <div class="w-20 h-20 rounded-full bg-gradient-to-br from-navy to-[#0058A8] text-white font-bold text-2xl flex items-center justify-center mx-auto mb-3">ป</div>
+        <div class="font-bold text-navy text-[16px]">ปกป้อง ใจดี</div>
+        <div class="text-[11px] text-gray mb-3">ที่ปรึกษาประกันชีวิตและการเงิน</div>
+        <div class="flex justify-center gap-2 mb-4">
+          <span class="text-[9px] font-bold bg-green/10 text-green px-2 py-0.5 rounded-full">MDRT</span>
+          <span class="text-[9px] font-bold bg-light text-navy px-2 py-0.5 rounded-full">10+ ปี</span>
+          <span class="text-[9px] font-bold bg-light text-navy px-2 py-0.5 rounded-full">1,000+ ลูกค้า</span>
+        </div>
+        <div class="bg-light rounded-xl p-3 mb-4 text-left">
+          <div class="text-[10px] text-gray mb-1">⭐ รีวิวจากลูกค้า</div>
+          <div class="text-[11px] text-text leading-relaxed">"แนะนำแผนได้ตรงกับเป้าหมาย ไม่โทรจี้ บริการดีมาก"</div>
+          <div class="text-[9px] text-gray mt-1">— คุณสมชาย ล.</div>
+        </div>
+        <a href="#" class="block bg-green hover:bg-greenHover text-white font-bold py-3 rounded-xl text-[14px] transition">เลือกแผนนี้เลย</a>
+        <a href="#" class="block text-[12px] font-bold text-navy border border-navy hover:bg-light py-2.5 rounded-xl mt-2 transition">💬 LINE ปรึกษาฟรี</a>
+        <div class="text-[10px] text-gray mt-3">ตอบไว 08:00–22:00 น.</div>
+      </div>
+    </aside>
   </div>
-</section>
-<!-- Sticky CTA มือถือ -->
-<div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 z-50 flex items-center gap-3">
-  <div class="flex-1">
-    <div class="text-[10px] text-gray line-through">12,000 บาท/ปี</div>
-    <div class="font-bold text-navy text-sm">10,200 บาท/ปี <span class="text-[10px] text-green font-semibold">-15%</span></div>
+  <div class="pt-12">
+    <h2 class="font-bold text-navy text-[20px] mb-5">แผนที่เกี่ยวข้อง</h2>
+    <div class="grid md:grid-cols-3 gap-5">
+      <div class="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg hover:border-navy/20 transition"><div class="text-[10px] font-bold text-green mb-1">ออมทรัพย์</div><div class="font-bold text-navy text-[15px] mb-2">มาย สมาร์ต อินเด็กซ์ 18/8</div><div class="text-[11px] text-gray mb-4">รับผลตอบแทนตามดัชนีอ้างอิง</div><div class="text-[12px] text-text mb-4">เริ่มต้น <span class="font-bold text-green">12,000 บาท/ปี</span></div><a href="#" class="block text-center text-[12px] font-bold text-navy border border-navy hover:bg-light py-2.5 rounded-xl transition">ดูแผนนี้</a></div>
+      <div class="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg hover:border-navy/20 transition"><div class="text-[10px] font-bold text-green mb-1">ออมทรัพย์</div><div class="font-bold text-navy text-[15px] mb-2">อยุธยา มั่นคง 99/5</div><div class="text-[11px] text-gray mb-4">มีเงินปันผล ชำระเบี้ย 5 ปี</div><div class="text-[12px] text-text mb-4">เริ่มต้น <span class="font-bold text-green">20,000 บาท/ปี</span></div><a href="#" class="block text-center text-[12px] font-bold text-navy border border-navy hover:bg-light py-2.5 rounded-xl transition">ดูแผนนี้</a></div>
+      <div class="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg hover:border-navy/20 transition"><div class="text-[10px] font-bold text-green mb-1">บำนาญ</div><div class="font-bold text-navy text-[15px] mb-2">มาย บำนาญ ไฟว์ A90/5</div><div class="text-[11px] text-gray mb-4">วางแผนเกษียณ ลดหย่อนภาษี</div><div class="text-[12px] text-text mb-4">เริ่มต้น <span class="font-bold text-green">30,000 บาท/ปี</span></div><a href="#" class="block text-center text-[12px] font-bold text-navy border border-navy hover:bg-light py-2.5 rounded-xl transition">ดูแผนนี้</a></div>
+    </div>
   </div>
-  <a href="#" class="bg-green text-white text-sm font-bold px-5 py-2.5 rounded-xl">เลือกแผนนี้</a>
 </div>
+
 </main>
-<!-- Footer (site context) -->
+<!-- ===== Footer ===== -->
 <footer class="bg-navy text-white mt-16">
-  <div class="max-w-7xl mx-auto px-4 md:px-8 py-10">
+  <div class="max-w-6xl mx-auto px-4 md:px-8 py-10">
     <div class="grid md:grid-cols-3 gap-8 text-sm">
       <div>
         <div class="font-bold text-lg mb-2">ประกันจริงใจ by ปกป้อง</div>
         <p class="text-blue-200 text-xs leading-relaxed">ที่ปรึกษาประกันชีวิตและการเงิน ประกันภัยทุกประเภท อลิอันซ์ อยุธยา</p>
       </div>
-      <div>
-        <div class="font-bold mb-3">เมนู</div>
-        <div class="space-y-2 text-blue-200 text-xs">
-          <a href="#" class="block hover:text-white">หน้าแรก</a>
-          <a href="#" class="block hover:text-white">แบบฟอร์มทำประกัน</a>
-          <a href="#" class="block hover:text-white">บทความ</a>
-          <a href="#" class="block hover:text-white">ติดต่อเรา</a>
-        </div>
+      <div class="text-xs text-blue-200 space-y-2">
+        <div class="font-bold text-white mb-2">เมนู</div>
+        <a href="#" class="block hover:text-white">หน้าแรก</a>
+        <a href="#" class="block hover:text-white">แบบฟอร์มทำประกัน</a>
+        <a href="#" class="block hover:text-white">บทความ</a>
       </div>
-      <div>
-        <div class="font-bold mb-3">ติดต่อ</div>
-        <div class="space-y-2 text-blue-200 text-xs">
-          <div>📞 092-515-9991</div>
-          <div>LINE: @945ampel</div>
-          <div>Facebook: pp.insure168</div>
-        </div>
+      <div class="text-xs text-blue-200 space-y-2">
+        <div class="font-bold text-white mb-2">ติดต่อ</div>
+        <div>📞 092-515-9991</div>
+        <div>LINE: @945ampel</div>
+        <div>Facebook: pp.insure168</div>
       </div>
     </div>
     <div class="border-t border-white/10 mt-8 pt-4 text-center text-xs text-blue-200">© 2026 ประกันจริงใจ by ปกป้อง — Insurance Advisor</div>
