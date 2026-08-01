@@ -279,20 +279,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <legend class="sr-only">แผนประกันที่สนใจ</legend>
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                         <?php
+                        // ═══ แผนจาก DB (categories) — fallback: รายการเดิม ═══
                         $planList = [
-                            ['heart', 'ประกันชีวิต'],
-                            ['activity', 'ประกันสุขภาพ'],
-                            ['shield-alert', 'ประกันโรคร้ายแรง'],
-                            ['footprints', 'ประกันอุบัติเหตุ'],
-                            ['baby', 'ประกันเด็ก'],
-                            ['landmark', 'ประกันออมทรัพย์'],
-                            ['home', 'ประกันเกษียณ/บำนาญ'],
-                            ['dollar-sign', 'ประกันชดเชยรายได้'],
-                            ['users', 'ประกันกลุ่ม/องค์กร'],
-                            ['car', 'ประกันรถยนต์'],
-                            ['plane', 'ประกันเดินทาง'],
-                            ['sparkles', 'อื่นๆ / ให้แนะนำ'],
+                            ['heart', 'ประกันชีวิต'], ['activity', 'ประกันสุขภาพ'], ['shield-alert', 'ประกันโรคร้ายแรง'],
+                            ['footprints', 'ประกันอุบัติเหตุ'], ['baby', 'ประกันเด็ก'], ['landmark', 'ประกันออมทรัพย์'],
+                            ['home', 'ประกันเกษียณ/บำนาญ'], ['dollar-sign', 'ประกันชดเชยรายได้'], ['users', 'ประกันกลุ่ม/องค์กร'],
+                            ['car', 'ประกันรถยนต์'], ['plane', 'ประกันเดินทาง'], ['sparkles', 'อื่นๆ / ให้แนะนำ'],
                         ];
+                        try {
+                            require_once __DIR__ . '/../includes/db.php';
+                            if (function_exists('getDB')) {
+                                $__cats = getDB()->query('SELECT icon, title FROM categories WHERE is_active = 1 ORDER BY sort_order, id')->fetchAll();
+                                if (count($__cats) >= 3) {
+                                    $planList = array_map(fn($c) => [$c['icon'] ?: 'shield', $c['title']], $__cats);
+                                    $planList[] = ['sparkles', 'อื่นๆ / ให้แนะนำ'];
+                                }
+                            }
+                        } catch (Throwable $e) { /* fallback */ }
                         foreach ($planList as $p):
                         ?>
                         <label class="relative cursor-pointer">
