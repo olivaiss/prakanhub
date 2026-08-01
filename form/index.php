@@ -18,7 +18,7 @@ $summary = [];
 $refCode = '';
 
 $labels = [
-    'plans' => 'แผนประกันที่สนใจ', 'budget' => 'งบประมาณเบี้ยประกันต่อปี', 'goals' => 'เป้าหมายในการทำประกัน',
+    'plans' => 'แผนประกันที่สนใจ', 'plan_detail' => 'แผนประกันที่สนใจ (เฉพาะ)', 'budget' => 'งบประมาณเบี้ยประกันต่อปี', 'goals' => 'เป้าหมายในการทำประกัน',
     'prefix_th' => 'คำนำหน้า (ไทย)', 'firstname_th' => 'ชื่อ (ไทย)', 'lastname_th' => 'นามสกุล (ไทย)',
     'prefix_en' => 'คำนำหน้า (อังกฤษ)', 'firstname_en' => 'ชื่อ (อังกฤษ)', 'lastname_en' => 'นามสกุล (อังกฤษ)',
     'birthdate' => 'วันเกิด', 'id_card' => 'เลขบัตรประชาชน', 'id_laser' => 'รหัสหลังบัตร', 'id_expiry' => 'วันที่บัตรหมดอายุ',
@@ -250,6 +250,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form id="insurance-form" method="POST" action="" class="bg-white rounded-3xl shadow-card border border-gray-100 p-5 md:p-10" autocomplete="on">
             <!-- Honeypot (anti-spam) -->
             <input type="text" name="website" value="" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
+            <?php if ($presetPlanName !== ''): ?>
+            <!-- ชื่อแผนที่เลือกจากปุ่ม "เลือกแผนนี้" -->
+            <input type="hidden" name="plan_detail" value="<?= htmlspecialchars($presetPlanName) ?>">
+            <?php endif; ?>
 
             <!-- Step indicator -->
             <div class="flex items-center gap-1 md:gap-2 mb-8">
@@ -282,9 +286,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php if ($presetPlan !== '' || $presetPlanName !== ''): ?>
                 <div class="bg-brand-green/10 border border-brand-green/30 rounded-xl px-4 py-3 mb-6 flex items-start gap-3">
                     <i data-lucide="check-circle-2" class="w-5 h-5 text-brand-green shrink-0 mt-0.5"></i>
-                    <div class="text-sm text-brand-text leading-relaxed">
-                        <span class="font-bold text-brand-navy">คุณสนใจ: <?= htmlspecialchars($presetPlanName !== '' ? $presetPlanName : $presetPlan) ?></span>
-                        — เลือกแผนนี้ไว้แล้ว ตรวจสอบด้านล่างหรือเพิ่มแผนอื่นได้ (หรือ <a href="/form/" class="font-bold text-brand-navy underline">ล้างการเลือก</a>)
+                    <div class="text-sm text-brand-text leading-relaxed space-y-0.5">
+                        <div class="font-bold text-brand-navy">คุณสนใจแผนนี้</div>
+                        <?php if ($presetPlan !== ''): ?>
+                        <div><span class="font-semibold">หมวด:</span> <?= htmlspecialchars($presetPlan) ?></div>
+                        <?php endif; ?>
+                        <?php if ($presetPlanName !== ''): ?>
+                        <div><span class="font-semibold">แผน:</span> <?= htmlspecialchars($presetPlanName) ?></div>
+                        <?php endif; ?>
+                        <div class="pt-1 text-xs text-brand-gray">ตรวจสอบด้านล่างหรือเพิ่มแผนอื่นได้ (หรือ <a href="/form/" class="font-bold text-brand-navy underline">ล้างการเลือก</a>)</div>
                     </div>
                 </div>
                 <?php endif; ?>
