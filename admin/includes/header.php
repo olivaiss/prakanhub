@@ -32,6 +32,10 @@ $adminMenu = isset($adminMenu) ? $adminMenu : 'dashboard';
         .navbar-brand-box { display: flex; align-items: center; justify-content: center; min-width: 240px; padding: 0 .75rem; text-align: center; }
         .navbar-brand-box .logo { display: inline-flex; align-items: center; justify-content: center; margin: 0; }
         .navbar-brand-box .logo-sm img, .navbar-brand-box .logo-lg img { display: block; }
+        /* ย่อตาม sidebar (vertical-collpsed): กล่อง 70px + แสดงเฉพาะ logo-sm */
+        body.vertical-collpsed .navbar-brand-box { min-width: 0; width: 70px; padding: 0; }
+        body.vertical-collpsed .navbar-brand-box .logo-lg { display: none !important; }
+        body.vertical-collpsed .navbar-brand-box .logo-sm { display: inline-flex !important; }
         /* ทำให้ topbar + กล่องโลโก้ + sidebar เป็นสีเดียวกัน — ไม่มีเส้นแบ่ง/ขอบ */
         #page-topbar, .navbar-brand-box { background-color: var(--bs-sidebar-dark-bg) !important; }
         @media (max-width: 991.98px) {
