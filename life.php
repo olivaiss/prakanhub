@@ -51,6 +51,12 @@ $section_config = [
     'senior'      => ['icon' => 'users',        'title' => 'ประกันผู้สูงอายุ',               'sub' => 'อุ่นใจในวัยเกษียณด้วยความคุ้มครองที่ออกแบบมาสำหรับผู้สูงอายุ จ่ายเบี้ยคงที่'],
     'accident'    => ['icon' => 'footprints',   'title' => 'ประกันอุบัติเหตุ',               'sub' => 'คุ้มครอง 24 ชั่วโมง ทั่วโลก อุ่นใจทุกที่ทุกเวลา เบี้ยเริ่มต้นเพียงหลักพัน'],
 ];
+// ═══ badge → หมวดในฟอร์ม (สำหรับปุ่ม "เลือกแผนนี้") ═══
+$__formPlanMap = [
+    'saving' => 'ประกันออมทรัพย์', 'tax' => 'ประกันออมทรัพย์', 'retirement' => 'ประกันบำนาญ',
+    'inheritance' => 'ประกันชีวิต', 'unit-linked' => 'ประกันชีวิต', 'senior' => 'ประกันชีวิต',
+    'accident' => 'ประกันอุบัติเหตุ',
+];
 $bg_alt = false;
 foreach ($sections as $key => $products):
     $cfg = $section_config[$key] ?? ['icon' => 'check-circle-2', 'title' => $key, 'sub' => ''];
@@ -72,7 +78,10 @@ foreach ($sections as $key => $products):
                     <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-brand-navy shrink-0 mt-0.5"></i> <?= htmlspecialchars($h) ?></li>
                     <?php endforeach; ?>
                 </ul>
-                <a href="<?= !empty($p['id']) ? '/plan.php?id=' . (int)$p['id'] : '/contact.php' ?>" class="text-sm font-bold text-brand-navy hover:underline flex items-center gap-1 mt-auto pt-3 border-t border-gray-100">ดูรายละเอียด <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+                <div class="flex gap-2 mt-auto pt-3 border-t border-gray-100">
+                    <a href="<?= !empty($p['id']) ? '/plan.php?id=' . (int)$p['id'] : '/contact.php' ?>" class="flex-1 text-center text-sm font-bold text-brand-navy border border-brand-navy hover:bg-brand-light rounded-lg py-2 transition">ดูรายละเอียด</a>
+                    <a href="/form/?plan=<?= urlencode($__formPlanMap[$key] ?? '') ?>&plan_name=<?= urlencode($p['name']) ?>" class="flex-1 text-center text-sm font-bold text-white bg-brand-green hover:bg-brand-greenHover rounded-lg py-2 transition">เลือกแผนนี้</a>
+                </div>
             </div>
             <?php endforeach; ?>
         </div>

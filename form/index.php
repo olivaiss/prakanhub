@@ -1,6 +1,10 @@
 <?php
 $pageTitle = 'แบบฟอร์มทำประกันออนไลน์';
 
+// ═══ แผนที่เลือกจากปุ่ม "เลือกแผนนี้" (category.php / plan.php) ═══
+$presetPlan = trim($_GET['plan'] ?? '');
+$presetPlanName = trim($_GET['plan_name'] ?? '');
+
 // Dual-mode include: ใช้ได้ทั้งโหมดโฟลเดอร์ย่อย (prakanhub.com/form/) และโหมด subdomain (form.prakanhub.com)
 if (file_exists(__DIR__ . '/../includes/header.php')) {
     include __DIR__ . '/../includes/header.php';
@@ -274,6 +278,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-step" data-step="1">
                 <h2 class="sec-title"><span class="num">1</span> แผนประกันที่สนใจ</h2>
                 <p class="text-sm text-brand-gray mb-5">เลือกได้มากกว่า 1 แผน เพื่อให้ที่ปรึกษาเตรียมแบบเสนอความคุ้มครองให้เหมาะสมกับคุณ</p>
+
+                <?php if ($presetPlan !== '' || $presetPlanName !== ''): ?>
+                <div class="bg-brand-green/10 border border-brand-green/30 rounded-xl px-4 py-3 mb-6 flex items-start gap-3">
+                    <i data-lucide="check-circle-2" class="w-5 h-5 text-brand-green shrink-0 mt-0.5"></i>
+                    <div class="text-sm text-brand-text leading-relaxed">
+                        <span class="font-bold text-brand-navy">คุณสนใจ: <?= htmlspecialchars($presetPlanName !== '' ? $presetPlanName : $presetPlan) ?></span>
+                        — เลือกแผนนี้ไว้แล้ว ตรวจสอบด้านล่างหรือเพิ่มแผนอื่นได้ (หรือ <a href="/form/" class="font-bold text-brand-navy underline">ล้างการเลือก</a>)
+                    </div>
+                </div>
+                <?php endif; ?>
 
                 <fieldset class="mb-7">
                     <legend class="sr-only">แผนประกันที่สนใจ</legend>
@@ -931,6 +945,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         });
 
         document.getElementById('review-body').innerHTML = html || '<p class="text-sm text-brand-gray">ยังไม่มีข้อมูลที่กรอก</p>';
+    }
+})();
+
+// ═══ เลือกแผนอัตโนมัติจาก URL (?plan= / ?plan_name=) ═══
+(function () {
+    var preset = <?= json_encode($presetPlan, JSON_UNESCAPED_UNICODE) ?>;
+    if (!preset) return;
+    var boxes = document.querySelectorAll('input[name="plans[]"]');
+    var matched = false;
+    for (var i = 0; i < boxes.length; i++) {
+        if (boxes[i].value === preset) {
+            boxes[i].checked = true;
+            matched = true;
+        }
+    }
+    // ถ้าไม่ตรงหมวด (เป็นชื่อแผนเฉพาะ) → ติ๊กหมวดที่ใกล้เคียง + เก็บชื่อแผน
+    if (!matched && boxes.length) {
+        var planName = <?= json_encode($presetPlanName, JSON_UNESCAPED_UNICODE) ?>;
+        if (planName) boxes[0].checked = true;
     }
 })();
 </script>

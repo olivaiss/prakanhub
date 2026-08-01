@@ -50,6 +50,16 @@ $section_config = [
     'additional'=> ['icon' => 'file-check-2', 'title' => 'ประกันสุขภาพเสริมสวัสดิการ', 'sub' => 'เสริมวงเงินรักษาพยาบาลให้อุ่นใจยิ่งขึ้น จาก 500,000 ถึง 60 ล้านบาท'],
     'income'    => ['icon' => 'dollar-sign', 'title' => 'ประกันชดเชยรายได้', 'sub' => 'ไม่ต้องกังวลเรื่องขาดรายได้เมื่อเจ็บป่วยนอนโรงพยาบาล'],
 ];
+// ═══ badge → หมวดในฟอร์ม (สำหรับปุ่ม "เลือกแผนนี้") ═══
+$__formPlanMap = [
+    'critical' => 'ประกันโรคร้ายแรง',
+    'cancer' => 'ประกันโรคร้ายแรง',
+    'nocopay' => 'ประกันสุขภาพ',
+    'kids' => 'ประกันเด็ก',
+    'senior50' => 'ประกันสุขภาพ',
+    'additional' => 'ประกันสุขภาพ',
+    'income' => 'ประกันชดเชยรายได้',
+];
 $bg_alt = false;
 foreach ($sections as $key => $products):
     $cfg = $section_config[$key] ?? ['icon' => 'check-circle-2', 'title' => $key, 'sub' => ''];
@@ -83,7 +93,10 @@ foreach ($sections as $key => $products):
                     <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-green-600 shrink-0 mt-0.5"></i> <?= $h ?></li>
                     <?php endforeach; ?>
                 </ul>
-                <a href="<?= !empty($p['id']) ? '/plan.php?id=' . (int)$p['id'] : '/contact.php' ?>" class="text-sm font-bold text-brand-navy hover:underline flex items-center gap-1 mt-auto pt-3 border-t border-gray-100">ดูรายละเอียด <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+                <div class="flex gap-2 mt-auto pt-3 border-t border-gray-100">
+                    <a href="<?= !empty($p['id']) ? '/plan.php?id=' . (int)$p['id'] : '/contact.php' ?>" class="flex-1 text-center text-sm font-bold text-brand-navy border border-brand-navy hover:bg-brand-light rounded-lg py-2 transition">ดูรายละเอียด</a>
+                    <a href="/form/?plan=<?= urlencode($__formPlanMap[$key] ?? '') ?>&plan_name=<?= urlencode($p['name']) ?>" class="flex-1 text-center text-sm font-bold text-white bg-brand-green hover:bg-brand-greenHover rounded-lg py-2 transition">เลือกแผนนี้</a>
+                </div>
             </div>
             <?php endforeach; ?>
         </div>
