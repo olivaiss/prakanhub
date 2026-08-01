@@ -28,6 +28,11 @@ $adminMenu = isset($adminMenu) ? $adminMenu : 'dashboard';
         .sidebar-logo small { color: #8ba4c0; font-weight: 500; }
 
         /* ═══ Responsive ทุกโหมด (มือถือ/แท็บเล็ต/แล็ปท็อป/เดสก์ท็อป) ═══ */
+        /* Fix topbar brand (Veltrix ซ่อน logo-dark/light + brand-box กว้าง 240px) */
+        .navbar-brand-box { width: auto; padding: 0 .75rem; text-align: left; background: transparent !important; }
+        @media (max-width: 575.98px) {
+            .navbar-brand-box { padding: 0 .35rem; }
+        }
         /* ฟอร์มฟิลด์ไม่เล็กเกินบนมือถือ */
         @media (max-width: 575.98px) {
             .form-control, .form-select { font-size: 16px; } /* กัน iOS zoom */
@@ -81,11 +86,9 @@ $adminMenu = isset($adminMenu) ? $adminMenu : 'dashboard';
                     <i class="fa fa-fw fa-bars"></i>
                 </button>
                 <div class="navbar-brand-box">
-                    <a href="index.php" class="logo logo-dark">
-                        <span class="logo-lg sidebar-logo d-inline-block"><span>📋 Admin</span> <small>Prakanhub</small></span>
-                    </a>
-                    <a href="index.php" class="logo logo-light">
-                        <span class="logo-lg sidebar-logo d-inline-block"><span>📋 Admin</span> <small>Prakanhub</small></span>
+                    <a href="index.php" class="d-flex align-items-center gap-2 text-decoration-none">
+                        <span class="fw-bold" style="color:#003781;font-size:1rem;white-space:nowrap">📋 Admin</span>
+                        <small class="d-none d-sm-inline fw-medium" style="color:#5B6B82;font-size:.7rem">Prakanhub</small>
                     </a>
                 </div>
             </div>
