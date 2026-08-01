@@ -89,7 +89,7 @@ $__planList = array_values(array_filter(array_map('trim', explode("\n", (string)
                         <?php if (!empty($plan['premium_from'])): ?>
                         <div class="bg-brand-green/10 border border-brand-green/30 text-brand-green rounded-xl px-4 py-2">
                             <div class="text-[10px] font-medium opacity-80">เบี้ยเริ่มต้น</div>
-                            <div class="font-bold text-lg leading-tight"><?= htmlspecialchars($plan['premium_from']) ?></div>
+                            <div class="font-bold text-lg leading-tight"><?= htmlspecialchars(preg_replace('/^เริ่มต้น\s*/', '', (string)$plan['premium_from'])) ?></div>
                         </div>
                         <?php endif; ?>
                         <?php if (!empty($plan['age_range'])): ?>

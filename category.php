@@ -91,11 +91,28 @@ include 'includes/header.php';
 <section class="py-12">
     <div class="max-w-7xl mx-auto px-4 md:px-8">
         <?php if (empty($plans)): ?>
-        <p class="text-brand-gray text-center py-10">กำลังเตรียมแผนในหมวดนี้ — ติดต่อเราเพื่อสอบถามได้เลย</p>
+        <div class="max-w-2xl mx-auto text-center">
+            <p class="text-brand-gray py-4">กำลังเตรียมแผนในหมวดนี้ — ติดต่อเราเพื่อสอบถามได้เลย</p>
+            <?php
+            $__relMap = [
+                'tax' => ['savings' => 'ประกันออมทรัพย์', 'pension' => 'ประกันบำนาญ'],
+                'corporate' => ['group' => 'ประกันกลุ่ม', 'property' => 'ประกันบ้าน/คอนโด'],
+            ];
+            $__rels = $__relMap[$slug] ?? [];
+            ?>
+            <?php if (!empty($__rels)): ?>
+            <p class="text-sm text-brand-gray mb-4">หมวดที่เกี่ยวข้อง:</p>
+            <div class="flex flex-wrap justify-center gap-3">
+                <?php foreach ($__rels as $__rslug => $__rtitle): ?>
+                <a href="/category.php?slug=<?= htmlspecialchars($__rslug) ?>" class="text-sm font-bold text-brand-navy border border-brand-navy hover:bg-brand-light rounded-lg px-4 py-2 transition"><?= htmlspecialchars($__rtitle) ?> →</a>
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
+        </div>
         <?php else: ?>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             <?php foreach ($plans as $p): ?>
-            <a href="/plan.php?id=<?= (int)$p['id'] ?>" class="group bg-white rounded-2xl border border-gray-100 hover:shadow-lg hover:border-brand-navy/20 transition p-6 flex flex-col">
+            <div class="group bg-white rounded-2xl border border-gray-100 hover:shadow-lg hover:border-brand-navy/20 transition p-6 flex flex-col">
                 <?php
                 $__badgeTh = [
                     'saving' => 'ออมทรัพย์', 'tax' => 'ลดหย่อนภาษี', 'retirement' => 'บำนาญ', 'inheritance' => 'มรดก',
@@ -111,13 +128,13 @@ include 'includes/header.php';
                 <h2 class="font-bold text-brand-navy group-hover:text-brand-navyHover transition text-lg leading-snug mb-2"><?= htmlspecialchars($p['title']) ?></h2>
                 <p class="text-sm text-brand-gray leading-relaxed mb-4 flex-1 line-clamp-3"><?= htmlspecialchars(implode(' ', array_slice(explode(',', (string)$p['desc_text']), 0, 3))) ?></p>
                 <?php if (!empty($p['premium_from'])): ?>
-                <div class="text-sm text-brand-text mb-4">เบี้ยเริ่มต้น <span class="font-bold text-brand-green"><?= htmlspecialchars($p['premium_from']) ?></span></div>
+                <div class="text-sm text-brand-text mb-4">เบี้ยเริ่มต้น <span class="font-bold text-brand-green"><?= htmlspecialchars(preg_replace('/^เริ่มต้น\s*/', '', (string)$p['premium_from'])) ?></span></div>
                 <?php endif; ?>
                 <div class="flex gap-2 mt-auto pt-3 border-t border-gray-100">
                     <a href="/plan.php?id=<?= (int)$p['id'] ?>" class="flex-1 text-center text-sm font-bold text-brand-navy border border-brand-navy hover:bg-brand-light rounded-lg py-2 transition">ดูรายละเอียด</a>
                     <a href="/form/?plan=<?= urlencode($cat['title']) ?>&plan_name=<?= urlencode($p['title']) ?>" class="flex-1 text-center text-sm font-bold text-white bg-brand-green hover:bg-brand-greenHover rounded-lg py-2 transition">เลือกแผนนี้</a>
                 </div>
-            </a>
+            </div>
             <?php endforeach; ?>
         </div>
         <?php endif; ?>
