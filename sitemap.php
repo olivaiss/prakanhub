@@ -30,7 +30,7 @@ try {
     require_once __DIR__ . '/includes/db.php';
     $__stmt = getDB()->query('SELECT id FROM articles WHERE is_active = 1 ORDER BY id');
     $articleIds = array_column($__stmt->fetchAll(), 'id');
-    $__stmt = getDB()->query('SELECT slug FROM categories WHERE is_active = 1 ORDER BY id');
+    $__stmt = getDB()->query('SELECT slug FROM categories WHERE is_active = 1 AND slug NOT IN ("life","health","general") ORDER BY id');
     $catSlugs = array_column($__stmt->fetchAll(), 'slug');
     $__stmt = getDB()->query('SELECT id FROM products WHERE is_active = 1 ORDER BY id');
     $planIds = array_column($__stmt->fetchAll(), 'id');

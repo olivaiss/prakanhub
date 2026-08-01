@@ -33,7 +33,7 @@ if (empty($__subs)) {
 
 // นับจำนวนแผนต่อหมวด (badge map)
 $__badgeMap = [
-    'savings' => ['saving', 'tax'], 'pension' => ['retirement'], 'tax' => ['tax'], 'inheritance' => ['inheritance'],
+    'savings' => ['saving'], 'pension' => ['retirement'], 'tax' => [], 'inheritance' => ['inheritance'],
     'unit-linked' => ['unit-linked'], 'senior' => ['senior'], 'accident' => ['accident'],
 ];
 $__counts = [];

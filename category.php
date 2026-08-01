@@ -31,16 +31,17 @@ try {
             elseif (strpos($__link, '/health.php') === 0) $__mainCat = 'health';
             elseif (strpos($__link, '/general.php') === 0) $__mainCat = 'general';
 
-            // หมวดหลัก → แผนทั้งหมดของหมวดแม่
+            // หมวดหลัก (life/health/general) → ไปหน้า Hub (life.php/health.php/general.php — ไม่แสดงแผนซ้ำ)
             if ($slug === 'life' || $slug === 'health' || $slug === 'general') {
-                if (isset($__map[$slug])) $plans = $__map[$slug];
+                header('Location: /' . $slug . '.php');
+                exit;
             } else {
-                // หมวดย่อย → badge map
+                // หมวดย่อย → badge map (เฉพาะ badge ของหมวดนี้ — แต่ละแผนอยู่ในหน้าเดียว ไม่ซ้ำ)
                 $__badgeMap = [
-                    'savings' => ['saving', 'tax'], 'pension' => ['retirement'], 'income' => ['income'],
-                    'critical' => ['critical', 'cancer'], 'accident' => ['accident'], 'kids' => ['kids'],
-                    'car' => ['motor'], 'travel' => ['travel'], 'group' => ['group'], 'corporate' => ['property'],
-                    'tax' => ['tax'], 'inheritance' => ['inheritance'], 'unit-linked' => ['unit-linked'],
+                    'savings' => ['saving'], 'pension' => ['retirement'], 'income' => ['income'],
+                    'critical' => ['critical'], 'accident' => ['accident'], 'kids' => ['kids'],
+                    'car' => ['motor'], 'travel' => ['travel'], 'group' => ['group'],
+                    'tax' => [], 'inheritance' => ['inheritance'], 'unit-linked' => ['unit-linked'],
                     'senior' => ['senior', 'senior50'], 'cancer' => ['cancer'],
                     'nocopay' => ['nocopay'], 'additional' => ['additional'], 'property' => ['property'],
                 ];
@@ -51,10 +52,6 @@ try {
                         if (in_array($__p['badge'], $__wanted, true)) $plans[] = $__p;
                     }
                 }
-            }
-            // ถ้ายังไม่เจอแผน → แสดงแผนทั้งหมดในหมวดแม่
-            if (empty($plans) && $__mainCat && isset($__map[$__mainCat])) {
-                $plans = $__map[$__mainCat];
             }
             $pageTitle = $cat['title'];
         }
@@ -99,8 +96,17 @@ include 'includes/header.php';
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             <?php foreach ($plans as $p): ?>
             <a href="/plan.php?id=<?= (int)$p['id'] ?>" class="group bg-white rounded-2xl border border-gray-100 hover:shadow-lg hover:border-brand-navy/20 transition p-6 flex flex-col">
+                <?php
+                $__badgeTh = [
+                    'saving' => 'ออมทรัพย์', 'tax' => 'ลดหย่อนภาษี', 'retirement' => 'บำนาญ', 'inheritance' => 'มรดก',
+                    'unit-linked' => 'ยูนิตลิงค์', 'senior' => 'ผู้สูงอายุ', 'senior50' => 'ผู้สูงอายุ 50+', 'accident' => 'อุบัติเหตุ',
+                    'critical' => 'โรคร้ายแรง', 'cancer' => 'มะเร็ง', 'kids' => 'เด็ก', 'nocopay' => 'ไม่มีส่วนร่วมจ่าย',
+                    'additional' => 'เพิ่มเติม', 'income' => 'ชดเชยรายได้', 'motor' => 'รถยนต์', 'property' => 'บ้าน/ทรัพย์สิน',
+                    'travel' => 'เดินทาง', 'group' => 'กลุ่ม',
+                ];
+                ?>
                 <?php if (!empty($p['badge'])): ?>
-                <span class="text-xs font-bold text-brand-green mb-2"><?= htmlspecialchars($p['badge']) ?></span>
+                <span class="text-xs font-bold text-brand-green mb-2"><?= htmlspecialchars($__badgeTh[$p['badge']] ?? $p['badge']) ?></span>
                 <?php endif; ?>
                 <h2 class="font-bold text-brand-navy group-hover:text-brand-navyHover transition text-lg leading-snug mb-2"><?= htmlspecialchars($p['title']) ?></h2>
                 <p class="text-sm text-brand-gray leading-relaxed mb-4 flex-1 line-clamp-3"><?= htmlspecialchars(implode(' ', array_slice(explode(',', (string)$p['desc_text']), 0, 3))) ?></p>
