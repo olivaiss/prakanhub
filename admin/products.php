@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         if ($action === 'save') {
             $id = (int)($_POST['id'] ?? 0);
-            $cat = in_array($_POST['category'] ?? '', ['life', 'health', 'general'], true) ? $_POST['category'] : 'life';
+            $cat = in_array($_POST['category'] ?? '', ['life', 'health', 'general', 'corporate'], true) ? $_POST['category'] : 'life';
             $title = trim($_POST['title'] ?? '');
             if ($title === '') throw new Exception('กรุณากรอกชื่อแผน');
             $data = [$cat, $title, trim($_POST['desc_text'] ?? ''), trim($_POST['img'] ?? ''), trim($_POST['link_url'] ?? ''), trim($_POST['badge'] ?? ''), (int)($_POST['sort_order'] ?? 0), !empty($_POST['is_active']) ? 1 : 0,
@@ -135,8 +135,29 @@ $__isEdit = $edit ? 'แก้ไข' : 'เพิ่ม';
                     <input type="hidden" name="action" value="save">
                     <input type="hidden" name="id" value="<?= (int)$e['id'] ?>">
 <div class="col-md-6"><label class="form-label">ชื่อแผน</label><input type="text" class="form-control" name="title" value="<?= admin_e($e['title']) ?>" required></div>
-<div class="col-md-6"><label class="form-label">กลุ่ม (badge)</label><input type="text" class="form-control" name="badge" value="<?= admin_e($e['badge']) ?>" ></div>
-<div class="col-md-4"><label class="form-label">หมวดหมู่</label><select class="form-select" name="category"><option value="life" <?= $e['category'] == "life" ? 'selected' : '' ?>>life</option><option value="health" <?= $e['category'] == "health" ? 'selected' : '' ?>>health</option><option value="general" <?= $e['category'] == "general" ? 'selected' : '' ?>>general</option></select></div>
+<div class="col-md-6"><label class="form-label">กลุ่ม (badge)</label>
+    <select class="form-select" name="badge">
+        <?php
+        // ═══ กลุ่มจาก DB (badge ที่มีอยู่) + แสดงชื่อไทย ═══
+        $__badgeTh = [
+            'saving' => 'ออมทรัพย์', 'tax' => 'ลดหย่อนภาษี', 'retirement' => 'บำนาญ', 'inheritance' => 'มรดก',
+            'unit-linked' => 'ยูนิตลิงค์', 'senior' => 'ผู้สูงอายุ', 'senior50' => 'ผู้สูงอายุ 50+', 'accident' => 'อุบัติเหตุ',
+            'critical' => 'โรคร้ายแรง', 'cancer' => 'มะเร็ง', 'kids' => 'เด็ก', 'nocopay' => 'ไม่มีส่วนร่วมจ่าย',
+            'additional' => 'เพิ่มเติม', 'income' => 'ชดเชยรายได้', 'motor' => 'รถยนต์', 'property' => 'บ้าน/ทรัพย์สิน',
+            'travel' => 'เดินทาง', 'group' => 'กลุ่ม',
+        ];
+        $__badges = $db->query('SELECT DISTINCT badge FROM products WHERE badge != "" ORDER BY badge')->fetchAll(PDO::FETCH_COLUMN);
+        ?>
+        <option value="">— ไม่มีกลุ่ม —</option>
+        <?php foreach ($__badges as $__b): ?>
+        <option value="<?= admin_e($__b) ?>" <?= $e['badge'] === $__b ? 'selected' : '' ?>><?= admin_e($__badgeTh[$__b] ?? $__b) ?> (<?= admin_e($__b) ?>)</option>
+        <?php endforeach; ?>
+        <?php if ($e['badge'] !== '' && !in_array($e['badge'], $__badges, true)): ?>
+        <option value="<?= admin_e($e['badge']) ?>" selected><?= admin_e($e['badge']) ?></option>
+        <?php endif; ?>
+    </select>
+</div>
+<div class="col-md-6"><label class="form-label">หมวดหมู่</label><select class="form-select" name="category"><option value="life" <?= $e['category'] == "life" ? 'selected' : '' ?>>ประกันชีวิต (life)</option><option value="health" <?= $e['category'] == "health" ? 'selected' : '' ?>>ประกันสุขภาพ (health)</option><option value="general" <?= $e['category'] == "general" ? 'selected' : '' ?>>ประกันทั่วไป (general)</option><option value="corporate" <?= $e['category'] == "corporate" ? 'selected' : '' ?>>ธุรกิจ/องค์กร (corporate)</option></select></div>
 <div class="col-12"><label class="form-label">คำอธิบาย/จุดเด่น</label><textarea class="form-control" name="desc_text" rows="4"><?= admin_e($e['desc_text']) ?></textarea></div>
 <div class="col-md-6"><label class="form-label">URL รูปภาพ</label><input type="text" class="form-control" name="img" value="<?= admin_e($e['img']) ?>" ></div>
 <div class="col-md-6"><label class="form-label">ลิงก์</label><input type="text" class="form-control" name="link_url" value="<?= admin_e($e['link_url']) ?>" ></div>
