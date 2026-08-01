@@ -107,7 +107,10 @@ include 'includes/header.php';
                 <?php if (!empty($p['premium_from'])): ?>
                 <div class="text-sm text-brand-text mb-4">เบี้ยเริ่มต้น <span class="font-bold text-brand-green"><?= htmlspecialchars($p['premium_from']) ?></span></div>
                 <?php endif; ?>
-                <div class="text-sm font-semibold text-brand-navy flex items-center gap-1 group-hover:gap-2 transition-all">ดูรายละเอียด <span>→</span></div>
+                <div class="flex gap-2 mt-auto pt-3 border-t border-gray-100">
+                    <a href="/plan.php?id=<?= (int)$p['id'] ?>" class="flex-1 text-center text-sm font-bold text-brand-navy border border-brand-navy hover:bg-brand-light rounded-lg py-2 transition">ดูรายละเอียด</a>
+                    <a href="/form/?plan=<?= urlencode($cat['title']) ?>&plan_name=<?= urlencode($p['title']) ?>" class="flex-1 text-center text-sm font-bold text-white bg-brand-green hover:bg-brand-greenHover rounded-lg py-2 transition">เลือกแผนนี้</a>
+                </div>
             </a>
             <?php endforeach; ?>
         </div>
