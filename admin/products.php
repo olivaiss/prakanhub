@@ -59,17 +59,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $cat = in_array($_POST['category'] ?? '', ['life', 'health', 'general', 'corporate'], true) ? $_POST['category'] : 'life';
             $title = trim($_POST['title'] ?? '');
             if ($title === '') throw new Exception('กรุณากรอกชื่อแผน');
+
+            // ═══ อัปโหลดโลโก้บริษัท → แปลง webp + หาขนาด ═══
+            $logoUrl = trim($_POST['company_logo'] ?? '');
+            $logoNote = '';
+            if (!empty($_FILES['company_logo_file']['name']) && $_FILES['company_logo_file']['error'] === UPLOAD_ERR_OK) {
+                $f = $_FILES['company_logo_file'];
+                $ext = strtolower(pathinfo($f['name'], PATHINFO_EXTENSION));
+                $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+                if (!in_array($ext, $allowed, true)) throw new Exception('อนุญาตเฉพาะไฟล์รูปภาพ (jpg, png, gif, webp)');
+                if ($f['size'] > 2 * 1024 * 1024) throw new Exception('ไฟล์ใหญ่เกิน 2MB');
+                $img = @imagecreatefromstring(file_get_contents($f['tmp_name']));
+                if (!$img) throw new Exception('อ่านไฟล์รูปไม่สำเร็จ — กรุณาใช้ไฟล์รูปจริง');
+                $w = imagesx($img);
+                $h = imagesy($img);
+                $logoDir = __DIR__ . '/../assets/logos';
+                if (!is_dir($logoDir)) @mkdir($logoDir, 0775, true);
+                $logoName = 'logo-' . ($id > 0 ? $id : date('His')) . '-' . preg_replace('/[^a-zA-Z0-9_-]/', '', pathinfo($f['name'], PATHINFO_FILENAME)) . '.webp';
+                $logoPath = $logoDir . '/' . $logoName;
+                // พื้นหลังโปร่งใส (png) → webp
+                if (in_array($ext, ['png', 'gif'], true)) {
+                    imagealphablending($img, false);
+                    imagesavealpha($img, true);
+                }
+                if (imagewebp($img, $logoPath, 85)) {
+                    $logoUrl = '/assets/logos/' . $logoName;
+                    $logoNote = " โลโก้ถูกแปลงเป็น WebP ({$w}x{$h}px)";
+                } else {
+                    throw new Exception('แปลงเป็น WebP ไม่สำเร็จ');
+                }
+                imagedestroy($img);
+            }
+
             $data = [$cat, $title, trim($_POST['desc_text'] ?? ''), trim($_POST['img'] ?? ''), trim($_POST['link_url'] ?? ''), trim($_POST['badge'] ?? ''), (int)($_POST['sort_order'] ?? 0), !empty($_POST['is_active']) ? 1 : 0,
                 trim($_POST['company'] ?? ''), trim($_POST['premium_from'] ?? ''), trim($_POST['coverage'] ?? ''), trim($_POST['plans'] ?? ''),
                 trim($_POST['room_rate'] ?? ''), trim($_POST['area'] ?? ''), trim($_POST['key_benefits'] ?? ''), trim($_POST['age_range'] ?? ''), trim($_POST['details_url'] ?? ''),
-                trim($_POST['company_logo'] ?? ''), trim(ltrim($_POST['company_color_text'] ?? ($_POST['company_color'] ?? ''), '#'))];
+                $logoUrl, trim(ltrim($_POST['company_color_text'] ?? ($_POST['company_color'] ?? ''), '#'))];
             if ($id > 0) {
                 $data[] = $id;
                 $db->prepare('UPDATE products SET category=?, title=?, desc_text=?, img=?, link_url=?, badge=?, sort_order=?, is_active=?, company=?, premium_from=?, coverage=?, plans=?, room_rate=?, area=?, key_benefits=?, age_range=?, details_url=?, company_logo=?, company_color=? WHERE id=?')->execute($data);
-                admin_flash('บันทึกแผนเรียบร้อย');
+                admin_flash('บันทึกแผนเรียบร้อย' . $logoNote);
             } else {
                 $db->prepare('INSERT INTO products (category, title, desc_text, img, link_url, badge, sort_order, is_active, company, premium_from, coverage, plans, room_rate, area, key_benefits, age_range, details_url, company_logo, company_color) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')->execute($data);
-                admin_flash('เพิ่มแผนเรียบร้อย');
+                admin_flash('เพิ่มแผนเรียบร้อย' . $logoNote);
             }
         } elseif ($action === 'delete') {
             $db->prepare('DELETE FROM products WHERE id=?')->execute([(int)$_POST['id']]);
@@ -131,7 +163,7 @@ $__isEdit = $edit ? 'แก้ไข' : 'เพิ่ม';
     <div class="col-lg-8">
         <div class="card">
             <div class="card-body">
-                <form method="post" class="row g-3">
+                <form method="post" class="row g-3" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="save">
                     <input type="hidden" name="id" value="<?= (int)$e['id'] ?>">
 <div class="col-md-6"><label class="form-label">ชื่อแผน</label><input type="text" class="form-control" name="title" value="<?= admin_e($e['title']) ?>" required></div>
@@ -174,7 +206,32 @@ $__isEdit = $edit ? 'แก้ไข' : 'เพิ่ม';
     </select>
 </div>
 <div class="col-md-4"><label class="form-label">สีประจำบริษัท (hex)</label><div class="d-flex gap-2"><input type="color" class="form-control form-control-color" name="company_color" value="#<?= admin_e(ltrim($e['company_color'] ?? '', '#')) ?>" style="width:52px"><input type="text" class="form-control" name="company_color_text" value="<?= admin_e($e['company_color']) ?>" placeholder="เช่น 0058A8"></div></div>
-<div class="col-md-4"><label class="form-label">URL โลโก้บริษัท (ถ้ามี)</label><input type="text" class="form-control" name="company_logo" value="<?= admin_e($e['company_logo']) ?>" placeholder="/assets/logos/allianz.png — ว่าง=ใช้ชื่อย่อ+สี"></div>
+<div class="col-md-6"><label class="form-label">โลโก้บริษัท (อัปโหลด หรือวาง URL)</label>
+    <div class="d-flex align-items-center gap-2">
+        <input type="file" class="form-control" name="company_logo_file" accept="image/*" onchange="previewLogo(this)">
+        <input type="text" class="form-control" name="company_logo" id="company_logo_url" value="<?= admin_e($e['company_logo']) ?>" placeholder="/assets/logos/... หรือ https://...">
+    </div>
+    <?php
+    // ═══ ขนาดโลโก้ปัจจุบัน (ถ้ามีไฟล์ local) ═══
+    $__logoDim = '';
+    if (!empty($e['company_logo']) && strpos($e['company_logo'], '/assets/') === 0) {
+        $__logoPath = __DIR__ . '/..' . $e['company_logo'];
+        if (file_exists($__logoPath)) {
+            $__dim = @getimagesize($__logoPath);
+            if ($__dim) $__logoDim = " — ไฟล์ปัจจุบัน: {$__dim[0]} x {$__dim[1]} px (" . round(filesize($__logoPath) / 1024) . " KB)";
+        }
+    }
+    ?>
+    <div class="form-text">เลือกไฟล์ (jpg/png/gif/webp สูงสุด 2MB) — <strong>จะแปลงเป็น WebP อัตโนมัติ</strong> และแสดงขนาด px หลังบันทึก<?= $__logoDim ?></div>
+    <div id="logo-preview" class="mt-2">
+        <?php if (!empty($e['company_logo'])): ?>
+        <div class="d-inline-flex align-items-center gap-2 border rounded p-2">
+            <img src="<?= admin_e($e['company_logo']) ?>" alt="โลโก้ปัจจุบัน" style="max-height:44px;max-width:160px;object-fit:contain">
+            <span class="text-muted small">โลโก้ปัจจุบัน</span>
+        </div>
+        <?php endif; ?>
+    </div>
+</div>
 <div class="col-12"><div class="form-text">ไม่มีโลโก้ → การ์ดแสดงกล่องสีประจำบริษัท + ชื่อย่ออัตโนมัติ</div></div>
 
 <h6 class="mt-4 mb-3 text-muted fw-bold border-bottom pb-2">📋 รายละเอียดแผน (หน้า plan.php)</h6>
@@ -261,3 +318,20 @@ $__isEdit = $edit ? 'แก้ไข' : 'เพิ่ม';
 <?php endif; ?>
 
 <?php include __DIR__ . '/includes/footer.php'; ?>
+
+<script>
+// ═══ Preview โลโก้ก่อนอัปโหลด + แสดงขนาด px ═══
+function previewLogo(input) {
+    var file = input.files && input.files[0];
+    if (!file) return;
+    var box = document.getElementById('logo-preview');
+    var img = new Image();
+    img.onload = function () {
+        box.innerHTML = '<div class="d-inline-flex align-items-center gap-2 border rounded p-2">' +
+            '<img src="' + img.src + '" style="max-height:44px;max-width:160px;object-fit:contain">' +
+            '<span class="text-success small fw-bold">' + file.name + ' — ' + img.width + ' x ' + img.height + ' px</span>' +
+            '</div>';
+    };
+    img.src = URL.createObjectURL(file);
+}
+</script>
