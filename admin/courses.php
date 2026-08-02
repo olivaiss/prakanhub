@@ -187,11 +187,11 @@ function addLesson(btn, lesson) {
     var idx = Array.prototype.indexOf.call(sec.parentElement.children, sec);
     var lessonsBox = sec.querySelector('.lessons');
     var row = document.createElement('div');
-    row.className = 'row g-2 mb-2 lesson-row';
+    row.className = 'row g-2 mb-2 lesson-row border rounded p-2 align-items-center';
     row.innerHTML = '<div class="col-md-5"><input type="text" class="form-control form-control-sm" name="lesson_title[' + idx + '][]" placeholder="ชื่อวิดีโอ" value="' + esc(lesson.title) + '"></div>'
         + '<div class="col-md-4"><input type="text" class="form-control form-control-sm" name="lesson_video[' + idx + '][]" placeholder="YouTube ID (เช่น aqz-KE-bpKQ)" value="' + esc(lesson.video) + '"></div>'
         + '<div class="col-md-2"><input type="text" class="form-control form-control-sm" name="lesson_duration[' + idx + '][]" placeholder="8:12" value="' + esc(lesson.duration) + '"></div>'
-        + '<div class="col-md-1"><button type="button" class="btn btn-sm btn-outline-danger w-100" onclick="this.closest(\'.lesson-row\').remove()"><i class="ti ti-x"></i></button></div>';
+        + '<div class="col-md-1"><button type="button" class="btn btn-sm btn-outline-danger" onclick="this.closest(\'.border\').remove()"><i class="ti ti-trash"></i></button></div>';
     lessonsBox.appendChild(row);
 }
 
