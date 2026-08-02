@@ -57,7 +57,7 @@ include 'includes/header.php';
             // ═══ อ่านรีวิวจากฐานข้อมูล (ถ้ามีข้อมูล) — fallback ใช้ array ด้านบน ═══
             try {
                 if (function_exists('getDB')) {
-                    $__dbTesti = getDB()->query('SELECT name, role, rating, message, img FROM testimonials WHERE is_active = 1 ORDER BY sort_order, id');
+                    $__dbTesti = getDB()->query('SELECT name, role, rating, message, img FROM testimonials WHERE is_active = 1 ORDER BY id DESC');
                     $__dbRows = $__dbTesti->fetchAll();
                     if (count($__dbRows) > 0) {
                         $testimonials = [];

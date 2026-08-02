@@ -210,7 +210,7 @@
                     'img' => $__r['img'] ?: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&h=375&fit=crop',
                 ];
             }
-            foreach ($__db->query('SELECT name, role, message, rating, img FROM testimonials WHERE is_active = 1 ORDER BY sort_order, id LIMIT 4') as $__r) {
+            foreach ($__db->query('SELECT name, role, message, rating, img FROM testimonials WHERE is_active = 1 ORDER BY id DESC LIMIT 4') as $__r) {
                 $__DB_REVIEWS[] = [
                     'img' => $__r['img'] ?: '', 'name' => $__r['name'], 'desc' => $__r['role'] ?: 'ลูกค้า', 'text' => $__r['message'],
                 ];
