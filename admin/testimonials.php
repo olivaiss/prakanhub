@@ -90,6 +90,7 @@ include __DIR__ . '/includes/header.php';
 
 <?php if ($edit || isset($_GET['new'])): ?>
 <?php $e = $edit ?: [
+    'id' => 0,
     'name' => '',
     'role' => '',
     'rating' => '',
