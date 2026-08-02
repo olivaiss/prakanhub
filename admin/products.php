@@ -139,6 +139,7 @@ include __DIR__ . '/includes/header.php';
 
 <?php if ($edit || isset($_GET['new'])): ?>
 <?php $e = $edit ?: [
+    'id' => 0,
     'title' => '',
     'badge' => '',
     'category' => '',
@@ -147,6 +148,17 @@ include __DIR__ . '/includes/header.php';
     'link_url' => '',
     'sort_order' => '',
     'is_active' => 1,
+    'company' => 'อลิอันซ์ อยุธยา',
+    'premium_from' => '',
+    'coverage' => '',
+    'plans' => '',
+    'room_rate' => '',
+    'area' => '',
+    'key_benefits' => '',
+    'age_range' => '',
+    'details_url' => '',
+    'company_logo' => '',
+    'company_color' => '0058A8',
 ];
 $__isEdit = $edit ? 'แก้ไข' : 'เพิ่ม';
 ?>
