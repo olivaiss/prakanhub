@@ -147,7 +147,8 @@ $adminMenu = isset($adminMenu) ? $adminMenu : 'dashboard';
 
                     <li class="menu-title">ข้อมูลลูกค้า</li>
                     <li><a href="inbox.php" class="waves-effect <?= $adminMenu === 'inbox' ? 'active' : '' ?>"><i class="ti ti-inbox"></i><span>กล่องข้อความ</span></a></li>
-                    <li><a href="uploads.php" class="waves-effect <?= $adminMenu === 'uploads' ? 'active' : '' ?>"><i class="ti ti-photo"></i><span>อัปโหลดรูป</span></a></li>
+                    <li><a href="banners.php" class="waves-effect <?= $adminMenu === 'banners' ? 'active' : '' ?>"><i class="ti ti-photo"></i><span>แบนเนอร์</span></a></li>
+                    <li><a href="uploads.php" class="waves-effect <?= $adminMenu === 'uploads' ? 'active' : '' ?>"><i class="ti ti-upload"></i><span>อัปโหลดรูป</span></a></li>
 
                     <li class="menu-title">ระบบสมาชิก</li>
                     <li><a href="courses.php" class="waves-effect <?= $adminMenu === 'courses' ? 'active' : '' ?>"><i class="ti ti-video-clapper"></i><span>คอร์สเรียน</span></a></li>
