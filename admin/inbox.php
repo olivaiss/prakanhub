@@ -122,7 +122,7 @@ if (!empty($viewRow['payload'])) {
             <div class="d-flex align-items-center gap-2">
                 <h4 class="card-title mb-0">รายละเอียด #<?= (int)$viewRow['id'] ?></h4>
                 <?php if (!empty($viewRow['ref_code'])): ?><span class="badge bg-soft-dark text-dark font-monospace"><?= admin_e($viewRow['ref_code']) ?></span><?php endif; ?>
-                <?= $viewRow['is_read'] ? '<span class="badge bg-soft-secondary text-secondary">อ่านแล้ว</span>' : '<span class="badge bg-danger">ใหม่</span>' ?>
+                <?= $viewRow['is_read'] ? '<span class="badge bg-soft-success text-success fw-bold">อ่านแล้ว</span>' : '<span class="badge bg-soft-danger text-danger fw-bold">ยังไม่อ่าน</span>' ?>
             </div>
             <a href="inbox.php?tab=<?= $tab ?>" class="btn btn-secondary waves-effect btn-sm"><i class="ti ti-arrow-left me-1"></i> กลับ</a>
         </div>
@@ -208,7 +208,7 @@ if (!empty($viewRow['payload'])) {
                         <td><?= admin_e($r['subject']) ?></td>
                         <td><?= admin_e($r['line']) ?></td>
                         <td class="text-truncate" style="max-width:260px" title="<?= admin_e($r['message']) ?>"><?= admin_e(mb_substr((string)$r['message'], 0, 80)) ?></td>
-                        <td><?= $r['is_read'] ? '<span class="badge bg-soft-secondary text-secondary">อ่านแล้ว</span>' : '<span class="badge bg-danger">ใหม่</span>' ?></td>
+                        <td><?= $r['is_read'] ? '<span class="badge bg-soft-success text-success fw-bold">อ่านแล้ว</span>' : '<span class="badge bg-soft-danger text-danger fw-bold">ยังไม่อ่าน</span>' ?></td>
                         <td><?= date('d/m/Y H:i', strtotime($r['created_at'])) ?>
                             <form method="post" class="d-inline" onclick="event.stopPropagation()">
                                 <input type="hidden" name="action" value="read"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
@@ -227,7 +227,7 @@ if (!empty($viewRow['payload'])) {
                         <td><?= admin_e($r['education']) ?></td>
                         <td class="text-truncate" style="max-width:200px"><?= admin_e($r['experience']) ?></td>
                         <td><?= admin_e($r['line']) ?></td>
-                        <td><?= $r['is_read'] ? '<span class="badge bg-soft-secondary text-secondary">อ่านแล้ว</span>' : '<span class="badge bg-danger">ใหม่</span>' ?></td>
+                        <td><?= $r['is_read'] ? '<span class="badge bg-soft-success text-success fw-bold">อ่านแล้ว</span>' : '<span class="badge bg-soft-danger text-danger fw-bold">ยังไม่อ่าน</span>' ?></td>
                         <td><?= date('d/m/Y H:i', strtotime($r['created_at'])) ?>
                             <form method="post" class="d-inline" onclick="event.stopPropagation()">
                                 <input type="hidden" name="action" value="read"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
@@ -254,7 +254,7 @@ if (!empty($viewRow['payload'])) {
                             echo admin_e(mb_substr(implode(' | ', array_slice($__vals, 0, 6)), 0, 120));
                             ?>
                         </td>
-                        <td><?= $r['is_read'] ? '<span class="badge bg-soft-secondary text-secondary">อ่านแล้ว</span>' : '<span class="badge bg-danger">ใหม่</span>' ?></td>
+                        <td><?= $r['is_read'] ? '<span class="badge bg-soft-success text-success fw-bold">อ่านแล้ว</span>' : '<span class="badge bg-soft-danger text-danger fw-bold">ยังไม่อ่าน</span>' ?></td>
                         <td>
                             <form method="post" class="d-inline" onclick="event.stopPropagation()">
                                 <input type="hidden" name="action" value="read"><input type="hidden" name="id" value="<?= (int)$r['id'] ?>">
