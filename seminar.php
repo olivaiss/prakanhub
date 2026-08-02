@@ -48,9 +48,9 @@ try {
             $gallery = [];
             $__aspects = ['aspect-[3/4]', 'aspect-[4/3]', 'aspect-[2/3]', 'aspect-[3/2]'];
             foreach ($__rows as $i => $__r) {
-                $__file = basename(parse_url($__r['img'], PHP_URL_PATH));
+                // ใช้ URL เต็ม (รองรับทั้ง /assets/image/seminar/ เดิม และ /assets/seminars/ ใหม่)
                 $gallery[] = [
-                    'file' => $__file,
+                    'file' => $__r['img'],
                     'cat' => $__r['location'] ?: 'สัมมนา',
                     'aspect' => $__aspects[$i % 4],
                 ];
@@ -72,7 +72,7 @@ try {
                      onclick="openLightbox(<?= $i ?>)">
                     <div class="relative overflow-hidden <?= $item['aspect'] ?>">
                         <!-- Image only — no text overlay, no badge, no button -->
-                        <img src="/assets/image/seminar/<?= $item['file'] ?>"
+                        <img src="<?= htmlspecialchars($item['file']) ?>"
                              alt="ภาพกิจกรรม"
                              class="gallery-img w-full h-full object-cover"
                              loading="lazy">
@@ -197,7 +197,7 @@ try {
 $images = [];
 foreach ($gallery as $item) {
     $images[] = json_encode([
-        'src' => '/assets/image/seminar/' . $item['file'],
+        'src' => $item['file'],
     ]);
 }
 echo 'const lightboxImages = [' . implode(',', $images) . '];';
