@@ -282,9 +282,9 @@ function closeMenu(){toggleMenu()}
                     <input type="text" name="q" placeholder="ค้นหา..." class="bg-transparent text-sm outline-none w-32 focus:w-44 transition-all" aria-label="ค้นหา">
                     <button type="submit" aria-label="ค้นหา"><i data-lucide="search" class="w-4 h-4 text-brand-gray"></i></button>
                 </form>
-                <button class="hidden md:flex items-center gap-2 bg-brand-navy hover:bg-brand-navyHover text-white px-5 py-2.5 rounded-full text-sm font-semibold transition shadow-md">
+                <a href="<?= htmlspecialchars($__siteLineUrl) ?>" target="_blank" rel="noopener" class="hidden md:flex items-center gap-2 bg-brand-navy hover:bg-brand-navyHover text-white px-5 py-2.5 rounded-full text-sm font-semibold transition shadow-md">
                     <img src="/assets/icon/line.svg" class="w-4 h-4" alt="LINE"> ปรึกษาฟรี
-                </button>
+                </a>
                 <button id="hamburger-btn" class="lg:hidden text-brand-navy p-2" onclick="toggleMenu()"><i data-lucide="menu" class="w-7 h-7"></i></button>
             </div>
         </div>
@@ -344,9 +344,9 @@ function closeMenu(){toggleMenu()}
                 <a href="/articles.php" class="mob-link <?= mobActive('articles.php', $currentPage) ?> flex items-center gap-2 py-2 rounded-lg"><i data-lucide="file-text" class="w-4 h-4"></i> บทความ</a>
                 <a href="/contact.php" class="mob-link <?= mobActive('contact.php', $currentPage) ?> flex items-center gap-2 py-2 rounded-lg"><i data-lucide="phone" class="w-4 h-4"></i> ติดต่อเรา</a>
                 <hr>
-                <button class="flex items-center justify-center gap-2 bg-brand-navy text-white px-5 py-3 rounded-xl text-sm font-semibold w-full mt-2">
+                <a href="<?= htmlspecialchars($__siteLineUrl) ?>" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 bg-brand-navy text-white px-5 py-3 rounded-xl text-sm font-semibold w-full mt-2">
                     <img src="/assets/icon/line.svg" class="w-4 h-4" alt="LINE"> ปรึกษาฟรี
-                </button>
+                </a>
             </div>
         </div>
     </header>

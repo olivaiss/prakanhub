@@ -29,10 +29,10 @@
 
                 <!-- Action Buttons -->
                 <div class="flex flex-col sm:flex-row gap-4 mb-14">
-                    <button class="flex items-center justify-center gap-3 bg-brand-navy hover:bg-brand-navyHover text-white px-6 py-3.5 rounded-xl shadow-lg transition group">
+                    <a href="/form/" class="flex items-center justify-center gap-3 bg-brand-navy hover:bg-brand-navyHover text-white px-6 py-3.5 rounded-xl shadow-lg transition group">
                         <i data-lucide="message-square" class="w-5 h-5"></i>
                         <div class="text-left leading-none"><div class="font-bold text-sm">ปรึกษาฟรี</div><div class="text-[10px] font-light mt-0.5">วางแผนการเงิน</div></div>
-                    </button>
+                    </a>
                     
                     <a href="https://www.allianz.co.th/th_TH/services/my-allianz.html" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-3 bg-white border border-brand-navy/20 hover:border-brand-navy text-brand-navy px-6 py-3.5 rounded-xl shadow-sm transition group">
                         <i data-lucide="file-check-2" class="w-5 h-5"></i>
@@ -96,9 +96,9 @@
                         <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-white"></i> ออกแบบแผนประกันที่เหมาะกับคุณ</li>
                         <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-white"></i> ดูแลต่อเนื่องในระยะยาว</li>
                     </ul>
-                    <button class="bg-white text-brand-navy font-bold text-sm px-6 py-2.5 rounded-full w-fit flex items-center gap-2 hover:bg-gray-100 transition">
+                    <a href="/form/" class="inline-flex items-center gap-2 bg-white text-brand-navy font-bold text-sm px-6 py-2.5 rounded-full w-fit hover:bg-gray-100 transition">
                         ปรึกษาฟรี คลิกเลย <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                    </button>
+                    </a>
                 </div>
                 <div class="sm:w-2/5 h-64 sm:h-auto relative overflow-hidden">
                     <img src="/assets/image/seminar/1784911056104.webp" alt="" loading="lazy" class="w-full h-full object-cover">
@@ -115,9 +115,9 @@
                         <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-brand-navy"></i> การพัฒนาตนเอง</li>
                         <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-brand-navy"></i> เครือข่ายตัวแทนมืออาชีพ</li>
                     </ul>
-                    <button class="bg-brand-navy text-white font-bold text-sm px-6 py-2.5 rounded-full w-fit flex items-center gap-2 hover:bg-brand-navyHover transition">
+                    <a href="/seminar.php" class="inline-flex items-center gap-2 bg-brand-navy text-white font-bold text-sm px-6 py-2.5 rounded-full w-fit hover:bg-brand-navyHover transition">
                         ดูสัมมนาทั้งหมด <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                    </button>
+                    </a>
                 </div>
                 <div class="sm:w-2/5 h-64 sm:h-auto relative overflow-hidden">
                     <img src="/assets/image/seminar/1784911045672.webp" alt="" loading="lazy" class="w-full h-full object-cover">
