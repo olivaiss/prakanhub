@@ -54,14 +54,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = (int)($_POST['id'] ?? 0);
             $title = trim($_POST['title'] ?? '');
             if ($title === '') throw new Exception('กรุณากรอกชื่อบทความ');
-            $data = [$title, trim($_POST['tag'] ?? ''), trim($_POST['img'] ?? ''), trim($_POST['excerpt'] ?? ''), $_POST['content'] ?? '', trim($_POST['author'] ?? ''), trim($_POST['publish_date'] ?? '') ?: null, trim($_POST['seo_title'] ?? ''), trim($_POST['seo_desc'] ?? ''), (int)($_POST['sort_order'] ?? 0), !empty($_POST['is_active']) ? 1 : 0];
+
+            // ═══ อัปโหลดรูปปก → แปลง webp + ขนาด ═══
+            $coverUrl = trim($_POST['img'] ?? '');
+            $coverNote = '';
+            if (!empty($_FILES['cover_file']['name']) && $_FILES['cover_file']['error'] === UPLOAD_ERR_OK) {
+                $f = $_FILES['cover_file'];
+                $ext = strtolower(pathinfo($f['name'], PATHINFO_EXTENSION));
+                $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+                if (!in_array($ext, $allowed, true)) throw new Exception('อนุญาตเฉพาะไฟล์รูปภาพ (jpg, png, gif, webp)');
+                if ($f['size'] > 5 * 1024 * 1024) throw new Exception('ไฟล์ใหญ่เกิน 5MB');
+                $img = @imagecreatefromstring(file_get_contents($f['tmp_name']));
+                if (!$img) throw new Exception('อ่านไฟล์รูปไม่สำเร็จ — กรุณาใช้ไฟล์รูปจริง');
+                $w = imagesx($img);
+                $h = imagesy($img);
+                // ย่อความกว้างไม่เกิน 1200px (คงสัดส่วน)
+                if ($w > 1200) {
+                    $nw = 1200;
+                    $nh = (int)round($h * $nw / $w);
+                    $img2 = imagecreatetruecolor($nw, $nh);
+                    imagealphablending($img2, false);
+                    imagesavealpha($img2, true);
+                    imagecopyresampled($img2, $img, 0, 0, 0, 0, $nw, $nh, $w, $h);
+                    imagedestroy($img);
+                    $img = $img2;
+                    $w = $nw;
+                    $h = $nh;
+                }
+                if (in_array($ext, ['png', 'gif'], true)) {
+                    imagealphablending($img, false);
+                    imagesavealpha($img, true);
+                }
+                $coverDir = __DIR__ . '/../assets/covers';
+                if (!is_dir($coverDir)) @mkdir($coverDir, 0775, true);
+                $coverName = 'cover-' . ($id > 0 ? $id : date('His')) . '-' . preg_replace('/[^a-zA-Z0-9_-]/', '', pathinfo($f['name'], PATHINFO_FILENAME)) . '.webp';
+                if (imagewebp($img, $coverDir . '/' . $coverName, 82)) {
+                    $coverUrl = '/assets/covers/' . $coverName;
+                    $coverNote = " รูปปกถูกแปลงเป็น WebP ({$w}x{$h}px)";
+                } else {
+                    throw new Exception('แปลงเป็น WebP ไม่สำเร็จ');
+                }
+                imagedestroy($img);
+            }
+
+            $data = [$title, trim($_POST['tag'] ?? ''), $coverUrl, trim($_POST['excerpt'] ?? ''), $_POST['content'] ?? '', trim($_POST['author'] ?? ''), trim($_POST['publish_date'] ?? '') ?: null, trim($_POST['seo_title'] ?? ''), trim($_POST['seo_desc'] ?? ''), (int)($_POST['sort_order'] ?? 0), !empty($_POST['is_active']) ? 1 : 0];
             if ($id > 0) {
                 $data[] = $id;
                 $db->prepare('UPDATE articles SET title=?, tag=?, img=?, excerpt=?, content=?, author=?, publish_date=?, seo_title=?, seo_desc=?, sort_order=?, is_active=? WHERE id=?')->execute($data);
-                admin_flash('บันทึกบทความเรียบร้อย');
+                admin_flash('บันทึกบทความเรียบร้อย' . $coverNote);
             } else {
                 $db->prepare('INSERT INTO articles (title, tag, img, excerpt, content, author, publish_date, seo_title, seo_desc, sort_order, is_active) VALUES (?,?,?,?,?,?,?,?,?,?,?)')->execute($data);
-                admin_flash('เพิ่มบทความเรียบร้อย');
+                admin_flash('เพิ่มบทความเรียบร้อย' . $coverNote);
             }
         } elseif ($action === 'delete') {
             $db->prepare('DELETE FROM articles WHERE id=?')->execute([(int)$_POST['id']]);
@@ -112,12 +155,31 @@ include __DIR__ . '/includes/header.php';
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title"><?= $edit ? 'แก้ไขบทความ' : 'เพิ่มบทความ' ?></h4>
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="save"><input type="hidden" name="id" value="<?= (int)$e['id'] ?>">
                     <div class="row">
                         <div class="col-md-8 mb-3"><label class="form-label">ชื่อบทความ <span class="required-flag">*</span></label><input type="text" class="form-control" name="title" value="<?= admin_e($e['title']) ?>" required></div>
                         <div class="col-md-4 mb-3"><label class="form-label">หมวด (tag)</label><input type="text" class="form-control" name="tag" value="<?= admin_e($e['tag']) ?>" placeholder="ประกันชีวิต"></div>
-                        <div class="col-md-4 mb-3"><label class="form-label">รูปปก (URL)</label><input type="text" class="form-control" name="img" value="<?= admin_e($e['img']) ?>"></div>
+                        <div class="col-md-4 mb-3"><label class="form-label">รูปปก (อัปโหลด หรือวาง URL)</label>
+                            <input type="file" class="form-control" name="cover_file" accept="image/*" onchange="previewCover(this)">
+                            <input type="text" class="form-control mt-2" name="img" id="cover_url" value="<?= admin_e($e['img']) ?>" placeholder="/assets/covers/... หรือ https://...">
+                            <?php
+                            $__coverDim = '';
+                            if (!empty($e['img']) && strpos($e['img'], '/assets/') === 0) {
+                                $__coverPath = __DIR__ . '/..' . $e['img'];
+                                if (file_exists($__coverPath)) {
+                                    $__dim = @getimagesize($__coverPath);
+                                    if ($__dim) $__coverDim = " — ไฟล์ปัจจุบัน: {$__dim[0]} x {$__dim[1]} px (" . round(filesize($__coverPath) / 1024) . " KB)";
+                                }
+                            }
+                            ?>
+                            <div class="form-text">เลือกไฟล์ (jpg/png/gif/webp ≤5MB) — <strong>แปลงเป็น WebP อัตโนมัติ</strong> (ย่อกว้าง 1200px)<?= $__coverDim ?></div>
+                            <div id="cover-preview" class="mt-2">
+                                <?php if (!empty($e['img'])): ?>
+                                <img src="<?= admin_e($e['img']) ?>" alt="รูปปกปัจจุบัน" style="max-height:90px;max-width:220px;object-fit:contain" class="border rounded" onerror="this.style.display='none'">
+                                <?php endif; ?>
+                            </div>
+                        </div>
                         <div class="col-md-4 mb-3"><label class="form-label">วันที่</label><input type="date" class="form-control" name="publish_date" value="<?= admin_e($e['publish_date']) ?>"></div>
                         <div class="col-md-4 mb-3"><label class="form-label">ผู้เขียน</label><input type="text" class="form-control" name="author" value="<?= admin_e($e['author']) ?>"></div>
                         <div class="col-12 mb-3"><label class="form-label">คำโปรย (excerpt)</label><textarea class="form-control" name="excerpt" rows="2"><?= admin_e($e['excerpt']) ?></textarea></div>
@@ -180,3 +242,19 @@ if (!$edit && !isset($_GET['new'])) {
 }
 include __DIR__ . '/includes/footer.php';
 ?>
+
+<script>
+// ═══ Preview รูปปกก่อนอัปโหลด + แสดงขนาด px ═══
+function previewCover(input) {
+    var file = input.files && input.files[0];
+    if (!file) return;
+    var img = new Image();
+    img.onload = function () {
+        var box = document.getElementById('cover-preview');
+        if (!box) return;
+        box.innerHTML = '<img src="' + img.src + '" style="max-height:90px;max-width:220px;object-fit:contain" class="border rounded">' +
+            '<div class="text-success small fw-bold mt-1">' + file.name + ' — ' + img.width + ' x ' + img.height + ' px</div>';
+    };
+    img.src = URL.createObjectURL(file);
+}
+</script>
