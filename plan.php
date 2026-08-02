@@ -164,31 +164,32 @@ $__planList = array_values(array_filter(array_map('trim', explode("\n", (string)
 
             <!-- Sidebar -->
             <aside class="space-y-6">
+                <?php
+                // ═══ แบนเนอร์สุ่ม (การ์ดแยก — จากตาราง banners, fallback: สุ่มจากโฟลเดอร์) ═══
+                $__bannerFile = '';
+                try {
+                    if (function_exists('getDB')) {
+                        $__b = getDB()->query('SELECT filename FROM banners WHERE is_active = 1 ORDER BY RAND() LIMIT 1')->fetch();
+                        if ($__b && !empty($__b['filename'])) $__bannerFile = '/assets/image/baner/' . rawurlencode($__b['filename']);
+                    }
+                    if ($__bannerFile === '') {
+                        $__banerDir = __DIR__ . '/assets/image/baner';
+                        if (is_dir($__banerDir)) {
+                            $__files = array_values(array_filter(scandir($__banerDir), fn($f) => preg_match('/\.(webp|jpg|jpeg|png|gif)$/i', $f)));
+                            if (!empty($__files)) $__bannerFile = '/assets/image/baner/' . rawurlencode($__files[array_rand($__files)]);
+                        }
+                    }
+                } catch (Throwable $e) { /* ignore */ }
+                ?>
+                <?php if ($__bannerFile !== ''): ?>
+                <!-- การ์ดแบนเนอร์ (แยกจากการ์ดอื่น — กว้างเต็ม ไม่จำกัดความสูง) -->
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                    <img src="<?= htmlspecialchars($__bannerFile) ?>" alt="แบนเนอร์" class="w-full h-auto block" loading="lazy">
+                </div>
+                <?php endif; ?>
+
                 <div class="bg-white rounded-2xl border border-gray-100 p-6">
                     <h3 class="font-bold text-brand-navy mb-4 flex items-center gap-2"><i data-lucide="building-2" class="w-4 h-4 text-brand-green"></i> บริษัทประกัน</h3>
-                    <?php
-                    // ═══ แบนเนอร์สุ่ม (จากตาราง banners — เปิดใช้งาน) ═══
-                    $__bannerFile = '';
-                    try {
-                        if (function_exists('getDB')) {
-                            $__b = getDB()->query('SELECT filename FROM banners WHERE is_active = 1 ORDER BY RAND() LIMIT 1')->fetch();
-                            if ($__b && !empty($__b['filename'])) $__bannerFile = '/assets/image/baner/' . rawurlencode($__b['filename']);
-                        }
-                        // fallback: DB ว่าง → สุ่มไฟล์จากโฟลเดอร์ตรงๆ
-                        if ($__bannerFile === '') {
-                            $__banerDir = __DIR__ . '/assets/image/baner';
-                            if (is_dir($__banerDir)) {
-                                $__files = array_values(array_filter(scandir($__banerDir), fn($f) => preg_match('/\.(webp|jpg|jpeg|png|gif)$/i', $f)));
-                                if (!empty($__files)) $__bannerFile = '/assets/image/baner/' . rawurlencode($__files[array_rand($__files)]);
-                            }
-                        }
-                    } catch (Throwable $e) { /* ignore */ }
-                    ?>
-                    <?php if ($__bannerFile !== ''): ?>
-                    <div class="rounded-xl overflow-hidden mb-4">
-                        <img src="<?= htmlspecialchars($__bannerFile) ?>" alt="แบนเนอร์" class="w-full h-auto block" loading="lazy">
-                    </div>
-                    <?php endif; ?>
                     <?php
                     $__pco = $plan['company'] ?: 'อลิอันซ์ อยุธยา';
                     $__pcolor = $plan['company_color'] ?: '0058A8';
