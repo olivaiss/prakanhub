@@ -1,5 +1,33 @@
 <?php
 $pageTitle = 'เกี่ยวกับผม';
+
+// ═══ เนื้อหาทั้งหน้า from DB (about_sections) — fallback: ค่า hardcode ในโค้ด ═══
+$__ABOUT = [];
+try {
+    require_once __DIR__ . '/includes/db.php';
+    if (function_exists('getDB')) {
+        foreach (getDB()->query('SELECT section_key, badge, title, subtitle, items, quote, is_active FROM about_sections') as $__r) {
+            $__ABOUT[$__r['section_key']] = [
+                'badge' => $__r['badge'], 'title' => $__r['title'], 'subtitle' => $__r['subtitle'],
+                'items' => json_decode((string)$__r['items'], true) ?: [], 'quote' => $__r['quote'],
+                'active' => (int)$__r['is_active'],
+            ];
+        }
+    }
+} catch (Throwable $e) { /* fallback */ }
+
+function about_val($key, $field, $default) {
+    global $__ABOUT;
+    if (isset($__ABOUT[$key]) && $__ABOUT[$key]['active'] && ($__ABOUT[$key][$field] ?? '') !== '') {
+        return $__ABOUT[$key][$field];
+    }
+    return $default;
+}
+function about_items($key) {
+    global $__ABOUT;
+    return (isset($__ABOUT[$key]) && $__ABOUT[$key]['active']) ? ($__ABOUT[$key]['items'] ?: []) : [];
+}
+
 include 'includes/header.php';
 ?>
 <style>
@@ -427,25 +455,30 @@ include 'includes/header.php';
                 <!-- Pill Badge -->
                 <div class="inline-flex items-center gap-2 glass-card rounded-full px-4 py-1.5 mb-6 reveal">
                     <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-                    <span class="text-xs font-medium text-blue-200 tracking-wide">Insurance Advisor — Allianz Ayudhya</span>
+                    <span class="text-xs font-medium text-blue-200 tracking-wide"><?= htmlspecialchars(about_val('hero', 'badge', 'Insurance Advisor — Allianz Ayudhya')) ?></span>
                 </div>
 
                 <!-- Name -->
                 <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white leading-tight mb-3 font-[Kanit] reveal delay-100">
-                    ประกันจริงใจ<br class="hidden sm:block">
-                    <span class="bg-gradient-to-r from-yellow-300 to-yellow-500 bg-clip-text text-transparent">by ปกป้อง</span>
+                    <?php
+                    $__heroTitle = about_val('hero', 'title', 'ประกันจริงใจ<br class="hidden sm:block"><span class="bg-gradient-to-r from-yellow-300 to-yellow-500 bg-clip-text text-transparent">by ปกป้อง</span>');
+                    if (strpos($__heroTitle, '<br') === false) {
+                        echo htmlspecialchars($__heroTitle);
+                    } else {
+                        echo $__heroTitle;
+                    }
+                    ?>
                 </h1>
 
                 <!-- Subtitle -->
                 <p class="text-xl sm:text-2xl lg:text-3xl font-semibold text-blue-200 mb-3 reveal delay-200">
-                    ที่ปรึกษาประกันชีวิตมืออาชีพ
+                    <?= htmlspecialchars(about_val('hero', 'subtitle', 'ที่ปรึกษาประกันชีวิตมืออาชีพ')) ?>
                 </p>
 
                 <!-- Quote -->
                 <p class="text-base sm:text-lg text-blue-100/70 max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed reveal delay-300">
                     <i data-lucide="quote" class="w-4 h-4 inline-block opacity-50 -translate-y-1"></i>
-                    เพราะทุกครอบครัวสมควรได้รับความคุ้มครองที่ดีที่สุด
-                    — ผมพร้อมเป็นที่ปรึกษาที่คุณวางใจได้
+                    <?= htmlspecialchars(about_val('hero', 'quote', 'เพราะทุกครอบครัวสมควรได้รับความคุ้มครองที่ดีที่สุด — ผมพร้อมเป็นที่ปรึกษาที่คุณวางใจได้')) ?>
                 </p>
 
                 <!-- CTAs -->
@@ -465,27 +498,25 @@ include 'includes/header.php';
 
                 <!-- Glassmorphism Stats Row -->
                 <div class="grid grid-cols-3 gap-3 sm:gap-4 mt-10 reveal delay-500">
+                    <?php
+                    $__heroStats = about_items('hero');
+                    if (empty($__heroStats)) {
+                        $__heroStats = [
+                            ['stat' => '1,000+', 'label' => 'ครอบครัวที่ไว้วางใจ', 'icon' => 'users'],
+                            ['stat' => 'MDRT', 'label' => 'รางวัลระดับโลก', 'icon' => 'award'],
+                            ['stat' => '10+', 'label' => 'ปีประสบการณ์', 'icon' => 'clock'],
+                        ];
+                    }
+                    foreach (array_slice($__heroStats, 0, 3) as $__hs):
+                    ?>
                     <div class="glass-card rounded-2xl p-4 sm:p-5 text-center hover:bg-white/10 transition-all duration-300">
-                        <p class="text-2xl sm:text-3xl font-extrabold text-white font-[Kanit]">1,000+</p>
+                        <p class="text-2xl sm:text-3xl font-extrabold text-white font-[Kanit]"><?= htmlspecialchars($__hs['stat'] ?? '') ?></p>
                         <div class="flex items-center justify-center gap-1.5 mt-1">
-                            <i data-lucide="users" class="w-3.5 h-3.5 text-blue-300"></i>
-                            <p class="text-[11px] sm:text-xs text-blue-200/80">ครอบครัวที่ไว้วางใจ</p>
+                            <i data-lucide="<?= htmlspecialchars($__hs['icon'] ?? 'users') ?>" class="w-3.5 h-3.5 text-blue-300"></i>
+                            <p class="text-[11px] sm:text-xs text-blue-200/80"><?= htmlspecialchars($__hs['label'] ?? '') ?></p>
                         </div>
                     </div>
-                    <div class="glass-card rounded-2xl p-4 sm:p-5 text-center hover:bg-white/10 transition-all duration-300">
-                        <p class="text-2xl sm:text-3xl font-extrabold text-white font-[Kanit]">MDRT</p>
-                        <div class="flex items-center justify-center gap-1.5 mt-1">
-                            <i data-lucide="award" class="w-3.5 h-3.5 text-yellow-300"></i>
-                            <p class="text-[11px] sm:text-xs text-blue-200/80">รางวัลระดับโลก</p>
-                        </div>
-                    </div>
-                    <div class="glass-card rounded-2xl p-4 sm:p-5 text-center hover:bg-white/10 transition-all duration-300">
-                        <p class="text-2xl sm:text-3xl font-extrabold text-white font-[Kanit]">10+</p>
-                        <div class="flex items-center justify-center gap-1.5 mt-1">
-                            <i data-lucide="clock" class="w-3.5 h-3.5 text-blue-300"></i>
-                            <p class="text-[11px] sm:text-xs text-blue-200/80">ปีประสบการณ์</p>
-                        </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </div>
@@ -528,76 +559,80 @@ try {
 
     <div class="relative max-w-7xl mx-auto px-4 lg:px-6">
         <!-- Section Header -->
-        <div class="text-center mb-14 lg:mb-18">
-            <span class="inline-flex items-center gap-2 bg-blue-100 text-blue-700 text-sm font-medium px-5 py-1.5 rounded-full mb-4 reveal">
-                <i data-lucide="briefcase" class="w-4 h-4"></i>
-                ประสบการณ์
-            </span>
-            <h2 class="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4 font-[Kanit] reveal delay-100">ประสบการณ์กว่า 10 ปี</h2>
-            <p class="text-gray-500 max-w-2xl mx-auto text-lg reveal delay-200">ความเชี่ยวชาญที่ผ่านการพิสูจน์ พร้อมดูแลคุณและครอบครัวอย่างมืออาชีพ</p>
-            <div class="section-divider mt-5"></div>
-        </div>
+                <div class="text-center mb-14 lg:mb-18">
+                    <span class="inline-flex items-center gap-2 bg-blue-100 text-blue-700 text-sm font-medium px-5 py-1.5 rounded-full mb-4 reveal">
+                        <i data-lucide="briefcase" class="w-4 h-4"></i>
+                        <?= htmlspecialchars(about_val('experience', 'badge', 'ประสบการณ์')) ?>
+                    </span>
+                    <h2 class="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4 font-[Kanit] reveal delay-100"><?= htmlspecialchars(about_val('experience', 'title', 'ประสบการณ์กว่า 10 ปี')) ?></h2>
+                    <p class="text-gray-500 max-w-2xl mx-auto text-lg reveal delay-200"><?= htmlspecialchars(about_val('experience', 'subtitle', 'ความเชี่ยวชาญที่ผ่านการพิสูจน์ พร้อมดูแลคุณและครอบครัวอย่างมืออาชีพ')) ?></p>
+                    <div class="section-divider mt-5"></div>
+                </div>
 
-        <!-- Key Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-            <?php
-            $experiences = [
-                ['icon' => 'users', 'gradient' => 'from-blue-500 to-blue-600', 'bg' => 'bg-blue-100', 'text' => 'text-blue-600',
-                 'title' => 'ลูกค้า 1,000+', 'desc' => 'ครอบครัวที่ไว้วางใจให้ผมดูแลแผนประกันและความคุ้มครอง'],
-                ['icon' => 'file-text', 'gradient' => 'from-emerald-500 to-emerald-600', 'bg' => 'bg-emerald-100', 'text' => 'text-emerald-600',
-                 'title' => 'กรมธรรม์ 2,500+ ฉบับ', 'desc' => 'จำนวนกรมธรรม์ที่ดูแลและให้บริการครบวงจร'],
-                ['icon' => 'landmark', 'gradient' => 'from-violet-500 to-violet-600', 'bg' => 'bg-violet-100', 'text' => 'text-violet-600',
-                 'title' => 'สินเชื่อ 500+ รายการ', 'desc' => 'ช่วยเหลือด้านสินเชื่อเพื่อให้ลูกค้าบรรลุเป้าหมาย'],
-                ['icon' => 'award', 'gradient' => 'from-orange-500 to-orange-600', 'bg' => 'bg-orange-100', 'text' => 'text-orange-600',
-                 'title' => 'รางวัล MDRT', 'desc' => 'มาตรฐานระดับโลกด้านการเป็นที่ปรึกษาประกันมืออาชีพ'],
-            ];
-            foreach ($experiences as $exp):
-            ?>
-            <div class="exp-card bg-white rounded-2xl p-6 lg:p-8 shadow-sm border border-gray-100 reveal group">
-                <div class="exp-icon-wrap w-14 h-14 rounded-2xl <?= $exp['bg'] ?> flex items-center justify-center mb-5">
-                    <i data-lucide="<?= $exp['icon'] ?>" class="w-7 h-7 <?= $exp['text'] ?>"></i>
+                <!-- Key Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+                    <?php
+                    $__expData = about_items('experience');
+                    $__expStats = is_array($__expData) && isset($__expData['stats']) ? $__expData['stats'] : $__expData;
+                    if (empty($__expStats)) {
+                        $__expStats = [
+                            ['icon' => 'users', 'title' => 'ลูกค้า 1,000+', 'desc' => 'ครอบครัวที่ไว้วางใจให้ผมดูแลแผนประกันและความคุ้มครอง'],
+                            ['icon' => 'file-text', 'title' => 'กรมธรรม์ 2,500+ ฉบับ', 'desc' => 'จำนวนกรมธรรม์ที่ดูแลและให้บริการครบวงจร'],
+                            ['icon' => 'landmark', 'title' => 'สินเชื่อ 500+ รายการ', 'desc' => 'ช่วยเหลือด้านสินเชื่อเพื่อให้ลูกค้าบรรลุเป้าหมาย'],
+                            ['icon' => 'award', 'title' => 'รางวัล MDRT', 'desc' => 'มาตรฐานระดับโลกด้านการเป็นที่ปรึกษาประกันมืออาชีพ'],
+                        ];
+                    }
+                    foreach ($__expStats as $__ei => $exp):
+                        $__grads = ['from-blue-500 to-blue-600', 'from-emerald-500 to-emerald-600', 'from-violet-500 to-violet-600', 'from-orange-500 to-orange-600'];
+                        $__bgs = ['bg-blue-100', 'bg-emerald-100', 'bg-violet-100', 'bg-orange-100'];
+                        $__tcs = ['text-blue-600', 'text-emerald-600', 'text-violet-600', 'text-orange-600'];
+                        $__gi = $__ei % 4;
+                    ?>
+                    <div class="exp-card bg-white rounded-2xl p-6 lg:p-8 shadow-sm border border-gray-100 reveal group">
+                        <div class="exp-icon-wrap w-14 h-14 rounded-2xl <?= $__bgs[$__gi] ?> flex items-center justify-center mb-5">
+                            <i data-lucide="<?= htmlspecialchars($exp['icon'] ?? 'users') ?>" class="w-7 h-7 <?= $__tcs[$__gi] ?>"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2 font-[Kanit]"><?= htmlspecialchars($exp['title'] ?? '') ?></h3>
+                        <p class="text-sm text-gray-500 leading-relaxed"><?= htmlspecialchars($exp['desc'] ?? '') ?></p>
+                    </div>
+                    <?php endforeach; ?>
                 </div>
-                <h3 class="text-lg font-bold text-gray-900 mb-2 font-[Kanit]"><?= $exp['title'] ?></h3>
-                <p class="text-sm text-gray-500 leading-relaxed"><?= $exp['desc'] ?></p>
-            </div>
-            <?php endforeach; ?>
-        </div>
 
-        <!-- Expertise Areas -->
-        <div class="mt-14 lg:mt-18 grid md:grid-cols-3 gap-5 reveal">
-            <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100/50 p-6 lg:p-8 border border-blue-100 hover:shadow-lg transition-all duration-300">
-                <div class="absolute top-0 right-0 w-20 h-20 bg-blue-200/30 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500"></div>
-                <div class="flex items-center gap-3 mb-3 relative">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-md">
-                        <i data-lucide="heart" class="w-5 h-5 text-white"></i>
+                <!-- Expertise Areas -->
+                <?php
+                $__expExpert = is_array($__expData) && isset($__expData['expertise']) ? $__expData['expertise'] : [];
+                if (empty($__expExpert)) {
+                    $__expExpert = [
+                        ['icon' => 'heart', 'title' => 'ประกันชีวิต', 'desc' => 'วางแผนความคุ้มครองชีวิตที่เหมาะสมกับทุกช่วงวัย'],
+                        ['icon' => 'activity', 'title' => 'ประกันสุขภาพ', 'desc' => 'ค่ารักษาพยาบาลเหมาจ่าย โรคร้ายแรง คุ้มครองสูงสุด'],
+                        ['icon' => 'shield', 'title' => 'วางแผนการเงิน', 'desc' => 'ประกันออมทรัพย์ ประกันบำนาญ ลดหย่อนภาษี'],
+                    ];
+                }
+                ?>
+                <div class="mt-14 lg:mt-18 grid md:grid-cols-3 gap-5 reveal">
+                    <?php
+                    $__expThemes = [
+                        ['bg' => 'from-blue-50 to-blue-100/50', 'border' => 'border-blue-100', 'circle' => 'bg-blue-200/30', 'iconBg' => 'from-blue-500 to-blue-600', 'text' => 'text-blue-600'],
+                        ['bg' => 'from-emerald-50 to-emerald-100/50', 'border' => 'border-emerald-100', 'circle' => 'bg-emerald-200/30', 'iconBg' => 'from-emerald-500 to-emerald-600', 'text' => 'text-emerald-600'],
+                        ['bg' => 'from-amber-50 to-amber-100/50', 'border' => 'border-amber-100', 'circle' => 'bg-amber-200/30', 'iconBg' => 'from-amber-500 to-amber-600', 'text' => 'text-amber-600'],
+                    ];
+                    foreach ($__expExpert as $__xi => $__ex):
+                        $__th = $__expThemes[$__xi % 3];
+                    ?>
+                    <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br <?= $__th['bg'] ?> p-6 lg:p-8 border <?= $__th['border'] ?> hover:shadow-lg transition-all duration-300">
+                        <div class="absolute top-0 right-0 w-20 h-20 <?= $__th['circle'] ?> rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500"></div>
+                        <div class="flex items-center gap-3 mb-3 relative">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br <?= $__th['iconBg'] ?> flex items-center justify-center shadow-md">
+                                <i data-lucide="<?= htmlspecialchars($__ex['icon'] ?? 'shield') ?>" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <h4 class="font-bold text-gray-900 font-[Kanit]"><?= htmlspecialchars($__ex['title'] ?? '') ?></h4>
+                        </div>
+                        <p class="text-sm text-gray-600 leading-relaxed relative"><?= htmlspecialchars($__ex['desc'] ?? '') ?></p>
                     </div>
-                    <h4 class="font-bold text-gray-900 font-[Kanit]">ประกันชีวิต</h4>
+                    <?php endforeach; ?>
                 </div>
-                <p class="text-sm text-gray-600 leading-relaxed relative">วางแผนความคุ้มครองชีวิตที่เหมาะสมกับทุกช่วงวัย</p>
             </div>
-            <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100/50 p-6 lg:p-8 border border-emerald-100 hover:shadow-lg transition-all duration-300">
-                <div class="absolute top-0 right-0 w-20 h-20 bg-emerald-200/30 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500"></div>
-                <div class="flex items-center gap-3 mb-3 relative">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-md">
-                        <i data-lucide="activity" class="w-5 h-5 text-white"></i>
-                    </div>
-                    <h4 class="font-bold text-gray-900 font-[Kanit]">ประกันสุขภาพ</h4>
-                </div>
-                <p class="text-sm text-gray-600 leading-relaxed relative">ค่ารักษาพยาบาลเหมาจ่าย โรคร้ายแรง คุ้มครองสูงสุด</p>
-            </div>
-            <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-50 to-amber-100/50 p-6 lg:p-8 border border-amber-100 hover:shadow-lg transition-all duration-300">
-                <div class="absolute top-0 right-0 w-20 h-20 bg-amber-200/30 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500"></div>
-                <div class="flex items-center gap-3 mb-3 relative">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-md">
-                        <i data-lucide="shield" class="w-5 h-5 text-white"></i>
-                    </div>
-                    <h4 class="font-bold text-gray-900 font-[Kanit]">วางแผนการเงิน</h4>
-                </div>
-                <p class="text-sm text-gray-600 leading-relaxed relative">ประกันออมทรัพย์ ประกันบำนาญ ลดหย่อนภาษี</p>
-            </div>
-        </div>
-    </div>
-</section>
+        </section>
 
 <!-- ============================================================ -->
 <!-- SECTION 4: MDRT — รางวัล MDRT Premium                        -->
@@ -617,53 +652,56 @@ try {
         <div class="text-center mb-14 lg:mb-18">
             <span class="inline-flex items-center gap-2 bg-blue-100 text-blue-700 text-sm font-medium px-5 py-1.5 rounded-full mb-4 reveal">
                 <i data-lucide="heart" class="w-4 h-4"></i>
-                ปรัชญาการทำงาน
+                <?= htmlspecialchars(about_val('philosophy', 'badge', 'ปรัชญาการทำงาน')) ?>
             </span>
-            <h2 class="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4 font-[Kanit] reveal delay-100">ความเชื่อในการทำงานของผม</h2>
-            <p class="text-gray-500 max-w-2xl mx-auto text-lg reveal delay-200">หัวใจสำคัญที่ทำให้ผมเป็นที่ปรึกษาที่แตกต่าง</p>
+            <h2 class="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4 font-[Kanit] reveal delay-100"><?= htmlspecialchars(about_val('philosophy', 'title', 'ความเชื่อในการทำงานของผม')) ?></h2>
+            <p class="text-gray-500 max-w-2xl mx-auto text-lg reveal delay-200"><?= htmlspecialchars(about_val('philosophy', 'subtitle', 'หัวใจสำคัญที่ทำให้ผมเป็นที่ปรึกษาที่แตกต่าง')) ?></p>
             <div class="section-divider mt-5"></div>
         </div>
 
         <!-- Philosophy Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <?php
-            $philosophies = [
-                ['icon' => 'ear', 'title' => 'ฟังอย่างเข้าใจ',
-                 'desc' => 'ทุกความต้องการเริ่มจากการฟัง ผมฟังลูกค้าอย่างตั้งใจ เพื่อเข้าใจความต้องการที่แท้จริง ไม่ใช่แค่ขายประกัน',
-                 'color' => 'blue', 'grad' => 'from-blue-500 to-blue-600', 'bg' => 'bg-blue-50', 'border' => 'border-blue-200'],
-                ['icon' => 'search', 'title' => 'วิเคราะห์อย่างรอบคอบ',
-                 'desc' => 'เปรียบเทียบทุกทางเลือกอย่างละเอียด เพื่อให้ได้แผนประกันที่เหมาะสม คุ้มค่า และตรงกับความต้องการมากที่สุด',
-                 'color' => 'green', 'grad' => 'from-emerald-500 to-emerald-600', 'bg' => 'bg-emerald-50', 'border' => 'border-emerald-200'],
-                ['icon' => 'heart-handshake', 'title' => 'แนะนำด้วยความจริงใจ',
-                 'desc' => 'ไม่แนะนำอะไรที่ไม่จำเป็น ผมให้คำแนะนำที่ตรงไปตรงมา เหมาะสมกับงบประมาณและเป้าหมายของลูกค้า',
-                 'color' => 'red', 'grad' => 'from-red-500 to-red-600', 'bg' => 'bg-red-50', 'border' => 'border-red-200'],
-                ['icon' => 'clock', 'title' => 'ดูแลอย่างต่อเนื่อง',
-                 'desc' => 'ความสัมพันธ์ไม่จบแค่การขาย ผมดูแลลูกค้าทุกคนอย่างต่อเนื่อง ตลอดอายุกรมธรรม์',
-                 'color' => 'purple', 'grad' => 'from-violet-500 to-violet-600', 'bg' => 'bg-violet-50', 'border' => 'border-violet-200'],
-            ];
-            $topBorders = [
+            $__philosophies = about_items('philosophy');
+            if (empty($__philosophies)) {
+                $__philosophies = [
+                    ['icon' => 'ear', 'title' => 'ฟังอย่างเข้าใจ', 'desc' => 'ทุกความต้องการเริ่มจากการฟัง ผมฟังลูกค้าอย่างตั้งใจ เพื่อเข้าใจความต้องการที่แท้จริง ไม่ใช่แค่ขายประกัน', 'color' => 'blue'],
+                    ['icon' => 'search', 'title' => 'วิเคราะห์อย่างรอบคอบ', 'desc' => 'เปรียบเทียบทุกทางเลือกอย่างละเอียด เพื่อให้ได้แผนประกันที่เหมาะสม คุ้มค่า และตรงกับความต้องการมากที่สุด', 'color' => 'green'],
+                    ['icon' => 'heart-handshake', 'title' => 'แนะนำด้วยความจริงใจ', 'desc' => 'ไม่แนะนำอะไรที่ไม่จำเป็น ผมให้คำแนะนำที่ตรงไปตรงมา เหมาะสมกับงบประมาณและเป้าหมายของลูกค้า', 'color' => 'red'],
+                    ['icon' => 'clock', 'title' => 'ดูแลอย่างต่อเนื่อง', 'desc' => 'ความสัมพันธ์ไม่จบแค่การขาย ผมดูแลลูกค้าทุกคนอย่างต่อเนื่อง ตลอดอายุกรมธรรม์', 'color' => 'purple'],
+                ];
+            }
+            $__topBorders = [
                 'blue' => 'bg-gradient-to-r from-blue-400 to-blue-600',
                 'green' => 'bg-gradient-to-r from-emerald-400 to-emerald-600',
                 'red' => 'bg-gradient-to-r from-red-400 to-red-600',
                 'purple' => 'bg-gradient-to-r from-violet-400 to-violet-600',
             ];
-            foreach ($philosophies as $phi):
+            $__phiColors = [
+                'blue' => ['text-blue-600', 'bg-blue-50', 'border-blue-200'],
+                'green' => ['text-emerald-600', 'bg-emerald-50', 'border-emerald-200'],
+                'red' => ['text-red-600', 'bg-red-50', 'border-red-200'],
+                'purple' => ['text-violet-600', 'bg-violet-50', 'border-violet-200'],
+            ];
+            foreach ($__philosophies as $phi):
+                $__c = $phi['color'] ?? 'blue';
+                $__pc = $__phiColors[$__c] ?? $__phiColors['blue'];
             ?>
-            <div class="phil-card bg-white rounded-2xl p-6 lg:p-8 shadow-sm border border-gray-100 group hover:border-<?= $phi['color'] ?>-200 reveal">
+            <div class="phil-card bg-white rounded-2xl p-6 lg:p-8 shadow-sm border border-gray-100 group hover:border-<?= $__c ?>-200 reveal">
                 <!-- Top gradient bar -->
-                <div class="h-1 rounded-full mb-6 <?= $topBorders[$phi['color']] ?> opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="h-1 rounded-full mb-6 <?= $__topBorders[$__c] ?? $__topBorders['blue'] ?> opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <!-- Icon -->
-                <div class="w-14 h-14 rounded-2xl <?= $phi['bg'] ?> flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-[-5deg] transition-all duration-300">
-                    <?php if ($phi['icon'] === 'ear'): ?>
+                <div class="w-14 h-14 rounded-2xl <?= $__pc[1] ?> flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-[-5deg] transition-all duration-300">
+                    <?php if (($phi['icon'] ?? '') === 'ear'): ?>
                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600"><path d="M6 8.5a6.5 6.5 0 1 1 13 0c0 6-3 8.5-3 8.5"/><path d="M10 18v2a2 2 0 0 0 2 2"/><path d="M12 14v-2a2 2 0 0 1 2-2"/></svg>
-                    <?php elseif ($phi['icon'] === 'heart-handshake'): ?>
+                    <?php elseif (($phi['icon'] ?? '') === 'heart-handshake'): ?>
                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-600"><path d="M19 14c1.5-2.5 2-5 2-5"/><path d="M3 9c0 2.5 1 6 3 8"/><path d="M12 3c-1.5 2-4 3-6 3"/><path d="M6 6c-1.5 2-1.5 5-1.5 7"/><path d="M12 3c1.5 2 4 3 6 3"/><path d="M18 6c1.5 2 1.5 5 1.5 7"/><path d="M19 14c-1 3-3 6-7 7-4-1-6-4-7-7"/></svg>
                     <?php else: ?>
-                    <i data-lucide="<?= $phi['icon'] ?>" class="w-7 h-7 <?= $phi['color'] === 'green' ? 'text-emerald-600' : ($phi['color'] === 'red' ? 'text-red-600' : ($phi['color'] === 'purple' ? 'text-violet-600' : 'text-blue-600')) ?>"></i>
+                    <i data-lucide="<?= htmlspecialchars($phi['icon'] ?? 'search') ?>" class="w-7 h-7 <?= $__pc[0] ?>"></i>
                     <?php endif; ?>
                 </div>
-                <h3 class="text-lg font-bold text-gray-900 mb-3 font-[Kanit]"><?= $phi['title'] ?></h3>
-                <p class="text-sm text-gray-500 leading-relaxed"><?= $phi['desc'] ?></p>
+                <h3 class="text-lg font-bold text-gray-900 mb-3 font-[Kanit]"><?= htmlspecialchars($phi['title'] ?? '') ?></h3>
+                <p class="text-sm text-gray-500 leading-relaxed"><?= htmlspecialchars($phi['desc'] ?? '') ?></p>
             </div>
             <?php endforeach; ?>
         </div>
@@ -677,7 +715,7 @@ try {
                     <i data-lucide="quote" class="w-6 h-6 text-blue-200"></i>
                 </div>
                 <blockquote class="text-2xl lg:text-3xl font-bold font-[Kanit] max-w-3xl mx-auto leading-snug">
-                    "ผมไม่ได้ขายประกัน — ผมช่วยให้คุณและครอบครัวมีอนาคตที่มั่นคง"
+                    "<?= htmlspecialchars(about_val('philosophy', 'quote', 'ผมไม่ได้ขายประกัน — ผมช่วยให้คุณและครอบครัวมีอนาคตที่มั่นคง')) ?>"
                 </blockquote>
                 <div class="flex items-center justify-center gap-3 mt-4">
                     <span class="w-8 h-px bg-blue-400/50"></span>
@@ -709,33 +747,36 @@ try {
         <div class="reveal">
             <span class="inline-flex items-center gap-2 glass-card rounded-full text-green-300 text-sm font-medium px-5 py-2 mb-6 border border-green-400/20 hover:bg-white/[0.12] transition-all">
                 <img src="/assets/icon/line.svg" class="w-4 h-4">
-                ปรึกษาวันนี้ รับคำแนะนำดีๆ ฟรี!
+                <?= htmlspecialchars(about_val('cta', 'badge', 'ปรึกษาวันนี้ รับคำแนะนำดีๆ ฟรี!')) ?>
             </span>
         </div>
 
         <h2 class="text-3xl lg:text-5xl font-extrabold text-white mb-4 font-[Kanit] reveal delay-100">
-            พร้อมดูแลคุณและครอบครัว
+            <?= htmlspecialchars(about_val('cta', 'title', 'พร้อมดูแลคุณและครอบครัว')) ?>
         </h2>
 
         <p class="text-blue-200/80 text-lg lg:text-xl max-w-2xl mx-auto mb-8 reveal delay-200">
-            ไม่ว่าคุณจะสนใจประกันชีวิต สุขภาพ ออมทรัพย์ หรือวางแผนการเงิน
-            ผมพร้อมให้คำปรึกษาฟรี ไม่มีค่าใช้จ่าย ไม่มีข้อผูกมัด
+            <?= htmlspecialchars(about_val('cta', 'subtitle', 'ไม่ว่าคุณจะสนใจประกันชีวิต สุขภาพ ออมทรัพย์ หรือวางแผนการเงิน ผมพร้อมให้คำปรึกษาฟรี ไม่มีค่าใช้จ่าย ไม่มีข้อผูกมัด')) ?>
         </p>
 
         <!-- Benefits -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto mb-10 reveal delay-300">
+            <?php
+            $__ctaBenefits = about_items('cta');
+            if (empty($__ctaBenefits)) {
+                $__ctaBenefits = [
+                    ['icon' => 'clock', 'text' => 'ปรึกษาฟรี ไม่มีค่าใช้จ่าย'],
+                    ['icon' => 'shield', 'text' => 'ข้อมูลถูกต้อง ครบถ้วน'],
+                    ['icon' => 'heart', 'text' => 'ไม่มีข้อผูกมัดใดๆ'],
+                ];
+            }
+            foreach (array_slice($__ctaBenefits, 0, 3) as $__cb):
+            ?>
             <div class="glass-card rounded-xl px-4 py-4 border border-white/10 hover:bg-white/[0.10] transition-all">
-                <i data-lucide="clock" class="w-5 h-5 text-green-400 mx-auto mb-2"></i>
-                <p class="text-white text-sm font-medium">ปรึกษาฟรี ไม่มีค่าใช้จ่าย</p>
+                <i data-lucide="<?= htmlspecialchars($__cb['icon'] ?? 'clock') ?>" class="w-5 h-5 text-green-400 mx-auto mb-2"></i>
+                <p class="text-white text-sm font-medium"><?= htmlspecialchars($__cb['text'] ?? '') ?></p>
             </div>
-            <div class="glass-card rounded-xl px-4 py-4 border border-white/10 hover:bg-white/[0.10] transition-all">
-                <i data-lucide="shield" class="w-5 h-5 text-green-400 mx-auto mb-2"></i>
-                <p class="text-white text-sm font-medium">ข้อมูลถูกต้อง ครบถ้วน</p>
-            </div>
-            <div class="glass-card rounded-xl px-4 py-4 border border-white/10 hover:bg-white/[0.10] transition-all">
-                <i data-lucide="heart" class="w-5 h-5 text-green-400 mx-auto mb-2"></i>
-                <p class="text-white text-sm font-medium">ไม่มีข้อผูกมัดใดๆ</p>
-            </div>
+            <?php endforeach; ?>
         </div>
 
         <!-- Main CTAs -->
