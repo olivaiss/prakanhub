@@ -18,14 +18,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $loc = trim($_POST['location'] ?? '');
             $desc = trim($_POST['description'] ?? '');
             if ($title === '') throw new Exception('กรุณากรอกชื่อสัมมนา');
+
+            // ═══ อัปโหลดรูปภาพ → แปลง webp + ขนาด ═══
+            $imgNote = '';
+            if (!empty($_FILES['img_file']['name']) && $_FILES['img_file']['error'] === UPLOAD_ERR_OK) {
+                $f = $_FILES['img_file'];
+                $ext = strtolower(pathinfo($f['name'], PATHINFO_EXTENSION));
+                $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+                if (!in_array($ext, $allowed, true)) throw new Exception('อนุญาตเฉพาะไฟล์รูปภาพ (jpg, png, gif, webp)');
+                if ($f['size'] > 5 * 1024 * 1024) throw new Exception('ไฟล์ใหญ่เกิน 5MB');
+                $im = @imagecreatefromstring(file_get_contents($f['tmp_name']));
+                if (!$im) throw new Exception('อ่านไฟล์รูปไม่สำเร็จ — กรุณาใช้ไฟล์รูปจริง');
+                $w = imagesx($im);
+                $h = imagesy($im);
+                if ($w > 1200) {
+                    $nw = 1200;
+                    $nh = (int)round($h * $nw / $w);
+                    $im2 = imagecreatetruecolor($nw, $nh);
+                    imagealphablending($im2, false);
+                    imagesavealpha($im2, true);
+                    imagecopyresampled($im2, $im, 0, 0, 0, 0, $nw, $nh, $w, $h);
+                    imagedestroy($im);
+                    $im = $im2;
+                    $w = $nw;
+                    $h = $nh;
+                }
+                if (in_array($ext, ['png', 'gif'], true)) {
+                    imagealphablending($im, false);
+                    imagesavealpha($im, true);
+                }
+                $imgDir = __DIR__ . '/../assets/seminars';
+                if (!is_dir($imgDir)) @mkdir($imgDir, 0775, true);
+                $imgName = 'sem-' . ($id > 0 ? $id : date('His')) . '-' . preg_replace('/[^a-zA-Z0-9_-]/', '', pathinfo($f['name'], PATHINFO_FILENAME)) . '.webp';
+                if (imagewebp($im, $imgDir . '/' . $imgName, 82)) {
+                    $img = '/assets/seminars/' . $imgName;
+                    $imgNote = " รูปถูกแปลงเป็น WebP ({$w}x{$h}px)";
+                } else {
+                    throw new Exception('แปลงเป็น WebP ไม่สำเร็จ');
+                }
+                imagedestroy($im);
+            }
+
             if ($id > 0) {
                 $db->prepare('UPDATE seminars SET title=?, img=?, event_date=?, location=?, description=?, sort_order=?, is_active=? WHERE id=?')
                    ->execute([$title, $img, $date ?: null, $loc, $desc, (int)($_POST['sort_order'] ?? 0), !empty($_POST['is_active']) ? 1 : 0, $id]);
-                admin_flash('บันทึกสัมมนาเรียบร้อย');
+                admin_flash('บันทึกสัมมนาเรียบร้อย' . $imgNote);
             } else {
                 $db->prepare('INSERT INTO seminars (title, img, event_date, location, description, sort_order, is_active) VALUES (?,?,?,?,?,?,?)')
                    ->execute([$title, $img, $date ?: null, $loc, $desc, (int)($_POST['sort_order'] ?? 0), !empty($_POST['is_active']) ? 1 : 0]);
-                admin_flash('เพิ่มสัมมนาเรียบร้อย');
+                admin_flash('เพิ่มสัมมนาเรียบร้อย' . $imgNote);
             }
         } elseif ($action === 'delete') {
             $db->prepare('DELETE FROM seminars WHERE id=?')->execute([(int)$_POST['id']]);
@@ -81,11 +122,30 @@ $__isEdit = $edit ? 'แก้ไข' : 'เพิ่ม';
     <div class="col-lg-8">
         <div class="card">
             <div class="card-body">
-                <form method="post" class="row g-3">
+                <form method="post" class="row g-3" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="save">
                     <input type="hidden" name="id" value="<?= (int)$e['id'] ?>">
 <div class="col-md-6"><label class="form-label">ชื่อกิจกรรม</label><input type="text" class="form-control" name="title" value="<?= admin_e($e['title']) ?>" required></div>
-<div class="col-md-6"><label class="form-label">URL รูปภาพ</label><input type="text" class="form-control" name="img" value="<?= admin_e($e['img']) ?>" ></div>
+<div class="col-md-6"><label class="form-label">รูปภาพ (อัปโหลด หรือวาง URL)</label>
+    <input type="file" class="form-control" name="img_file" accept="image/*" onchange="previewSemImg(this)">
+    <input type="text" class="form-control mt-2" name="img" id="sem_img_url" value="<?= admin_e($e['img']) ?>" placeholder="/assets/seminars/... หรือ https://...">
+    <?php
+    $__semImgDim = '';
+    if (!empty($e['img']) && strpos($e['img'], '/assets/') === 0) {
+        $__semImgPath = __DIR__ . '/..' . $e['img'];
+        if (file_exists($__semImgPath)) {
+            $__dim = @getimagesize($__semImgPath);
+            if ($__dim) $__semImgDim = " — ไฟล์ปัจจุบัน: {$__dim[0]} x {$__dim[1]} px (" . round(filesize($__semImgPath) / 1024) . " KB)";
+        }
+    }
+    ?>
+    <div class="form-text">เลือกไฟล์ (jpg/png/gif/webp ≤5MB) — <strong>แปลงเป็น WebP อัตโนมัติ</strong> (ย่อกว้าง 1200px)<?= $__semImgDim ?></div>
+    <div id="sem-img-preview" class="mt-2">
+        <?php if (!empty($e['img'])): ?>
+        <img src="<?= admin_e($e['img']) ?>" alt="รูปปัจจุบัน" style="max-height:100px;max-width:220px;object-fit:contain" class="border rounded" onerror="this.style.display='none'">
+        <?php endif; ?>
+    </div>
+</div>
 <div class="col-md-6"><label class="form-label">วันที่จัด (YYYY-MM-DD)</label><input type="text" class="form-control" name="event_date" value="<?= admin_e($e['event_date']) ?>" ></div>
 <div class="col-md-6"><label class="form-label">สถานที่</label><input type="text" class="form-control" name="location" value="<?= admin_e($e['location']) ?>" ></div>
 <div class="col-12"><label class="form-label">คำอธิบาย</label><textarea class="form-control" name="description" rows="4"><?= admin_e($e['description']) ?></textarea></div>
@@ -158,3 +218,19 @@ $__isEdit = $edit ? 'แก้ไข' : 'เพิ่ม';
 <?php endif; ?>
 
 <?php include __DIR__ . '/includes/footer.php'; ?>
+
+<script>
+// ═══ Preview รูปสัมมนาก่อนอัปโหลด + ขนาด px ═══
+function previewSemImg(input) {
+    var file = input.files && input.files[0];
+    if (!file) return;
+    var img = new Image();
+    img.onload = function () {
+        var box = document.getElementById('sem-img-preview');
+        if (!box) return;
+        box.innerHTML = '<img src="' + img.src + '" style="max-height:100px;max-width:220px;object-fit:contain" class="border rounded">' +
+            '<div class="text-success small fw-bold mt-1">' + file.name + ' — ' + img.width + ' x ' + img.height + ' px</div>';
+    };
+    img.src = URL.createObjectURL(file);
+}
+</script>
