@@ -1,6 +1,18 @@
 <?php
 $pageTitle = 'ร่วมงานกับเรา';
 
+// ═══ เนื้อหาจากฐานข้อมูล (pages table) — fallback: hardcode ด้านล่าง ═══
+$__pageContent = '';
+$__forceFallback = $__forceFallback ?? false;
+try {
+    require_once __DIR__ . '/includes/db.php';
+    if (function_exists('getDB')) {
+        $__s = getDB()->prepare('SELECT content FROM pages WHERE slug = ? AND content IS NOT NULL AND content != "" LIMIT 1');
+        $__s->execute(['career']);
+                if (!$__forceFallback) $__pageContent = trim((string)$__s->fetchColumn());
+    }
+} catch (Throwable $e) { /* fallback */ }
+
 // ═══ เก็บผู้สมัครตัวแทนลงฐานข้อมูล ═══
 $applied = false;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -33,6 +45,12 @@ include 'includes/header.php';
 </section>
 
 <!-- Why Join Us -->
+<?php if ($__pageContent !== ''): ?>
+<section class="py-16">
+    <div class="max-w-[1000px] mx-auto px-4 md:px-8 prose-db"><?= $__pageContent ?></div>
+</section>
+<?php else: ?>
+<!-- BEGIN-CONTENT -->
 <section class="py-16">
     <div class="max-w-[1400px] mx-auto px-4 md:px-8">
         <h2 class="text-2xl md:text-3xl font-bold text-brand-navy text-center mb-12">ทำไมต้องร่วมงานกับเรา</h2>
@@ -133,6 +151,9 @@ include 'includes/header.php';
         </div>
     </div>
 </section>
+
+<!-- END-CONTENT -->
+<?php endif; ?>
 
 <!-- Testimonials from team -->
 <section class="py-16">

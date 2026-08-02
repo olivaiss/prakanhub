@@ -13,11 +13,12 @@ include 'includes/header.php';
 <?php
 // ═══ เนื้อหาจากฐานข้อมูล (pages table) — fallback: hardcode ด้านล่าง ═══
 $__pageContent = '';
+$__forceFallback = $__forceFallback ?? false;
 try {
     if (function_exists('getDB')) {
         $__s = getDB()->prepare('SELECT content FROM pages WHERE slug = ? AND content IS NOT NULL AND content != "" LIMIT 1');
         $__s->execute(['claim']);
-        $__pageContent = trim((string)$__s->fetchColumn());
+                if (!$__forceFallback) $__pageContent = trim((string)$__s->fetchColumn());
     }
 } catch (Throwable $e) {
     // DB ไม่พร้อม — ใช้ hardcode
@@ -31,6 +32,7 @@ try {
     </div>
 </section>
 <?php else: ?>
+<!-- BEGIN-CONTENT -->
 <section class="py-16">
     <div class="max-w-[900px] mx-auto px-4 md:px-8">
         <div class="text-center mb-12">
@@ -121,6 +123,7 @@ try {
         </div>
     </div>
 </section>
+<!-- END-CONTENT -->
 <?php endif; ?>
 
 <?php include 'includes/footer.php'; ?>
