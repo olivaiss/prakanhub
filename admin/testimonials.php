@@ -160,7 +160,7 @@ $__isEdit = $edit ? 'แก้ไข' : 'เพิ่ม';
             <h6 class="page-title">รีวิวลูกค้า</h6>
             <ol class="breadcrumb m-0"><li class="breadcrumb-item"><a href="index.php">Admin</a></li><li class="breadcrumb-item active">รีวิวลูกค้า</li></ol>
         </div>
-        <div class="col-md-4"><div class="float-end"><a href="testimonials.php?new=1" class="btn btn-primary waves-effect"><i class="ti ti-plus me-1"></i></a></div></div>
+        <div class="col-md-4"><div class="float-end"><a href="testimonials.php?new=1" class="btn btn-primary waves-effect"><i class="ti ti-plus me-1"></i> เพิ่มรีวิว</a></div></div>
     </div>
 </div>
 

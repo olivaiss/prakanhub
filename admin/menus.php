@@ -104,7 +104,7 @@ $__isEdit = $edit ? 'แก้ไข' : 'เพิ่ม';
             <h6 class="page-title">เมนู</h6>
             <ol class="breadcrumb m-0"><li class="breadcrumb-item"><a href="index.php">Admin</a></li><li class="breadcrumb-item active">เมนู</li></ol>
         </div>
-        <div class="col-md-4"><div class="float-end"><a href="menus.php?new=1" class="btn btn-primary waves-effect"><i class="ti ti-plus me-1"></i></a></div></div>
+        <div class="col-md-4"><div class="float-end"><a href="menus.php?new=1" class="btn btn-primary waves-effect"><i class="ti ti-plus me-1"></i> เพิ่มเมนู</a></div></div>
     </div>
 </div>
 
