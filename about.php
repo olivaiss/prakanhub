@@ -842,65 +842,6 @@ try {
 <!-- ============================================================ -->
 <!-- SECTION 6: STATS — ตัวเลขที่สะท้อนความไว้วางใจ                -->
 <!-- ============================================================ -->
-<section class="py-16 lg:py-24 relative overflow-hidden" style="background: linear-gradient(135deg, #0B1628 0%, #0F2140 30%, #1A3A6B 60%, #0F2140 100%);">
-    <div class="absolute inset-0 opacity-[0.06]" style="background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80'); background-size: cover; background-position: center;"></div>
-    <!-- Grid pattern -->
-    <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 50px 50px;"></div>
-
-    <div class="relative max-w-7xl mx-auto px-4 lg:px-6">
-        <!-- Section Header -->
-        <div class="text-center mb-14 lg:mb-18">
-            <span class="inline-flex items-center gap-2 bg-white/10 text-blue-300 text-sm font-medium px-5 py-1.5 rounded-full mb-4 reveal border border-white/10">
-                <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
-                ตัวเลขบอกเล่าเรื่องราว
-            </span>
-            <h2 class="text-3xl lg:text-4xl font-extrabold text-white mb-4 font-[Kanit] reveal delay-100">ตัวเลขที่สะท้อนความไว้วางใจ</h2>
-            <p class="text-blue-200/70 max-w-2xl mx-auto text-lg reveal delay-200">ทุกตัวเลขคือครอบครัวที่ไว้วางใจและเส้นชีวิตที่ได้รับการปกป้อง</p>
-            <div class="w-20 h-1 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full mx-auto mt-5"></div>
-        </div>
-
-        <!-- Main Stats -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-5 lg:gap-6">
-            <?php
-            $stats = [
-                ['value' => 1000, 'suffix' => '+', 'label' => 'ครอบครัวที่ไว้วางใจ', 'icon' => 'users', 'border' => 'border-blue-400/30', 'glow' => 'shadow-blue-500/20'],
-                ['value' => 10, 'suffix' => '+ ปี', 'label' => 'ประสบการณ์', 'icon' => 'clock', 'border' => 'border-emerald-400/30', 'glow' => 'shadow-emerald-500/20'],
-                ['value' => 2500, 'suffix' => '+', 'label' => 'กรมธรรม์ที่ดูแล', 'icon' => 'file-text', 'border' => 'border-violet-400/30', 'glow' => 'shadow-violet-500/20'],
-                ['value' => 98, 'suffix' => '%', 'label' => 'ความพึงพอใจลูกค้า', 'icon' => 'smile', 'border' => 'border-amber-400/30', 'glow' => 'shadow-amber-500/20'],
-            ];
-            foreach ($stats as $stat):
-            ?>
-            <div class="stat-card glass-card rounded-2xl p-6 lg:p-8 text-center group hover:bg-white/[0.10] transition-all duration-300 reveal <?= $stat['border'] ?> <?= $stat['glow'] ?>">
-                <div class="w-12 h-12 rounded-xl bg-white/[0.08] flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:bg-white/[0.15] transition-all duration-300">
-                    <i data-lucide="<?= $stat['icon'] ?>" class="w-6 h-6 text-blue-300"></i>
-                </div>
-                <div class="stat-number text-4xl lg:text-5xl font-extrabold text-white mb-2 font-[Kanit] stat-glow" data-target="<?= $stat['value'] ?>" data-suffix="<?= $stat['suffix'] ?>">
-                    0<?= $stat['suffix'] ?>
-                </div>
-                <p class="text-sm text-blue-200/70"><?= $stat['label'] ?></p>
-            </div>
-            <?php endforeach; ?>
-        </div>
-
-        <!-- Micro Stats -->
-        <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3 reveal">
-            <?php
-            $micros = [
-                ['label' => 'จังหวัดที่ให้บริการ', 'value' => '10+ จังหวัด'],
-                ['label' => 'เคลมสำเร็จ', 'value' => '100%'],
-                ['label' => 'ช่องทางติดต่อ', 'value' => '5+ ช่องทาง'],
-                ['label' => 'Allianz Partnership', 'value' => '10+ ปี'],
-            ];
-            foreach ($micros as $m):
-            ?>
-            <div class="glass-card rounded-xl px-4 py-3 text-center border border-white/[0.06] hover:bg-white/[0.08] transition-all">
-                <p class="text-blue-300/60 text-xs"><?= $m['label'] ?></p>
-                <p class="text-white font-bold font-[Kanit] text-base"><?= $m['value'] ?></p>
-            </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
-</section>
 
 <!-- ============================================================ -->
 <!-- SECTION 7: REVIEWS — เสียงจากลูกค้า                          -->
