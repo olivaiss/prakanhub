@@ -79,7 +79,7 @@
                 <!-- Data injected via JS (แสดง 8 หมวดแรก) -->
             </div>
             <div class="text-center mt-8">
-                <a href="/plans.php" class="inline-flex items-center gap-2 bg-brand-navy hover:bg-brand-navyHover text-white font-bold px-8 py-3 rounded-full transition shadow-md">ดูประกันทั้งหมด 60 แผน <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+                <a href="/plans.php" class="inline-flex items-center gap-2 bg-brand-navy hover:bg-brand-navyHover text-white font-bold px-8 py-3 rounded-full transition shadow-md">ดูประกันทั้งหมด <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
             </div>
         </section>
 
