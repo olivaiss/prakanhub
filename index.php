@@ -75,7 +75,7 @@
                 <h2 class="text-2xl md:text-3xl font-bold text-brand-navy mb-2">ประกันของเรา</h2>
                 <p class="text-sm text-brand-gray">ครบทุกความคุ้มครอง ดูแลคุณและคนที่คุณรัก</p>
             </div>
-            <div id="category-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 md:gap-4">
+            <div id="category-grid" class="flex gap-3 md:gap-4 overflow-x-auto pb-3 snap-x scroll-smooth -mx-4 px-4 md:mx-0 md:px-0" style="-webkit-overflow-scrolling:touch;scrollbar-width:thin">
                 <!-- Data injected via JS -->
             </div>
         </section>

@@ -67,14 +67,14 @@ if (catGrid) {
             
         if (cat.isDark) {
             catGrid.innerHTML += `
-                <a href="${linkUrl}" class="bg-brand-navy rounded-2xl p-4 flex flex-col items-center justify-center text-center hover-card group border border-brand-navy">
+                <a href="${linkUrl}" class="bg-brand-navy rounded-2xl p-4 flex flex-col items-center justify-center text-center hover-card group border border-brand-navy min-w-[130px] md:min-w-[150px] shrink-0 snap-start">
                     <h3 class="font-bold text-sm text-white mb-2">${cat.title}</h3>
                     <p class="text-[10px] text-blue-200 leading-tight flex items-center gap-1">${cat.desc} <i data-lucide="${cat.icon}" class="w-3 h-3 group-hover:translate-x-1 transition-transform"></i></p>
                 </a>
             `;
         } else {
             catGrid.innerHTML += `
-                <a href="${linkUrl}" class="bg-white rounded-2xl p-4 flex flex-col items-center text-center shadow-sm border border-gray-100 hover-card group">
+                <a href="${linkUrl}" class="bg-white rounded-2xl p-4 flex flex-col items-center text-center shadow-sm border border-gray-100 hover-card group min-w-[130px] md:min-w-[150px] shrink-0 snap-start">
                     <div class="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center mb-3 text-brand-navy group-hover:bg-brand-light transition-colors">
                         <i data-lucide="${cat.icon}" class="w-6 h-6 stroke-[1.5]"></i>
                     </div>
