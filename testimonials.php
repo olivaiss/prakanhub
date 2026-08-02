@@ -57,7 +57,7 @@ include 'includes/header.php';
             // ═══ อ่านรีวิวจากฐานข้อมูล (ถ้ามีข้อมูล) — fallback ใช้ array ด้านบน ═══
             try {
                 if (function_exists('getDB')) {
-                    $__dbTesti = getDB()->query('SELECT name, role, rating, message FROM testimonials WHERE is_active = 1 ORDER BY sort_order, id');
+                    $__dbTesti = getDB()->query('SELECT name, role, rating, message, img FROM testimonials WHERE is_active = 1 ORDER BY sort_order, id');
                     $__dbRows = $__dbTesti->fetchAll();
                     if (count($__dbRows) > 0) {
                         $testimonials = [];
@@ -67,6 +67,7 @@ include 'includes/header.php';
                                 'tag' => $__r['role'] ?: 'ลูกค้า',
                                 'rating' => max(1, min(5, (int)$__r['rating'])),
                                 'text' => $__r['message'] ?: '',
+                                'img' => $__r['img'] ?: '',
                             ];
                         }
                     }
@@ -92,7 +93,11 @@ include 'includes/header.php';
                 <span class="text-[10px] font-bold text-brand-navy bg-brand-light px-3 py-1 rounded-full w-fit mb-3"><?= $t['tag'] ?></span>
                 <p class="text-sm text-brand-text leading-relaxed flex-1">"<?= $t['text'] ?>"</p>
                 <div class="flex items-center gap-3 mt-4 pt-3 border-t border-gray-100">
+                    <?php if (!empty($t['img'] ?? '')): ?>
+                    <img src="<?= htmlspecialchars($t['img']) ?>" alt="<?= htmlspecialchars($t['name']) ?>" class="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm" loading="lazy" onerror="this.style.display='none'">
+                    <?php else: ?>
                     <div class="w-9 h-9 rounded-full bg-brand-navy flex items-center justify-center text-white font-bold text-sm"><?= mb_substr($t['name'], 1, 1) ?></div>
+                    <?php endif; ?>
                     <div class="font-bold text-sm text-brand-navy"><?= $t['name'] ?></div>
                 </div>
             </div>
