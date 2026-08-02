@@ -187,10 +187,16 @@ include __DIR__ . '/includes/header.php';
                         <td><?= (int)$r['id'] ?></td>
                         <td class="fw-semibold"><?= admin_e($r['ref_code']) ?></td>
                         <td><?= date('d/m/Y H:i', strtotime($r['created_at'])) ?></td>
-                        <td class="text-truncate" style="max-width:340px" title="<?= admin_e($r['payload']) ?>">
+                        <td class="text-truncate" style="max-width:340px" title="<?= admin_e((string)$r['payload']) ?>">
                             <?php
                             $__p = json_decode((string)$r['payload'], true);
-                            echo admin_e(mb_substr(implode(' | ', array_slice(array_values($__p ?: []), 0, 6)), 0, 120));
+                            // flatten — payload มีค่าเป็น array ได้ (plans[]/goals[]) → แปลงเป็นข้อความ
+                            $__vals = [];
+                            foreach (($__p ?: []) as $__v) {
+                                if (is_array($__v)) $__v = implode(', ', array_filter(array_map('strval', $__v)));
+                                $__vals[] = (string)$__v;
+                            }
+                            echo admin_e(mb_substr(implode(' | ', array_slice($__vals, 0, 6)), 0, 120));
                             ?>
                         </td>
                         <td><?= $r['is_read'] ? '<span class="badge bg-soft-secondary text-secondary">อ่านแล้ว</span>' : '<span class="badge bg-danger">ใหม่</span>' ?></td>
