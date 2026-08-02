@@ -9,18 +9,26 @@ $adminMenu = 'inbox';
 $tab = $_GET['tab'] ?? 'contacts';
 if (!in_array($tab, ['contacts', 'applications', 'form_submissions'], true)) $tab = 'contacts';
 
+// ═══ แมปแท็บ → ชื่อตารางจริง ═══
+$__tables = [
+    'contacts' => 'contacts',
+    'applications' => 'agent_applications',
+    'form_submissions' => 'form_submissions',
+];
+$__table = $__tables[$tab];
+
 // ─── Actions ───
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_verify();
     $action = $_POST['action'] ?? '';
     $id = (int)($_POST['id'] ?? 0);
     if ($action === 'delete' && $id > 0) {
-        $db->prepare("DELETE FROM `$tab` WHERE id = ?")->execute([$id]);
+        $db->prepare("DELETE FROM `$__table` WHERE id = ?")->execute([$id]);
         admin_flash('ลบรายการเรียบร้อย');
     } elseif ($action === 'read' && $id > 0) {
-        $db->prepare("UPDATE `$tab` SET is_read = 1 WHERE id = ?")->execute([$id]);
+        $db->prepare("UPDATE `$__table` SET is_read = 1 WHERE id = ?")->execute([$id]);
     } elseif ($action === 'delete_all') {
-        $db->query("TRUNCATE TABLE `$tab`");
+        $db->query("TRUNCATE TABLE `$__table`");
         admin_flash('ล้างทั้งหมดเรียบร้อย');
     }
     header('Location: inbox.php?tab=' . $tab);
@@ -28,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // ─── ข้อมูล ───
-$rows = $db->query("SELECT * FROM `$tab` ORDER BY id DESC LIMIT 200")->fetchAll();
+$rows = $db->query("SELECT * FROM `$__table` ORDER BY id DESC LIMIT 200")->fetchAll();
 $unread = [
     'contacts' => (int)$db->query("SELECT COUNT(*) FROM contacts WHERE is_read = 0")->fetchColumn(),
     'applications' => (int)$db->query("SELECT COUNT(*) FROM agent_applications WHERE is_read = 0")->fetchColumn(),
@@ -38,11 +46,11 @@ $unread = [
 // ─── View mode (หน้าเต็ม ไม่มี popup) ───
 $viewRow = null;
 if (isset($_GET['view'])) {
-    $__v = $db->prepare("SELECT * FROM `$tab` WHERE id = ?");
+    $__v = $db->prepare("SELECT * FROM `$__table` WHERE id = ?");
     $__v->execute([(int)$_GET['view']]);
     $viewRow = $__v->fetch();
     if ($viewRow) {
-        $db->prepare("UPDATE `$tab` SET is_read = 1 WHERE id = ?")->execute([(int)$_GET['view']]);
+        $db->prepare("UPDATE `$__table` SET is_read = 1 WHERE id = ?")->execute([(int)$_GET['view']]);
     }
 }
 
