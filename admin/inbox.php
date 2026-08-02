@@ -99,11 +99,45 @@ include __DIR__ . '/includes/header.php';
                         <?php if ($k === 'payload' && $v): ?>
                             <?php
                             $__pp = json_decode((string)$v, true);
-                            if (is_array($__pp)) {
-                                echo '<pre style="max-height:420px;overflow:auto;font-size:12px">' . admin_e(json_encode($__pp, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) . '</pre>';
-                            } else {
+                            if (is_array($__pp)):
+                                // ═══ แสดง payload เป็นฟอร์ม label ไทย (อ่านง่าย) ═══
+                                $__labels = [
+                                    'plan_detail' => 'แผนประกันที่สนใจ (เฉพาะ)', 'plans' => 'แผนประกันที่สนใจ', 'budget' => 'งบประมาณเบี้ยประกันต่อปี',
+                                    'goals' => 'เป้าหมายในการทำประกัน', 'prefix_th' => 'คำนำหน้า (ไทย)', 'firstname_th' => 'ชื่อ (ไทย)',
+                                    'lastname_th' => 'นามสกุล (ไทย)', 'prefix_en' => 'คำนำหน้า (อังกฤษ)', 'firstname_en' => 'ชื่อ (อังกฤษ)',
+                                    'lastname_en' => 'นามสกุล (อังกฤษ)', 'birthdate' => 'วันเกิด', 'id_card' => 'เลขบัตรประชาชน',
+                                    'id_laser' => 'รหัสหลังบัตร', 'id_expiry' => 'วันที่บัตรหมดอายุ', 'marital_status' => 'สถานภาพ',
+                                    'nationality' => 'สัญชาติ', 'other_nationality_detail' => 'สัญชาติอื่น (ระบุ)', 'weight' => 'น้ำหนัก (กก.)',
+                                    'height' => 'ส่วนสูง (ซม.)', 'mobile' => 'เบอร์โทรศัพท์มือถือ', 'email' => 'อีเมล',
+                                    'workplace' => 'สถานที่ทำงาน', 'workplace_address' => 'ที่อยู่สถานที่ทำงาน',
+                                    'policy_count' => 'ถือประกันกี่สัญญา', 'policy_companies' => 'บริษัทประกันที่ถืออยู่',
+                                    'policy_life_sum' => 'ทุนชีวิต (บาท)', 'policy_accident_sum' => 'ทุนอุบัติเหตุ (บาท)',
+                                    'tax_deduction' => 'ส่งข้อมูลให้สรรพากรลดหย่อนภาษี', 'spouse_relation' => 'สามี/ภรรยา',
+                                    'spouse_name' => 'ชื่อ-สกุลผู้สมรส', 'beneficiary_name' => 'ชื่อ-สกุลผู้รับผลประโยชน์',
+                                    'beneficiary_relation' => 'ความสัมพันธ์', 'beneficiary_relation_detail' => 'ความสัมพันธ์อื่น (ระบุ)',
+                                    'contact_type' => 'สถานที่ติดต่อ', 'contact_address' => 'ที่อยู่ติดต่อ',
+                                    'occupation' => 'ลักษณะอาชีพ', 'position' => 'ตำแหน่ง', 'work_detail' => 'ลักษณะงานที่ทำ',
+                                    'business_detail' => 'ลักษณะธุรกิจของบริษัท', 'income' => 'รายได้ต่อปี (บาท)',
+                                    'smoking' => 'การสูบบุหรี่', 'smoking_detail' => 'สูบ (ระบุจำนวน)', 'alcohol' => 'ดื่มแอลกอฮอล์เป็นประจำ',
+                                    'rejected' => 'เคยถูกปฏิเสธการรับประกัน', 'rejected_detail' => 'รายละเอียด (ระบุ)',
+                                    'name_changed' => 'เคยเปลี่ยนชื่อ/นามสกุล', 'old_name' => 'ชื่อ-นามสกุลเดิม', 'nickname' => 'ชื่อเล่น',
+                                    'health_checks' => 'เคยตรวจร่างกาย 5 ปี', 'health_reason' => 'สาเหตุที่ไปตรวจ',
+                                    'health_reason_detail' => 'สาเหตุอื่น (ระบุ)', 'hospital_stays' => 'เคยเข้าพักรักษา รพ.',
+                                    'diseases' => 'โรคประจำตัว/โรคที่เคยเป็น',
+                                ];
+                                echo '<div class="row g-2">';
+                                foreach ($__pp as $__pk => $__pv) {
+                                    if ($__pv === '' || $__pv === null || $__pv === []) continue;
+                                    if (is_array($__pv)) $__pv = implode(', ', array_filter(array_map('strval', $__pv)));
+                                    $__pl = $__labels[$__pk] ?? $__pk;
+                                    echo '<div class="col-md-6"><div class="border rounded p-2 h-100"><div class="text-muted small fw-bold">' . admin_e($__pl) . '</div><div>' . admin_e((string)$__pv) . '</div></div></div>';
+                                }
+                                echo '</div>';
+                                // JSON ดิบ (ย่อได้)
+                                echo '<details class="mt-3"><summary class="text-muted small">ดู JSON ดิบ</summary><pre style="max-height:300px;overflow:auto;font-size:11px">' . admin_e(json_encode($__pp, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) . '</pre></details>';
+                            else:
                                 echo admin_e((string)$v);
-                            }
+                            endif;
                             ?>
                         <?php else: ?>
                             <?= admin_e($k === 'created_at' ? date('d/m/Y H:i:s', strtotime((string)$v)) : (string)$v) ?>
