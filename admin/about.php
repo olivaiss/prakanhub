@@ -104,6 +104,44 @@ foreach ($DEFAULTS as $k => $d) {
 }
 
 include __DIR__ . '/includes/header.php';
+
+// ═══ Schema ของ item editor (ฟอร์มง่าย ไม่ต้องแตะ JSON) ═══
+$itemSchema = [
+    'main' => [
+        ['name' => 'stat', 'label' => 'ตัวเลข / ข้อความเด่น', 'def' => '1,000+'],
+        ['name' => 'label', 'label' => 'คำอธิบาย', 'def' => ''],
+        ['name' => 'icon', 'label' => 'ไอคอน', 'type' => 'select', 'def' => 'users'],
+    ],
+    'stats' => [
+        ['name' => 'icon', 'label' => 'ไอคอน', 'type' => 'select', 'def' => 'users'],
+        ['name' => 'title', 'label' => 'หัวข้อ', 'def' => ''],
+        ['name' => 'desc', 'label' => 'รายละเอียด', 'def' => ''],
+    ],
+    'expertise' => [
+        ['name' => 'icon', 'label' => 'ไอคอน', 'type' => 'select', 'def' => 'shield'],
+        ['name' => 'title', 'label' => 'หัวข้อ', 'def' => ''],
+        ['name' => 'desc', 'label' => 'รายละเอียด', 'def' => ''],
+    ],
+];
+if ($edit === 'hero') {
+    $itemSchema['main'] = [
+        ['name' => 'stat', 'label' => 'ตัวเลข / ข้อความเด่น (เช่น 1,000+, MDRT, 10+)', 'def' => ''],
+        ['name' => 'label', 'label' => 'คำอธิบายสั้น (เช่น ครอบครัวที่ไว้วางใจ)', 'def' => ''],
+        ['name' => 'icon', 'label' => 'ไอคอน', 'type' => 'select', 'def' => 'users'],
+    ];
+} elseif ($edit === 'philosophy') {
+    $itemSchema['main'] = [
+        ['name' => 'icon', 'label' => 'ไอคอน', 'type' => 'select', 'def' => 'search'],
+        ['name' => 'title', 'label' => 'หัวข้อ', 'def' => ''],
+        ['name' => 'desc', 'label' => 'รายละเอียด', 'def' => ''],
+        ['name' => 'color', 'label' => 'สี', 'type' => 'select', 'options' => ['blue', 'green', 'red', 'purple'], 'def' => 'blue'],
+    ];
+} elseif ($edit === 'cta') {
+    $itemSchema['main'] = [
+        ['name' => 'icon', 'label' => 'ไอคอน', 'type' => 'select', 'def' => 'clock'],
+        ['name' => 'text', 'label' => 'ข้อความ', 'def' => ''],
+    ];
+}
 ?>
 
 <div class="page-title-box">
@@ -137,11 +175,12 @@ include __DIR__ . '/includes/header.php';
                         <div class="col-md-12"><label class="form-label">หัวข้อหลัก (title)</label><input type="text" class="form-control" name="title" value="<?= admin_e($rows[$edit]['title']) ?>"></div>
                         <div class="col-12"><label class="form-label">คำอธิบาย (subtitle)</label><textarea class="form-control" name="subtitle" rows="2"><?= admin_e($rows[$edit]['subtitle']) ?></textarea></div>
                         <div class="col-12">
-                            <label class="form-label">รายการ (items — JSON)</label>
-                            <textarea class="form-control" name="items" rows="12" style="font-family:monospace;font-size:12px"><?= admin_e($rows[$edit]['items']) ?></textarea>
+                            <label class="form-label">รายการ <span class="text-muted fw-normal">(เพิ่ม/แก้ไข/ลบ ได้ง่ายๆ ด้านล่าง)</span></label>
+                            <div id="items-editor"></div>
+                            <textarea class="d-none" name="items" id="items-json"><?= admin_e($rows[$edit]['items']) ?></textarea>
                             <div class="form-text">
-                                <button type="button" class="btn btn-sm btn-outline-info mt-1 me-1" onclick="document.getElementsByName('items')[0].value = document.getElementById('default-items').textContent.trim()">โหลดค่าเริ่มต้น</button>
-                                ใช้ JSON — ตัวอย่างด้านล่าง (คัดลอกได้)
+                                <button type="button" class="btn btn-sm btn-outline-info mt-2 me-1" onclick="loadDefaults()">↺ โหลดค่าเริ่มต้น</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary mt-2 me-1" onclick="addRow()">＋ เพิ่มรายการ</button>
                             </div>
                         </div>
                         <div class="col-12"><label class="form-label">Quote (สำหรับ hero / philosophy)</label><textarea class="form-control" name="quote" rows="2"><?= admin_e($rows[$edit]['quote']) ?></textarea></div>
@@ -150,7 +189,6 @@ include __DIR__ . '/includes/header.php';
                         </div>
                     </div>
                 </form>
-                <pre id="default-items" class="d-none"><?= admin_e($DEFAULTS[$edit]['items']) ?></pre>
             </div>
         </div>
     </div>
@@ -174,3 +212,126 @@ include __DIR__ . '/includes/header.php';
 </div>
 
 <?php include __DIR__ . '/includes/footer.php'; ?>
+
+<script>
+// ═══════ Item Editor แบบง่าย (ไม่ต้องแตะ JSON) ═══════
+var ITEM_SCHEMA = <?= json_encode($itemSchema) ?>;
+var ITEM_DEFAULTS = <?= json_encode($DEFAULTS) ?>;
+var CUR_EDIT = <?= json_encode($edit) ?>;
+
+// ไอคอนที่เลือกได้
+var ICONS = ['users', 'award', 'clock', 'file-text', 'landmark', 'heart', 'activity', 'shield', 'search', 'ear', 'heart-handshake', 'quote', 'smartphone', 'phone', 'check-circle-2', 'briefcase', 'graduation-cap'];
+var COLORS = ['blue', 'green', 'red', 'purple'];
+
+function esc(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// ฟอร์มต่อ field
+function fieldHtml(spec, val, grp, idx) {
+    var v = val != null ? val : (spec.def != null ? spec.def : '');
+    if (spec.type === 'select') {
+        var opts = spec.options || ICONS;
+        var html = '<select class="form-select form-select-sm" data-f="' + spec.name + '" data-g="' + grp + '" data-i="' + idx + '">';
+        opts.forEach(function (o) {
+            html += '<option value="' + o + '"' + (String(v) === String(o) ? ' selected' : '') + '>' + o + '</option>';
+        });
+        return html + '</select>';
+    }
+    return '<input type="text" class="form-control form-control-sm" data-f="' + spec.name + '" data-g="' + grp + '" data-i="' + idx + '" value="' + esc(v) + '">';
+}
+
+function renderItems() {
+    var box = document.getElementById('items-editor');
+    var html = '';
+    var data;
+    try { data = JSON.parse(document.getElementById('items-json').value || '[]'); } catch (e) { data = []; }
+    if (!Array.isArray(data)) data = [];
+
+    // experience = 2 กลุ่ม (stats + expertise)
+    if (CUR_EDIT === 'experience') {
+        var groups = { stats: 'สถิติหลัก', expertise: 'ความเชี่ยวชาญ' };
+        ['stats', 'expertise'].forEach(function (g) {
+            var items = (data && data[g]) ? data[g] : [];
+            html += '<div class="border rounded p-2 mb-2 bg-light"><div class="fw-bold small text-muted mb-1">' + groups[g] + ' (' + items.length + ')</div>';
+            items.forEach(function (it, i) {
+                html += '<div class="item-row border rounded p-2 mb-2 bg-white" data-g="' + g + '">';
+                ITEM_SCHEMA[g].forEach(function (s) { html += '<div class="mb-1"><label class="form-label small text-muted mb-0">' + s.label + '</label>' + fieldHtml(s, it[s.name], g, i) + '</div>'; });
+                html += '<button type="button" class="btn btn-sm btn-soft-danger mt-1" onclick="removeRow(this)"><i class="ti ti-trash"></i> ลบ</button></div>';
+            });
+            html += '<button type="button" class="btn btn-sm btn-outline-primary mb-2" onclick="addRow(\'' + g + '\')">＋ เพิ่ม ' + groups[g] + '</button></div>';
+        });
+    } else {
+        // section อื่น = array ธรรมดา
+        data.forEach(function (it, i) {
+            html += '<div class="item-row border rounded p-2 mb-2 bg-white">';
+            ITEM_SCHEMA.main.forEach(function (s) { html += '<div class="mb-1"><label class="form-label small text-muted mb-0">' + s.label + '</label>' + fieldHtml(s, it[s.name], 'main', i) + '</div>'; });
+            html += '<button type="button" class="btn btn-sm btn-soft-danger mt-1" onclick="removeRow(this)"><i class="ti ti-trash"></i> ลบ</button></div>';
+        });
+        if (data.length === 0) {
+            html += '<p class="text-muted small">ยังไม่มีรายการ — กด "เพิ่มรายการ" ด้านล่าง</p>';
+        }
+    }
+    box.innerHTML = html;
+}
+
+function addRow(grp) {
+    var data;
+    try { data = JSON.parse(document.getElementById('items-json').value || '[]'); } catch (e) { data = []; }
+    if (CUR_EDIT === 'experience') {
+        if (!data || !Array.isArray(data)) data = {};
+        if (!data[grp]) data[grp] = [];
+        var blank = {};
+        (ITEM_SCHEMA[grp] || []).forEach(function (s) { blank[s.name] = s.def != null ? s.def : ''; });
+        data[grp].push(blank);
+    } else {
+        if (!Array.isArray(data)) data = [];
+        var b2 = {};
+        (ITEM_SCHEMA.main || []).forEach(function (s) { b2[s.name] = s.def != null ? s.def : ''; });
+        data.push(b2);
+    }
+    document.getElementById('items-json').value = JSON.stringify(data);
+    renderItems();
+}
+
+function removeRow(btn) {
+    var row = btn.closest('.item-row');
+    var grp = row.getAttribute('data-g') || 'main';
+    var idx = parseInt(row.querySelector('[data-i]').getAttribute('data-i'), 10);
+    var data;
+    try { data = JSON.parse(document.getElementById('items-json').value || '[]'); } catch (e) { data = []; }
+    if (CUR_EDIT === 'experience') {
+        data[grp].splice(idx, 1);
+    } else {
+        data.splice(idx, 1);
+    }
+    document.getElementById('items-json').value = JSON.stringify(data);
+    renderItems();
+}
+
+function loadDefaults() {
+    var def = ITEM_DEFAULTS[CUR_EDIT];
+    if (def && def.items) {
+        document.getElementById('items-json').value = def.items;
+        renderItems();
+    }
+}
+
+// ฟัง input → อัปเดต JSON ทันที
+document.addEventListener('input', function (e) {
+    if (!e.target.dataset || !e.target.dataset.f) return;
+    var f = e.target.dataset.f, grp = e.target.dataset.g, idx = parseInt(e.target.dataset.i, 10);
+    var data;
+    try { data = JSON.parse(document.getElementById('items-json').value || '[]'); } catch (err) { data = []; }
+    if (CUR_EDIT === 'experience') {
+        if (!data[grp] || !data[grp][idx]) return;
+        data[grp][idx][f] = e.target.value;
+    } else {
+        if (!data[idx]) return;
+        data[idx][f] = e.target.value;
+    }
+    document.getElementById('items-json').value = JSON.stringify(data);
+});
+
+renderItems();
+</script>
